@@ -1,0 +1,21 @@
+<RCC>
+  <qresource prefix="selecting">
+    <file alias="remove">Select_Remove.png</file>
+    <file alias="add">Select_Add.png</file>
+    <file alias="replace">Select_Replace.png</file>
+  </qresource>
+  <qresource prefix="dl_switchs">
+    <file alias="playback_off">Playback_off.png</file>
+    <file alias="playback_on">Playback_on.png</file>
+    <file alias="shaded_off">Shading_Off.png</file>
+    <file alias="shaded_on">Shading_On.png</file>
+    <file alias="texture_off">Texture_Off.png</file>
+    <file alias="texture_on">Texture_On.png</file>
+    <file alias="visiblity_off">Visiblity_Off.png</file>
+    <file alias="visiblity_on">Visiblity_On.png</file>
+  </qresource>
+  <qresource prefix="nodes">
+    <file alias="display_layer_group">Display_Layers.png</file>
+    <file alias="display_layer">Single_Display_Layer.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,12 @@
+global proc create_AW_ModelPanel_Menu( string $object, string $editor )
+{
+	string $cmd;
+	$cmd = "import Scripts.UIFns.Active_Camera_Node_Creation\n";
+	$cmd += "Scripts.UIFns.Active_Camera_Node_Creation.make_Model_Editor_Menu_Items(";
+	$cmd += "'";
+	$cmd += $object;
+	$cmd += "','";
+	$cmd += $editor;
+	$cmd += "')";
+	python $cmd;
+}

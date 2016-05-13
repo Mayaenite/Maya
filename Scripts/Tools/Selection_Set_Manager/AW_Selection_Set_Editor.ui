@@ -1,0 +1,1440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Drew Loverige</author>
+ <class>Selection_Set_Editor</class>
+ <widget class="AW_Selection_Set_Editor" name="Selection_Set_Editor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>508</width>
+    <height>784</height>
+   </rect>
+  </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Selection Set Editor</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_15">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QGroupBox" name="Display_Options_GroupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Display Options</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_16">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="Display_Options_Frame">
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_17">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="Button_Display_Options_GroupBox">
+           <property name="title">
+            <string>Apperence</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <property name="spacing">
+             <number>1</number>
+            </property>
+            <property name="margin">
+             <number>1</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="Button_Display_Options_Frame">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Plain</enum>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <property name="spacing">
+                <number>1</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="Display_Option_Tool_Button" name="Display_Options_toolButton">
+                 <property name="text">
+                  <string>Display Options</string>
+                 </property>
+                 <property name="popupMode">
+                  <enum>QToolButton::InstantPopup</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Both</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Text</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButton">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Icons</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="Outline_Container_Widget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QGroupBox" name="Selection_Set_Outliner_groupBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string>Set Outliner</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="Show_Name_Spaces_Tool_Button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(0, 0, 0);</string>
+           </property>
+           <property name="text">
+            <string>Show Name Spaces</string>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="Frame">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_14">
+              <property name="spacing">
+               <number>1</number>
+              </property>
+              <property name="margin">
+               <number>11</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="Icons/Master_Icon_Resource_File.qrc">:/F/filterson</pixmap>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="Outliner_Item_Filter_lineEdit"/>
+              </item>
+              <item>
+               <widget class="QPushButton" name="Filter_Options_Button">
+                <property name="toolTip">
+                 <string>Filter Options</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                  <normaloff>:/A/advancedsettings</normaloff>:/A/advancedsettings</iconset>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="Selection_Set_Outliner_Frame">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="margin">
+             <number>5</number>
+            </property>
+            <item>
+             <widget class="Selection_Set_Tree_View" name="Selection_Set_Outliner_Tree_View">
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::InternalMove</enum>
+              </property>
+              <property name="defaultDropAction">
+               <enum>Qt::LinkAction</enum>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::ExtendedSelection</enum>
+              </property>
+              <property name="animated">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="Tools_GroupBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string>Tools</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_10">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <property name="margin">
+          <number>4</number>
+         </property>
+         <item>
+          <widget class="QFrame" name="Tools_Frame">
+           <property name="frameShape">
+            <enum>QFrame::Box</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>3</number>
+            </property>
+            <property name="margin">
+             <number>5</number>
+            </property>
+            <item>
+             <widget class="QGroupBox" name="SSets_Maya_Content_Creation_GroupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Content Creation</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <property name="spacing">
+                <number>2</number>
+               </property>
+               <property name="margin">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="SSets_Maya_Content_Creation_Frame">
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_11">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="margin">
+                   <number>5</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_3">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="margin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <widget class="QToolButton" name="Create_Empty_Set_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Create New Sets Under Selected Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Create</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/O/out_objectset</normaloff>:/O/out_objectset</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Copy_Highlighted_Sets_Button">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Make A Copy The Highlighted Set Items Underneath The Master Set</string>
+                      </property>
+                      <property name="text">
+                       <string>Copy</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/D/duplicatereference</normaloff>:/D/duplicatereference</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Delete_Highlighted_Sets_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Delete The Hilighted Selection Set</string>
+                      </property>
+                      <property name="text">
+                       <string>Delete</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/X/xgdelete</normaloff>:/X/xgdelete</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="SSets_Membership_Assinment_GroupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Assinments</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="spacing">
+                <number>7</number>
+               </property>
+               <property name="margin">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="SSets_Membership_Assinment_Frame">
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="margin">
+                   <number>5</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="SSets_Membership_Assinment_Tool_Buttons_Layout">
+                    <property name="spacing">
+                     <number>2</number>
+                    </property>
+                    <property name="margin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="Membership_Assinment_Selection_Layout">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QToolButton" name="Add_Selection_To_Highlighted_Sets_Button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="toolTip">
+                         <string>Add The Items In The Active Selection To The Hilighted Set</string>
+                        </property>
+                        <property name="text">
+                         <string>Add Selected</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                          <normaloff>:/S/setedaddcmd</normaloff>:/S/setedaddcmd</iconset>
+                        </property>
+                        <property name="toolButtonStyle">
+                         <enum>Qt::ToolButtonTextBesideIcon</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="Remove_Selection_From_Highlighted_Sets_Button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="toolTip">
+                         <string>Remove The Items In The Active Selection From Hilighted Set</string>
+                        </property>
+                        <property name="text">
+                         <string>Remove Selected</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                          <normaloff>:/S/setedremovecmd</normaloff>:/S/setedremovecmd</iconset>
+                        </property>
+                        <property name="toolButtonStyle">
+                         <enum>Qt::ToolButtonTextBesideIcon</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <widget class="Line" name="line">
+                      <property name="frameShadow">
+                       <enum>QFrame::Plain</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>6</number>
+                      </property>
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" name="Membership_Assinment_Highlighted_Layout">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QToolButton" name="Add_Highlighted_Nodes_To_Highlighted_Set_Button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="toolTip">
+                         <string>Add The Highlighted Node Items To Any Highlighted Set Items</string>
+                        </property>
+                        <property name="text">
+                         <string>Add Highlighted</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                          <normaloff>:/S/setedaddcmd</normaloff>:/S/setedaddcmd</iconset>
+                        </property>
+                        <property name="toolButtonStyle">
+                         <enum>Qt::ToolButtonTextBesideIcon</enum>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QToolButton" name="Remove_Highlighted_From_Parent_Sets_Button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="toolTip">
+                         <string>Remove The Items In The Active Selection From Hilighted Set</string>
+                        </property>
+                        <property name="text">
+                         <string>Remove Highlighted</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                          <normaloff>:/S/setedremovecmd</normaloff>:/S/setedremovecmd</iconset>
+                        </property>
+                        <property name="toolButtonStyle">
+                         <enum>Qt::ToolButtonTextBesideIcon</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="SSets_Selections_GroupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Selection</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="spacing">
+                <number>7</number>
+               </property>
+               <property name="margin">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="SSets_Selections_Frame">
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_9">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="margin">
+                   <number>5</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="SSets_Selections_Tool_Buttons_Layout">
+                    <property name="spacing">
+                     <number>2</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>1</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>5</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <widget class="QToolButton" name="Select_Highlighted_Sets_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Select The Highlighted Selection Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Select Highlighted</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/S/selectobject</normaloff>:/S/selectobject</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Select_Highlighted_Set_Members_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Select Child Nodes Of Highlighted Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Select Child Nodes</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/S/selectbyhierarchy</normaloff>:/S/selectbyhierarchy</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Select_Highlighted_Child_Sets_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Select The Child Sets Of The Hilighted Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Select Child Sets</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/S/selectobj</normaloff>:/S/selectobj</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Select_Highlighted_Set_Member_Recursively_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Select All The Nodes And Sets That Are Underneath The Highlighted Selection Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Select Hierarchy</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/S/selectfilecontents</normaloff>:/S/selectfilecontents</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="SSets_Maya_Viewport_GroupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>1</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Viewport</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="spacing">
+                <number>2</number>
+               </property>
+               <property name="margin">
+                <number>4</number>
+               </property>
+               <item>
+                <widget class="QFrame" name="SSets_Maya_Viewport_Frame">
+                 <property name="frameShape">
+                  <enum>QFrame::Box</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <layout class="QHBoxLayout" name="horizontalLayout_8">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="margin">
+                   <number>5</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="SSets_Maya_Viewport_Tool_Buttons_Layout">
+                    <property name="spacing">
+                     <number>2</number>
+                    </property>
+                    <property name="margin">
+                     <number>5</number>
+                    </property>
+                    <item>
+                     <widget class="QToolButton" name="Frame_Highlighted_Set_Members_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Frame The Contents Of The Currently Highlighted Selection Sets In The Active Viewport</string>
+                      </property>
+                      <property name="text">
+                       <string>Frame Contents</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/F/framegraph</normaloff>:/F/framegraph</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="SSets_Isolate_Contents_Tool_Button">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Select Child Sets Of Highlighted Sets</string>
+                      </property>
+                      <property name="text">
+                       <string>Isolate Contents</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/I/isolateselecteddown</normaloff>:/I/isolateselecteddown</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Reveal_Highlighted_Outliner_Panel_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Reveal The Curently Highlighted Items In The Outliner Panal</string>
+                      </property>
+                      <property name="text">
+                       <string>Reveal In Outliner</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/R/render_decomposematrix</normaloff>:/R/render_decomposematrix</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="Line" name="line_2">
+                      <property name="frameShadow">
+                       <enum>QFrame::Plain</enum>
+                      </property>
+                      <property name="lineWidth">
+                       <number>6</number>
+                      </property>
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="Frame_Highlighted_Button">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="toolTip">
+                       <string>Frame The Currently Highlighted Item In The Active Viewport</string>
+                      </property>
+                      <property name="text">
+                       <string>Frame Highlighted</string>
+                      </property>
+                      <property name="icon">
+                       <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+                        <normaloff>:/F/framehierarchy</normaloff>:/F/framehierarchy</iconset>
+                      </property>
+                      <property name="toolButtonStyle">
+                       <enum>Qt::ToolButtonTextBesideIcon</enum>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+  <action name="action_Create_Empty_Set">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/C/createcontainer</normaloff>:/C/createcontainer</iconset>
+   </property>
+   <property name="text">
+    <string>Create Empty Set</string>
+   </property>
+   <property name="toolTip">
+    <string>Creates A New Empty Selection Set And Adds It To All The Currently Hilighted Selection Sets</string>
+   </property>
+  </action>
+  <action name="action_Add_Selection_To_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/setedaddcmd</normaloff>:/S/setedaddcmd</iconset>
+   </property>
+   <property name="text">
+    <string>Add Selected</string>
+   </property>
+   <property name="toolTip">
+    <string>Add The Items In The Active Selection To The Hilighted Set</string>
+   </property>
+  </action>
+  <action name="action_Remove_Selection_From_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/setedremovecmd</normaloff>:/S/setedremovecmd</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Selected</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove The Items In The Active Selection From Hilighted Sets</string>
+   </property>
+  </action>
+  <action name="action_Select_Highlighted_Child_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/selectobj</normaloff>:/S/selectobj</iconset>
+   </property>
+   <property name="text">
+    <string>Select Child Sets</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets Maya's Active Selection To The Child Sets Of The Hilighted Sets</string>
+   </property>
+  </action>
+  <action name="action_Delete_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/R/removerenderable</normaloff>:/R/removerenderable</iconset>
+   </property>
+   <property name="text">
+    <string>Delete Sets</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete The Hilighted Selection Sets</string>
+   </property>
+  </action>
+  <action name="action_Select_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/selectobject</normaloff>:/S/selectobject</iconset>
+   </property>
+   <property name="text">
+    <string>Select Highlighted</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets Maya's Active Selection To The Hilighted Items</string>
+   </property>
+  </action>
+  <action name="action_Select_Highlighted_Set_Members">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/selectbyhierarchy</normaloff>:/S/selectbyhierarchy</iconset>
+   </property>
+   <property name="text">
+    <string>Select Members</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sets Maya's Active Selection To The Members Of The Highlighted Sets&lt;/p&gt;&lt;p&gt;This Does Not Include The Child Sets&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Unlock_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/L/lock_off</normaloff>:/L/lock_off</iconset>
+   </property>
+   <property name="text">
+    <string>Unlock Highlighted Sets</string>
+   </property>
+   <property name="toolTip">
+    <string>Unlock The Hilighted Nodes</string>
+   </property>
+  </action>
+  <action name="action_Lock_Highlighted_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/L/lock_on</normaloff>:/L/lock_on</iconset>
+   </property>
+   <property name="text">
+    <string>Lock Highlighted Sets</string>
+   </property>
+   <property name="toolTip">
+    <string>Lock The Hilighted Nodes</string>
+   </property>
+  </action>
+  <action name="action_Set_Inerface_To_Icons_Only">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/I/iconsuper</normaloff>:/I/iconsuper</iconset>
+   </property>
+   <property name="text">
+    <string>Icons Only</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets The Inerface To Show Icons Only</string>
+   </property>
+  </action>
+  <action name="action_Set_Inerface_To_Text_Only">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/T/text</normaloff>:/T/text</iconset>
+   </property>
+   <property name="text">
+    <string>Text Only</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets The Inerface To Show Text Only</string>
+   </property>
+  </action>
+  <action name="action_Set_Inerface_To_Text_And_Icons">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/T/toongetexample</normaloff>:/T/toongetexample</iconset>
+   </property>
+   <property name="text">
+    <string>Icons &amp; Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets The Inerface To Show Text And Icons</string>
+   </property>
+  </action>
+  <action name="action_Select_Highlighted_Set_Member_Recursively">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/selectfilecontents</normaloff>:/S/selectfilecontents</iconset>
+   </property>
+   <property name="text">
+    <string>Select Members Recursively</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sets Maya's Active Selection To The Members Of The Of All The Highlighted Sets&lt;/p&gt;&lt;p&gt;And The Members Of There Child Set Recursively&lt;/p&gt;&lt;p&gt;This Does Not Include The Sets Them Self Just The Members&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Frame_Highlighted_Set_Members">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/F/framegraph</normaloff>:/F/framegraph</iconset>
+   </property>
+   <property name="text">
+    <string>Frame Set Members</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Frames The Contents Of The Currently Highlighted Selection Sets In The Active Viewport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Reveal_Highlighted_Outliner_Panel">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/R/render_decomposematrix</normaloff>:/R/render_decomposematrix</iconset>
+   </property>
+   <property name="text">
+    <string>Reveal In Outliner</string>
+   </property>
+   <property name="toolTip">
+    <string>Reveal The Curently Highlighted Items In The Outliner Panal</string>
+   </property>
+  </action>
+  <action name="action_Toggle_Isolate_Highlighted">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/I/isolateselected</normaloff>
+     <normalon>:/I/isolateselecteddown</normalon>:/I/isolateselected</iconset>
+   </property>
+   <property name="text">
+    <string>Isolate</string>
+   </property>
+   <property name="toolTip">
+    <string>Isolate Toggle</string>
+   </property>
+  </action>
+  <action name="action_Frame_Highlighted">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/F/framehierarchy</normaloff>:/F/framehierarchy</iconset>
+   </property>
+   <property name="text">
+    <string>Frame Highlighted Nodes</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Frame The Currently Highlighted Nodes In The Active Viewport&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Remove_Highlighted_From_Parent_Sets">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/setedremovecmd</normaloff>:/S/setedremovecmd</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Highlighted</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove The Highlighted Items From There Parent Sets&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Add_Highlighted_Nodes_To_Highlighted_Set">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/S/setedaddcmd</normaloff>:/S/setedaddcmd</iconset>
+   </property>
+   <property name="text">
+    <string>Add Highlighted Nodes</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add The Highlighted Items To Any Highlighted Set Items&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_Copy_Highlighted_Sets">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/C/createcontainer</normaloff>:/C/createcontainer</iconset>
+   </property>
+   <property name="text">
+    <string>Copy Highlighted Sets</string>
+   </property>
+   <property name="toolTip">
+    <string>Make A Copy The Highlighted Set Items Underneath The Master Set</string>
+   </property>
+  </action>
+  <action name="action_Move_Highlighted_Up">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/A/arrowup</normaloff>:/A/arrowup</iconset>
+   </property>
+   <property name="text">
+    <string>Move Item Up</string>
+   </property>
+   <property name="toolTip">
+    <string>Move The Highlighted Items Up One Sibling Level</string>
+   </property>
+  </action>
+  <action name="action_Move_Highlighted_Down">
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/A/arrowdown</normaloff>:/A/arrowdown</iconset>
+   </property>
+   <property name="text">
+    <string>Move Item Down</string>
+   </property>
+   <property name="toolTip">
+    <string>Move The Highlighted Items Down One Sibling Level</string>
+   </property>
+  </action>
+  <action name="action_Show_Name_Spaces">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/Master_Icon_Resource_File.qrc">
+     <normaloff>:/F/fpe_brokenpaths</normaloff>
+     <normalon>:/C/confirm</normalon>:/F/fpe_brokenpaths</iconset>
+   </property>
+   <property name="text">
+    <string>Show Name Spaces</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Or Hide Name Spaces</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="7" margin="3"/>
+ <customwidgets>
+  <customwidget>
+   <class>AW_Selection_Set_Editor</class>
+   <extends>QWidget</extends>
+   <header>AW_Selection_Set_Editor</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Display_Option_Tool_Button</class>
+   <extends>QToolButton</extends>
+   <header>Display_Option_Tool_Button</header>
+  </customwidget>
+  <customwidget>
+   <class>Selection_Set_Tree_View</class>
+   <extends>QTreeView</extends>
+   <header>selection_set_tree_view</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="Icons/Master_Icon_Resource_File.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>action_Create_Empty_Set</sender>
+   <signal>triggered()</signal>
+   <receiver>Selection_Set_Editor</receiver>
+   <slot>_Action_Create_New_Set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Delete_Highlighted_Sets</sender>
+   <signal>triggered()</signal>
+   <receiver>Selection_Set_Editor</receiver>
+   <slot>_Action_Delete_Set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>458</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Display_Options_GroupBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>Display_Options_Frame</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>98</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>204</x>
+     <y>45</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Create_Empty_Set_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>Selection_Set_Editor</receiver>
+   <slot>_Action_Create_New_Set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>297</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Delete_Highlighted_Sets_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>Selection_Set_Editor</receiver>
+   <slot>_Action_Delete_Set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>462</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>20</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>20</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+ <slots>
+  <signal>ISOLATE_STATE_CHANGED(bool)</signal>
+  <slot>_Action_Create_New_Set()</slot>
+  <slot>_Action_Delete_Set()</slot>
+ </slots>
+</ui>

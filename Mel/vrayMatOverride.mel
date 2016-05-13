@@ -1,0 +1,6 @@
+global proc vrayMatOverride ( string $mat ){
+    string $vrayMatFix = "from vray.utils import *"+"\n"+"overRideSurf = exportMaterial('"+$mat+"')"+"\n"+"overRideBRDF = overRideSurf.get('brdf')"+"\n"+"matList = findByType('MtlSingleBRDF')" +"\n"+"for mat in matList:"+"\n"+"\t"+"mat.set('brdf',overRideBRDF)"+"\n"+"matID = findByType('MtlMaterialID')"+"\n"+"for id in matID:"+"\n"+"\t"+"id.set('material_id_number', 0)";
+    setAttr -type "string" vraySettings.postTranslatePython $vrayMatFix;
+    setAttr -type "string" defaultRenderGlobals.postRenderLayerMel "setAttr -type \"string\" vraySettings.postTranslatePython \"\"";
+
+}

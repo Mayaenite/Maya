@@ -1,0 +1,33 @@
+<RCC>
+  <qresource prefix="items">
+    <file alias="beauty_parts">../../icons/out_AW_Beauty_Parts.png</file>
+    <file alias="invisible_parts">../../icons/out_AW_Invisible_Parts.png</file>
+    <file alias="matte_parts">../../icons/out_AW_Matte_Parts.png</file>
+    <file alias="part_sets">../../icons/out_AW_Part_Sets.png</file>
+    <file alias="scene_state">../../icons/out_AW_Scene_State.png</file>
+    <file alias="scene_state_list">../../icons/out_AW_Scene_State_List.png</file>
+    <file alias="state_manager">../../icons/out_AW_Scene_State_Manager.png</file>
+    <file alias="object_props">../../icons/out_VRayObjectProperties.png</file>
+  </qresource>
+  <qresource prefix="new_items">
+    <file alias="beauty_parts">Layer_Comp_Icons/Beauty_Parts.png</file>
+    <file alias="invisible_parts">Layer_Comp_Icons/Invisable_Parts.png</file>
+    <file alias="matte_parts">Layer_Comp_Icons/Matte_Parts.png</file>
+    <file alias="part_set">Layer_Comp_Icons/Part_Set.png</file>
+    <file alias="part_sets">Layer_Comp_Icons/Part_Sets.png</file>
+    <file alias="scene_state">Layer_Comp_Icons/Scene_State.png</file>
+    <file alias="scene_state_list">Layer_Comp_Icons/Scene_State_List.png</file>
+    <file alias="state_manager">Layer_Comp_Icons/Scene_State_Manager.png</file>
+  </qresource>
+  <qresource prefix="maya_types">
+    <file alias="container">icons/container.png</file>
+    <file alias="displaylayer">icons/display_layer.png</file>
+    <file alias="file">icons/file.png</file>
+    <file alias="grid">icons/grid.png</file>
+    <file alias="joint">icons/joint.png</file>
+    <file alias="locator">icons/locator.png</file>
+    <file alias="mesh">icons/mesh.png</file>
+    <file alias="output">icons/output.png</file>
+    <file alias="transform">icons/transform.png</file>
+  </qresource>
+</RCC>

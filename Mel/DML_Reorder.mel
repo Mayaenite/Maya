@@ -1,0 +1,50 @@
+global proc DML_Reorder()
+{
+	int $i;
+
+	string $items[] = `listTransforms"  -allPaths"`;
+
+	string $item;
+
+	for ($i=0; $i<size($items); $i++)
+	{
+		$item =  ("0"+(size(`listRelatives -path -ad -type transform $items[$i]`)));
+		while (size($item)<4)
+		{
+			$item = ("0"+$item);
+		} 
+		$item = ($item+" "+$items[$i]);
+
+		$items[$i] = $item;
+	}
+
+	$items =`sort($items)`;
+    
+	for ($i=0; $i< size($items) ;$i++)
+	{
+		if(`match "[0-9]" $items[$i]`)
+		{
+			select `match "[0-9|:_a-zA-Z_]+$" $items[$i]`;
+			reorder -back;
+		}
+		else
+		{
+			select `match "[0-9|:_a-zA-Z_]+$" $items[$i]`;
+
+			reorder -front;
+		}
+	}
+	$i =0;
+
+	select -all;
+
+    select -hi;
+
+    string $items[] = `ls -type mesh -type locator -sl -type nurbsCurve`;
+
+    for($item in $items);
+    {
+        reorder -front $item;
+    }
+    select -cl;
+}

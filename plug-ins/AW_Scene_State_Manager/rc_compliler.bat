@@ -1,0 +1,1 @@
+"C:\Python27\Lib\site-packages\PySide\pyside-rcc.exe" -o "AW_Scene_State_Manager_UI_rc.py" "AW_Scene_State_Manager_UI.qrc"

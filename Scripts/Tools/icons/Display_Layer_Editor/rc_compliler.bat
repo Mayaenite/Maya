@@ -1,0 +1,1 @@
+"C:\Python27\Lib\site-packages\PySide\pyside-rcc.exe" -o ".\..\..\Display_Layer_Editor_rc.py" ".\Display_Layer_Editor.qrc"
