@@ -1336,7 +1336,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		                                            changeCommand=self._PD.SavePersistentDeadlineOptions,
 		                                            label="Enable Tile Rendering")
 		isinstance(self.RegionRendering_CheckBox, pm.uitypes.CheckBox)
-		self.RegionRendering_CheckBox.changeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.RegionRendering_CheckBox))
+		self.RegionRendering_CheckBox.setChangeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.RegionRendering_CheckBox))
 
 		pm.setParent('..')
 
@@ -1388,7 +1388,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		                                                       value=self.defaultRenderGlobals.deadlineTileSingleJob.get(True),
 		                                                       annotation="Check this to combine all tiles into a single job.")
 		isinstance(self.Submit_Tiles_As_Single_Job_CheckBox, pm.uitypes.CheckBox)
-		self.Submit_Tiles_As_Single_Job_CheckBox.changeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Submit_Tiles_As_Single_Job_CheckBox))
+		self.Submit_Tiles_As_Single_Job_CheckBox.setChangeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Submit_Tiles_As_Single_Job_CheckBox))
 		UI_Globals.SubmitTileSingleJob = self.Submit_Tiles_As_Single_Job_CheckBox
 
 		pm.rowLayout(numberOfColumns=1,
@@ -1425,7 +1425,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		                                             annotation="Check this submit an assembly job that is dependent on the first job.")
 		isinstance(self.Job_Submit_Tile_Dependent, pm.uitypes.CheckBox)
 		UI_Globals.SubmitTileDependentJob = self.Job_Submit_Tile_Dependent
-		self.Job_Submit_Tile_Dependent.changeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Job_Submit_Tile_Dependent))
+		self.Job_Submit_Tile_Dependent.setChangeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Job_Submit_Tile_Dependent))
 
 		self.Job_Submit_Tile_Cleanup = pm.checkBox(UI_Globals.SubmitTileCleanupJob,
 		                                           en=self.regionRendering_val,
@@ -1452,7 +1452,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		                                             annotation="Check this to assemble tiles using draft")
 		UI_Globals.SubmitTileUseDraft = self.Job_Submit_Tile_Use_Draft
 		isinstance(self.Job_Submit_Tile_Use_Draft, pm.uitypes.CheckBox)
-		self.Job_Submit_Tile_Use_Draft.changeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Job_Submit_Tile_Use_Draft))
+		self.Job_Submit_Tile_Use_Draft.setChangeCommand(partial(self._PD.SavePersistentDeadlineOptions, self.Job_Submit_Tile_Use_Draft))
 
 		self.Job_Submit_Tile_Error_On_Missing = pm.checkBox(UI_Globals.SubmitTileErrorOnMissing,
 		                                                    en=(self.defaultRenderGlobals.deadlineTileUseDraft.get(True) and self.regionRendering_val),
