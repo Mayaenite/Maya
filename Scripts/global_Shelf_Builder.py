@@ -408,8 +408,14 @@ def Build_Artist_Tools(shelfName):
         ,command="import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader\nG_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()" 
         ,sourceType="python")
 
+def Add_Custom_Menu_Items():
+	maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')	
+	Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
+	SelLocatorItem = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform"))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
+
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")
 # removeShelfTab("Deadline")
 Build_DataPrep_Tools("AW_DP_Tools")
 Build_Artist_Tools("AW_CG_Tools")
+Add_Custom_Menu_Items()

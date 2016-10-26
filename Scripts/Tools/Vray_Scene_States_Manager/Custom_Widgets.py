@@ -838,9 +838,12 @@ class Asset_States_ComboBox(QComboBox):
 		self.currentIndexChanged.connect(self.update_asset_attribute)
 		
 	def update_asset_attribute(self):
-		if not cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ) == "defaultRenderLayer":
+		current_render_layer = cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
+		current_index        = self.currentIndex()
+		current_plug_index   = self._asset.enum_render_states_plug.value
+		if not current_render_layer == "defaultRenderLayer":
 			self._asset.enum_render_states_plug.value = self.currentIndex()
-			if not self._maya_forced:
+			if not self._maya_forced or not current_index == current_plug_index:
 				self._asset.set_Render_States_Plug_Overide()
 				actived_state = self._asset.Render_States.child(self.currentIndex())
 				isinstance(actived_state, Render_State_Item)

@@ -3,6 +3,10 @@ import maya.cmds  as cmds
 import maya.utils as utils
 import maya.mel   as mel
 import Scripts
+if os.environ.has_key("AW_GLOBAL_SYSTEMS"):
+	if not os.environ["AW_GLOBAL_SYSTEMS"] in os.sys.path:
+		os.sys.path.append(os.environ["AW_GLOBAL_SYSTEMS"])
+
 from Environment_Access import System_Paths, System_Settings, utilities
 
 if System_Settings.USE_WING_DEBUG:

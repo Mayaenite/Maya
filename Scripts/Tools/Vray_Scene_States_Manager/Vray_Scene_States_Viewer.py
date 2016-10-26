@@ -108,7 +108,17 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QtGui.QMainWindow):
 		
 	def emit_render_layer_changed(self):
 		self.ACTIVE_RENDER_LAYER_CHANGED.emit()
-		
+		if self.Version_Check() == 2:
+			try:
+				active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
+				if cmds.objExists("Vray_Scene_States_Global_Render_Group"):
+					master_node = Scripts.NodeCls.M_Nodes.MNODE("Vray_Scene_States_Global_Render_Group")
+					active_layer.addMembers([master_node])
+				else:
+					master_node = None
+			except:
+				master_node = None
+	
 	def update_on_render_layer_Added(self):
 		for file_ref in self.model.File_References.Children:
 			for asset in file_ref.Children:
