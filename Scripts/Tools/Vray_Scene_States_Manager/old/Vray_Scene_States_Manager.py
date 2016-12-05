@@ -104,7 +104,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		super(Vray_Scene_States_Manager_MainWindow,self).__init__(parent)
 		self.setupUi(self)
 		self.ACTIVATE_RUN_SETUP.emit(self)
-		# self.verticalGroupBox.hide()
+		self.verticalGroupBox.hide()
 		self.entity_tree_view.hide()
 		self.undo_stack =  QtGui.QUndoStack()
 		
@@ -129,37 +129,14 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		
 		self.sorted_proxy_model = Custom_Widgets.Sorted_Item_Filter_ProxyModel(self)
 		self.sorted_proxy_model.setSourceModel(self.model)
-		self.sorted_proxy_model.setFilterCaseSensitivity(QT.Qt.CaseSensitivity.CaseInsensitive)
 		self.run_Item_View_Assinments()
 		self.render_layer_helper_button.clicked.connect(self.Construct_Render_Layer_From_Render_State)
 		self.isolateSelect_Button.toggled.connect(self.isolate_Select_Render_State)
 		self.render_states_view.clicked.connect(self.update_isolate_Select_Render_State)
-		self.actionLoadPickle_Data = QtGui.QAction(self)
-		self.actionLoadPickle_Data.setEnabled(True)
-		self.actionLoadPickle_Data.setObjectName("actionLoadPickle_Data")
-		self.actionLoadPickle_Data.setText("Load VG Data")
-		self.actionLoadPickle_Data.triggered.connect(self.Construst_From_Pickle_Data)
-		self.menuFile.addAction(self.actionLoadPickle_Data)
-		self.Render_States_Filter_input.textChanged.connect(self.update_on_render_states_filter_Changed)
-		self.Favorits_Only_checkBox.clicked.connect(self.update_on_render_states_filter_Changed)
-		if cmds.objExists("VG_Model_BuilderScriptNode"):
-			self.actionDumpPickle_Data = QtGui.QAction(self)
-			self.actionDumpPickle_Data.setEnabled(True)
-			self.actionDumpPickle_Data.setObjectName("actionDumpPickle_Data")
-			self.actionDumpPickle_Data.setText("Dumb VG Data")
-			self.actionDumpPickle_Data.triggered.connect(self.Extract_To_Pickle_Data)
-			self.menuFile.addAction(self.actionDumpPickle_Data)
 		if _maya_check:
 			self.Script_Data = Custom_Widgets.Yaml_Config_Data.find_yaml_config_scripts()
 			cmds.scriptJob(killWithScene=True, event=['SceneSaved',self.Save])
-	
-	#----------------------------------------------------------------------
-	@QT.QtSlot()
-	def update_on_render_states_filter_Changed(self):
-		text = self.Render_States_Filter_input.text()
-		if not text.endswith("*"):
-			text += "*"
-		self.sorted_proxy_model.setFilterWildcard(text)
+			
 	#----------------------------------------------------------------------
 	@QT.QtSlot(list)
 	def remove_Objects_From_Model_Editor(self, objs):
@@ -324,56 +301,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 	def Construct_Render_Layer_From_Render_State(self):
 		item = self.render_states_view.current_item()
 		Render_State_Layer(item)
-	#----------------------------------------------------------------------
-	@QT.QtSlot()
-	def Extract_To_Pickle_Data(self):
-		""""""
-		import Vg_EMI_Data_Extractor
-		Vg_EMI_Data_Extractor.dump_EIM_Data()
 		
-	#----------------------------------------------------------------------
-	@QT.QtSlot()
-	def Construst_From_Pickle_Data(self):
-		""""""
-		import Vg_EMI_Data_Extractor
-		data = Vg_EMI_Data_Extractor.load_EIM_Data()
-		for item in data:
-			for layer in item.layers:
-				if not cmds.objExists(layer):
-					cmds.inViewMessage( statusMessage='<hl>Can Not Reconstruct From Pickle Data\nBecause The Fallowing Display Layer\nWas Not Found In The Scene\n"%s".' % (layer), fadeInTime=200, fadeOutTime=1000, fadeStayTime=3000,fontSize=20, pos='midCenter', fade=True )
-					return
-		
-		self.Construct_From_Display_Layers()
-		self.sync_Display_Layers()
-		if len(self.asset_tree_view.selected_Items()):
-			asset_item = self.asset_tree_view.selected_Items()[0]
-		else:
-			asset_item = self.model.Assets.Children[0]
-		isinstance(asset_item, Custom_Widgets.Assets_Item)
-		for item in data:
-			isinstance(item, Vg_EMI_Data_Extractor.EIM_Config_Data)
-			# self.actionAdd_Render_State.trigger()
-			self.add_Render_State(name=item.code)
-			# for rs in asset_item.Render_States.Children:
-			render_state = asset_item.Render_States.Children[-1]
-			isinstance(render_state, Custom_Widgets.Render_State_Item)
-			found_items = []
-			for name in item.layers:
-				for ref in render_state.Unassined.Children:
-					try:
-						if ref._data.node.assinedDisplayLayer == name:
-							found_items.append(ref)
-							break
-					except:
-						pass
-			cmd = Custom_Widgets.Reparent_Items_Command(render_state.Beauty, found_items)
-			self.undo_stack.push(cmd)
-		# for rs in asset_item.Render_States.Children:
-			# for i, bp in enumerate(rs.Beauty.Children):
-				# if bp is not None:
-					# if bp.type() == 0:
-						# rs.Beauty.removeRow(bp.row())
-		self.sorted_proxy_model.sort()
 	@QT.QtSlot()
 	#----------------------------------------------------------------------
 	def Apply_Current_State_To_Diaplay_Layers(self):

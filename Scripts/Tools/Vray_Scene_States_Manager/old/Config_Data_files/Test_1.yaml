@@ -1,0 +1,215 @@
+!Config_Data
+Part_Sets: !Part_Sets
+  parts:
+  - &id001 !Part_Set {name: Car}
+  - &id002 !Part_Set {name: Doors}
+  - &id003 !Part_Set {name: Fender}
+  - &id004 !Part_Set {name: Headlights}
+  - &id005 !Part_Set {name: TailLights}
+  - &id006 !Part_Set {name: Wheels}
+  - &id007 !Part_Set {name: Glass}
+  - &id008 !Part_Set {name: RoofRack}
+  - &id009 !Part_Set {name: Mirrors}
+  - &id010 !Part_Set {name: Shadow}
+Render_States: !Render_States
+  states:
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links: []
+    name: !!python/unicode 'All Beauty'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    Unassined: !Unassined_Overides
+      links: []
+    name: !!python/unicode 'All Matte'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links: []
+    name: !!python/unicode 'All Invisible'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+    Invisible: !Invisible_Overides
+      links:
+      - *id007
+      - *id008
+      - *id009
+    Matte: !Matte_Overides
+      links:
+      - *id004
+      - *id005
+      - *id006
+    Unassined: !Unassined_Overides
+      links:
+      - *id010
+    name: !!python/unicode '3 In Each'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links:
+      - *id001
+    Invisible: !Invisible_Overides
+      links:
+      - *id003
+    Matte: !Matte_Overides
+      links:
+      - *id002
+    Unassined: !Unassined_Overides
+      links:
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    name: !!python/unicode '1 In Each'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    name: !!python/unicode 'Render set 5'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    name: !!python/unicode 'Render set 6'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    name: !!python/unicode 'Render set 7'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links: []
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+      - *id010
+    name: !!python/unicode 'Render set 8'
+  - !Render_State
+    Beauty: !Beauty_Overides
+      links: []
+    Invisible: !Invisible_Overides
+      links:
+      - *id010
+    Matte: !Matte_Overides
+      links: []
+    Unassined: !Unassined_Overides
+      links:
+      - *id001
+      - *id002
+      - *id003
+      - *id004
+      - *id005
+      - *id006
+      - *id007
+      - *id008
+      - *id009
+    name: !!python/unicode 'Render set 9'

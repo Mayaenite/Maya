@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Vray_Scene_States_Viewer</class>
+ <widget class="QMainWindow" name="Vray_Scene_States_Viewer">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>504</width>
+    <height>646</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QPushButton" name="Update_Button">
+      <property name="text">
+       <string>Update To Version 2</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="rebuild_Render_layer_states_button">
+      <property name="text">
+       <string>Rebuild Render Layer States</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="Asset_Grid_groupBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="title">
+       <string>Asset Grid</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="Asset_Grid" name="Asset_Grid_widget" native="true">
+         <property name="baseSize">
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="Asset_Tree_View" name="entity_tree_view">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>504</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Asset_Tree_View</class>
+   <extends>QTreeView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+   <slots>
+    <signal>ACTIVE_PROXY_INDEX_CHANGED(QModelIndex*)</signal>
+    <signal>ACTIVE_INDEX_CHANGED(QModelIndex*)</signal>
+    <signal>ACTIVE_ITEM_CHANGED(QStandardItem*)</signal>
+    <slot>_run_setup(QMainWindow*)</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>Asset_Grid</class>
+   <extends>QWidget</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+   <container>1</container>
+   <slots>
+    <slot>rebuild_grid(QStandardItem*)</slot>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

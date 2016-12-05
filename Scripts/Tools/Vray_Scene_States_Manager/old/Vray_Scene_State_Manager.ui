@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1346</width>
+    <width>1344</width>
     <height>871</height>
    </rect>
   </property>
@@ -101,9 +101,6 @@
               </item>
               <item>
                <widget class="QPushButton" name="add_child_asset_Button">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
                 <property name="text">
                  <string>Add Child Asset</string>
                 </property>
@@ -187,34 +184,6 @@
               <property name="text">
                <string>Show All Display Layers</string>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QGroupBox" name="Render_States_Filter_groupBox">
-              <property name="title">
-               <string>Filter</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="margin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QLineEdit" name="Render_States_Filter_input"/>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="Favorits_Only_checkBox">
-                 <property name="text">
-                  <string>Favorits Only</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
              </widget>
             </item>
             <item>
@@ -504,6 +473,166 @@
         </layout>
        </widget>
       </widget>
+      <widget class="QGroupBox" name="verticalGroupBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>5</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Active Part Set Item View</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="horizontalWidget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="margin">
+              <number>3</number>
+             </property>
+             <item>
+              <widget class="ToolButton" name="toolButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Display Apperence</string>
+               </property>
+               <property name="popupMode">
+                <enum>QToolButton::InstantPopup</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="Camera_List_ToolButton" name="toolButton_2">
+               <property name="text">
+                <string>Set Active Camera</string>
+               </property>
+               <property name="popupMode">
+                <enum>QToolButton::InstantPopup</enum>
+               </property>
+               <property name="toolButtonStyle">
+                <enum>Qt::ToolButtonTextOnly</enum>
+               </property>
+               <property name="arrowType">
+                <enum>Qt::DownArrow</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="Auto_Frame_Toggle_Button">
+               <property name="text">
+                <string>Auto Frame</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="Maya_Modle_Editor" name="Model_Editor" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>492</width>
+              <height>556</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(0, 0, 0);</string>
+            </property>
+            <property name="Auto_Frame_Value" stdset="0">
+             <bool>false</bool>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_12"/>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+           <property name="margin">
+            <number>1</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="Frame_Selected_Button">
+             <property name="text">
+              <string>Frame Selected</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="Frame_Visable_Button">
+             <property name="text">
+              <string>Frame Visable</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
     <item>
@@ -523,7 +652,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1346</width>
+     <width>1344</width>
      <height>26</height>
     </rect>
    </property>
@@ -682,6 +811,91 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>Maya_Modle_Editor</class>
+   <extends>QWidget</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+   <container>1</container>
+   <slots>
+    <slot>_run_setup(QMainWindow*)</slot>
+    <slot>editor_displayAppearance(QString)</slot>
+    <slot>editor_ActiveOnly(bool)</slot>
+    <slot>editor_set_ignorePanZoom(bool)</slot>
+    <slot>editor_set_twoSidedLighting(bool)</slot>
+    <slot>editor_set_displayAppearance(QString)</slot>
+    <slot>editor_set_wireframeOnShaded(bool)</slot>
+    <slot>editor_set_headsUpDisplay(bool)</slot>
+    <slot>editor_set_selectionHiliteDisplay(bool)</slot>
+    <slot>editor_set_useDefaultMaterial(bool)</slot>
+    <slot>editor_set_wireframeBackingStore(bool)</slot>
+    <slot>editor_set_imagePlane(bool)</slot>
+    <slot>editor_set_backfaceCulling(bool)</slot>
+    <slot>editor_set_xray(bool)</slot>
+    <slot>editor_set_jointXray(bool)</slot>
+    <slot>editor_set_activeComponentsXray(bool)</slot>
+    <slot>editor_set_displayTextures(bool)</slot>
+    <slot>editor_set_smoothWireframe(bool)</slot>
+    <slot>editor_set_lineWidth(double)</slot>
+    <slot>editor_set_textureMaxSize(int)</slot>
+    <slot>editor_set_textureAnisotropic(bool)</slot>
+    <slot>editor_set_textureSampling(int)</slot>
+    <slot>editor_set_textureDisplay(str)</slot>
+    <slot>editor_set_textureHilight(bool)</slot>
+    <slot>editor_set_fogging(bool)</slot>
+    <slot>editor_set_fogSource(QString)</slot>
+    <slot>editor_set_fogMode(QString)</slot>
+    <slot>editor_set_fogDensity(double)</slot>
+    <slot>editor_set_fogEnd(double)</slot>
+    <slot>editor_set_fogStart(double)</slot>
+    <slot>editor_set_shadows(bool)</slot>
+    <slot>editor_set_lowQualityLighting(bool)</slot>
+    <slot>editor_set_occlusionCulling(bool)</slot>
+    <slot>editor_set_nurbsCurves(bool)</slot>
+    <slot>editor_set_nurbsSurfaces(bool)</slot>
+    <slot>editor_set_polymeshes(bool)</slot>
+    <slot>editor_set_subdivSurfaces(bool)</slot>
+    <slot>editor_set_planes(bool)</slot>
+    <slot>editor_set_lights(bool)</slot>
+    <slot>editor_set_cameras(bool)</slot>
+    <slot>editor_set_controlVertices(bool)</slot>
+    <slot>editor_set_grid(bool)</slot>
+    <slot>editor_set_hulls(bool)</slot>
+    <slot>editor_set_joints(bool)</slot>
+    <slot>editor_set_ikHandles(bool)</slot>
+    <slot>editor_set_deformers(bool)</slot>
+    <slot>editor_set_dynamics(bool)</slot>
+    <slot>editor_set_fluids(bool)</slot>
+    <slot>editor_set_hairSystems(bool)</slot>
+    <slot>editor_set_follicles(bool)</slot>
+    <slot>editor_set_nCloths(bool)</slot>
+    <slot>editor_set_nParticles(bool)</slot>
+    <slot>editor_set_nRigids(bool)</slot>
+    <slot>editor_set_dynamicConstraints(bool)</slot>
+    <slot>editor_set_locators(bool)</slot>
+    <slot>editor_set_manipulators(bool)</slot>
+    <slot>editor_set_dimensions(bool)</slot>
+    <slot>editor_set_handles(bool)</slot>
+    <slot>editor_set_pivots(bool)</slot>
+    <slot>editor_set_textures(bool)</slot>
+    <slot>editor_set_strokes(bool)</slot>
+    <slot>editor_set_allObjects(bool)</slot>
+    <slot>editor_set_useInteractiveMode(bool)</slot>
+    <slot>editor_set_activeView(bool)</slot>
+    <slot>editor_set_sortTransparent(bool)</slot>
+    <slot>editor_set_viewSelected(bool)</slot>
+    <slot>editor_addSelected(bool)</slot>
+    <slot>editor_removeSelected(bool)</slot>
+    <slot>editor_noUndo(bool)</slot>
+    <slot>editor_set_transparencyAlgorithm(QString)</slot>
+    <slot>editor_set_lineWidth(float)</slot>
+    <slot>editor_set_fogDensity(float)</slot>
+    <slot>editor_set_fogEnd(float)</slot>
+    <slot>editor_set_fogStart(float)</slot>
+    <slot>Viewfit_Frame_Selected()</slot>
+    <slot>Viewfit_Frame_All()</slot>
+    <slot>set_Auto_Frame_Value(bool)</slot>
+   </slots>
+  </customwidget>
+  <customwidget>
    <class>Entity_Tree_View</class>
    <extends>QTreeView</extends>
    <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
@@ -750,6 +964,16 @@
     <slot>_run_setup(QMainWindow*)</slot>
     <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    </slots>
+  </customwidget>
+  <customwidget>
+   <class>ToolButton</class>
+   <extends>QToolButton</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Camera_List_ToolButton</class>
+   <extends>QToolButton</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -905,7 +1129,7 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>663</x>
+     <x>343</x>
      <y>672</y>
     </hint>
     <hint type="destinationlabel">
@@ -921,7 +1145,7 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>790</x>
+     <x>458</x>
      <y>672</y>
     </hint>
     <hint type="destinationlabel">
@@ -937,7 +1161,7 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1202</x>
+     <x>709</x>
      <y>672</y>
     </hint>
     <hint type="destinationlabel">
@@ -953,8 +1177,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1328</x>
-     <y>672</y>
+     <x>810</x>
+     <y>652</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -989,7 +1213,7 @@
      <y>714</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
+     <x>594</x>
      <y>241</y>
     </hint>
    </hints>
@@ -1005,8 +1229,8 @@
      <y>686</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>457</y>
+     <x>518</x>
+     <y>344</y>
     </hint>
    </hints>
   </connection>
@@ -1021,8 +1245,8 @@
      <y>722</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>673</y>
+     <x>518</x>
+     <y>507</y>
     </hint>
    </hints>
   </connection>
@@ -1037,8 +1261,8 @@
      <y>706</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1329</x>
-     <y>437</y>
+     <x>762</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
@@ -1053,8 +1277,8 @@
      <y>685</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>575</y>
+     <x>459</x>
+     <y>365</y>
     </hint>
    </hints>
   </connection>
@@ -1097,7 +1321,7 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>481</x>
+     <x>210</x>
      <y>644</y>
     </hint>
     <hint type="destinationlabel">
@@ -1133,8 +1357,8 @@
      <y>445</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>620</y>
+     <x>447</x>
+     <y>410</y>
     </hint>
    </hints>
   </connection>
@@ -1145,11 +1369,11 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>643</y>
+     <x>459</x>
+     <y>501</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
+     <x>594</x>
      <y>241</y>
     </hint>
    </hints>
@@ -1161,12 +1385,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>447</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>457</y>
+     <x>518</x>
+     <y>344</y>
     </hint>
    </hints>
   </connection>
@@ -1177,12 +1401,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>447</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>673</y>
+     <x>518</x>
+     <y>507</y>
     </hint>
    </hints>
   </connection>
@@ -1193,12 +1417,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>447</x>
+     <y>410</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1329</x>
-     <y>437</y>
+     <x>762</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
@@ -1235,6 +1459,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>Vray_Scene_State_Manager</sender>
+   <signal>ACTIVATE_RUN_SETUP(QMainWindow*)</signal>
+   <receiver>Model_Editor</receiver>
+   <slot>_run_setup(QMainWindow*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>634</x>
+     <y>492</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1286</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>actionDisplay_Layers_To_Part_Sets</sender>
    <signal>triggered()</signal>
    <receiver>Vray_Scene_State_Manager</receiver>
@@ -1247,6 +1487,118 @@
     <hint type="destinationlabel">
      <x>727</x>
      <y>369</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Auto_Frame_Toggle_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>action_auto_frame_toggle</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1187</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_auto_frame_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Auto_Frame_Toggle_Button</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1187</x>
+     <y>85</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Frame_Selected</sender>
+   <signal>triggered()</signal>
+   <receiver>Model_Editor</receiver>
+   <slot>Viewfit_Frame_Selected()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1065</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Frame_Visable</sender>
+   <signal>triggered()</signal>
+   <receiver>Model_Editor</receiver>
+   <slot>Viewfit_Frame_All()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1065</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Frame_Selected_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>action_Frame_Selected</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1084</x>
+     <y>675</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Frame_Visable_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>action_Frame_Visable</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1329</x>
+     <y>675</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_auto_frame_toggle</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Model_Editor</receiver>
+   <slot>set_Auto_Frame_Value(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1094</x>
+     <y>351</y>
     </hint>
    </hints>
   </connection>
@@ -1289,12 +1641,12 @@
    <slot>Apply_Current_State_To_Diaplay_Layers()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>141</y>
+     <x>338</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>549</x>
-     <y>0</y>
+     <y>-9</y>
     </hint>
    </hints>
   </connection>
@@ -1305,12 +1657,12 @@
    <slot>Show_All_Diaplay_Layers()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>169</y>
+     <x>287</x>
+     <y>154</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
-     <y>0</y>
+     <y>-3</y>
     </hint>
    </hints>
   </connection>
