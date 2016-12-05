@@ -118,6 +118,7 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QtGui.QMainWindow):
 					master_node = None
 			except:
 				master_node = None
+	
 	def update_on_render_layer_Added(self):
 		for file_ref in self.model.File_References.Children:
 			for asset in file_ref.Children:

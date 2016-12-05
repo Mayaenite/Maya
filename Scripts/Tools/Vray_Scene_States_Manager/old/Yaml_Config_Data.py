@@ -202,14 +202,13 @@ class Unassined_Overides(Overides_Container):
 class Render_State(yaml.YAMLObject):
 	yaml_tag = u'!Render_State'
 	#----------------------------------------------------------------------
-	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None, favorit=0):
+	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None):
 		self.name      = name
 		self.parent    = parent
 		self.Unassined = Unassined
 		self.Matte     = Matte
 		self.Invisible = Invisible
 		self.Beauty    = Beauty
-		self.favorit   = favorit
 		isinstance(self.parent, Render_States)
 		
 		if not isinstance(self.Unassined, Unassined_Overides):

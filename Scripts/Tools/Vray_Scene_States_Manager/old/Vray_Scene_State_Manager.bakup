@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Vray_Scene_State_Manager</class>
+ <widget class="QMainWindow" name="Vray_Scene_State_Manager">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>738</width>
+    <height>675</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_6">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="Render_State_Config_Editor_tab">
+       <attribute name="title">
+        <string>Render State Configuration Editor</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <widget class="QGroupBox" name="Active_Asset_groupBox">
+          <property name="title">
+           <string>Active Asset</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="Active_Asset_ComboBox" name="active_asset_comboBox">
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="add_asset_Button">
+             <property name="text">
+              <string>Add Asset</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+          <zorder>add_asset_Button</zorder>
+          <zorder>active_asset_comboBox</zorder>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSplitter" name="Item_Lists_Views_splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="handleWidth">
+           <number>9</number>
+          </property>
+          <widget class="QGroupBox" name="Render_States_groupBox">
+           <property name="title">
+            <string>Render States</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="Render_Layers_groupBox_verticalLayout">
+            <property name="margin">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="Render_States_List_View" name="render_states_view"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QPushButton" name="add_render_state_Button">
+                <property name="text">
+                 <string>Add Render State</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="remove_render_state_Button">
+                <property name="text">
+                 <string>Remove Selected</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QSplitter" name="Overide_States_splitter">
+           <property name="midLineWidth">
+            <number>5</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="opaqueResize">
+            <bool>true</bool>
+           </property>
+           <property name="handleWidth">
+            <number>12</number>
+           </property>
+           <property name="childrenCollapsible">
+            <bool>false</bool>
+           </property>
+           <widget class="QGroupBox" name="Beauty_Overide_groupBox">
+            <property name="title">
+             <string>Beauty</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="Beauty_groupBox_verticalLayout">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="Beauty_Overide_View" name="beauty_overide_view">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::DragDrop</enum>
+               </property>
+               <property name="defaultDropAction">
+                <enum>Qt::MoveAction</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="view_state_type" stdset="0">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="Matte_Overide_groupBox">
+            <property name="title">
+             <string>Matte</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="Matte_groupBox_verticalLayout">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="Matte_Overide_View" name="matte_overide_view">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::DragDrop</enum>
+               </property>
+               <property name="defaultDropAction">
+                <enum>Qt::MoveAction</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="view_state_type" stdset="0">
+                <number>2</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QGroupBox" name="Invisible_Overide_groupBox">
+            <property name="title">
+             <string>Invisible</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="Invisible_groupBox_verticalLayout">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="Invisible_Overide_View" name="invisible_overide_view">
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="dragEnabled">
+                <bool>true</bool>
+               </property>
+               <property name="dragDropMode">
+                <enum>QAbstractItemView::DragDrop</enum>
+               </property>
+               <property name="defaultDropAction">
+                <enum>Qt::MoveAction</enum>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::ExtendedSelection</enum>
+               </property>
+               <property name="view_state_type" stdset="0">
+                <number>3</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+          <widget class="QGroupBox" name="Part_Sets_groupBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>Part Sets</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="Part_Sets_groupBox_verticalLayout">
+            <property name="margin">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="Part_Sets_List_View" name="part_sets_view">
+              <property name="editTriggers">
+               <set>QAbstractItemView::DoubleClicked</set>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::DragDrop</enum>
+              </property>
+              <property name="defaultDropAction">
+               <enum>Qt::MoveAction</enum>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::ExtendedSelection</enum>
+              </property>
+              <property name="view_state_type" stdset="0">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QPushButton" name="add_part_set_Button">
+                <property name="text">
+                 <string>Add Part Set</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="remove_part_sets_Button">
+                <property name="text">
+                 <string>Remove Selected</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Entity Manager</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="Standered_Tree_View" name="treeView"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>738</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuItems">
+    <property name="title">
+     <string>Items</string>
+    </property>
+    <addaction name="actionAdd_Asset"/>
+    <addaction name="actionAdd_Part_Set"/>
+    <addaction name="actionDelete_Parts"/>
+    <addaction name="actionAdd_Render_State"/>
+    <addaction name="actionRemove_Selected_States"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_File"/>
+    <addaction name="actionSave_As"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuItems"/>
+   <addaction name="menuEdit"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAdd_Render_State">
+   <property name="text">
+    <string>Add Render State</string>
+   </property>
+  </action>
+  <action name="actionAdd_Part_Set">
+   <property name="text">
+    <string>Add Part Set</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="actionOpen_File">
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionDelete_Parts">
+   <property name="text">
+    <string>Delete Selected Part Sets</string>
+   </property>
+  </action>
+  <action name="actionRemove_Selected_States">
+   <property name="text">
+    <string>Remove Selected States</string>
+   </property>
+  </action>
+  <action name="actionAdd_Asset">
+   <property name="text">
+    <string>add Asset</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Standered_Tree_View</class>
+   <extends>QTreeView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Render_States_List_View</class>
+   <extends>QListView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+   <slots>
+    <signal>Selected_Render_State_Changed(QModelIndex)</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>Part_Sets_List_View</class>
+   <extends>QListView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Beauty_Overide_View</class>
+   <extends>QListView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Invisible_Overide_View</class>
+   <extends>QListView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Matte_Overide_View</class>
+   <extends>QListView</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>Active_Asset_ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>actionAdd_Part_Set</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>add_Part_Set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionUndo</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>undo_it()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRedo</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>redo_it()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAdd_Render_State</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>add_Render_State()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>483</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>render_states_view</sender>
+   <signal>Selected_Render_State_Changed(QModelIndex)</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Update_On_Render_State_Selection_Changed(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>190</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen_File</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>open_File()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>589</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_As</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>save_File_As()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>589</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDelete_Parts</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Remove_Selected_Part_Sets()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>303</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_Selected_States</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Remove_Selected_Render_States()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>402</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAdd_Asset</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>add_Asset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>402</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>add_render_state_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAdd_Render_State</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>99</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>remove_render_state_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>actionRemove_Selected_States</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>236</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>add_part_set_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAdd_Part_Set</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>583</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>remove_part_sets_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>actionDelete_Parts</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>692</x>
+     <y>627</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>add_asset_Button</sender>
+   <signal>clicked()</signal>
+   <receiver>actionAdd_Asset</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>589</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>active_asset_comboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Update_On_Active_Asset_Changed(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>219</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>630</x>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>add_Part_Set()</slot>
+  <slot>undo_it()</slot>
+  <slot>redo_it()</slot>
+  <slot>add_Render_State()</slot>
+  <slot>Update_On_Render_State_Selection_Changed(QModelIndex)</slot>
+  <slot>open_File()</slot>
+  <slot>save_File_As()</slot>
+  <slot>Remove_Selected_Part_Sets()</slot>
+  <slot>Remove_Selected_Render_States()</slot>
+  <slot>add_Asset()</slot>
+  <slot>Update_On_Active_Asset_Changed(QModelIndex)</slot>
+  <slot>Update_On_Active_Asset_Changed(int)</slot>
+ </slots>
+</ui>

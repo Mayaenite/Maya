@@ -309,8 +309,10 @@ def Build_DataPrep_Tools(shelfName):
 		    ,image      = "alembic_asset_extractor.png"
 		    ,image1     = "alembic_asset_extractor.png"
 		    ,style      = "iconOnly"
-		    ,command    = "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Asset_Extractor()"
-		    ,sourceType = "python" )
+	        ,menuItem   = (("Export" , "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Alembic_Asset_Writer()"), ("Import", "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Alembic_Asset_reader()")), 
+		    # ,command    = "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Asset_Extractor()"
+	        menuItemPython = (0, 1),
+		    sourceType = "python" )
 	# Visibility_Connect_Maker
 	cmds.shelfButton(parent=active_shelf
 	        ,annotation = "Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected"
@@ -372,7 +374,7 @@ def Build_Artist_Tools(shelfName):
             ,sourceType="python")
 	# Vray Scene States Viewer
 	cmds.shelfButton(parent=active_shelf
-            ,annotation="Vray Scene States Viewer" 
+            ,annotation="Vray Scene States Viewer\n\nHOLD DOWN\n\nCTRL + ALT + SHIFT\n\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA\n\n" 
             ,image="vray_scene_states_viewer.png" 
             ,image1="vray_scene_states_viewer.png" 
             ,style="iconOnly" 
@@ -411,7 +413,7 @@ def Build_Artist_Tools(shelfName):
 def Add_Custom_Menu_Items():
 	maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')	
 	Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
-	SelLocatorItem = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform"))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
+	SelLocatorItem = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
 
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")

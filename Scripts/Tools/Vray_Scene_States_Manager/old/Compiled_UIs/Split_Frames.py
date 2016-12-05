@@ -2,12 +2,12 @@
 
 # Form implementation generated from reading ui file 'c:\Users\dloveridge\Documents\AW_Git_Repo\Maya\Scripts\Tools\Vray_Scene_States_Manager\Split_Frames.ui'
 #
-# Created: Wed Jun 15 12:53:55 2016
+# Created: Mon Dec 28 14:16:47 2015
 #      by: pyside-uic 0.2.14 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide import QtCore, QtGui
+from QT import QtCore, QtGui
 
 class Ui_Form(object):
 	def setupUi(self, Form):

@@ -534,10 +534,10 @@ class Add_Render_State_Command(QtGui.QUndoCommand):
 		self.Render_State = Render_State_Item(self.name)
 		self.render_states.appendRow(self.Render_State)
 		collected = []
-		for child_ref in self.render_states.parent().Part_Sets.Children:
-			if not child_ref.data() in collected:
-				collected.append(child_ref.data())
-				ref = Part_Set_Reference_Item(child_ref)
+		for child_ref in self.render_states.parent().find_child_item_types(Part_Set_Reference_Item.ITEM_TYPE):
+			if not child_ref._data.data() in collected:
+				collected.append(child_ref._data.data())
+				ref = Part_Set_Reference_Item(child_ref._data)
 				self.Render_State.Unassined.appendRow( ref )
 
 ########################################################################
@@ -769,8 +769,8 @@ class Asset_Restore_Data(object):
 			for item in [child for child in asset.rowChildren() if isinstance(child, Asset_Item)]:
 				storage = Asset_Restore_Data(view, item)
 				self.restore_data.append(storage)
-		# if _maya_check:
-			# asset.node_removeContainer()
+		if _maya_check:
+			asset.node_removeContainer()
 				
 	
 	def restore(self, parent_asset):
@@ -819,7 +819,7 @@ class Remove_Asset_Command(QtGui.QUndoCommand):
 			self.view.set_Current_Item(self.asset.Parent.rowChildren()[0])
 		
 		self.asset.Render_States.clear_Children()
-		self.asset.Part_Sets.clear_Children()	
+		self.asset.Part_Sets.clear_Children()		
 		self.asset.parent().removeRow(self.row)
 			
 #---------------------------------------------------------------------------------------------------
@@ -832,16 +832,11 @@ class Asset_States_ComboBox(QComboBox):
 		super(Asset_States_ComboBox, self).__init__(parent=parent)
 		self.setModel(asset.Model)
 		self.setRootModelIndex(asset.Render_States.index())
-		self.setEditable(True)
 		self._asset = asset
 		self._maya_forced = False
 		self.setCurrentIndex(0)
 		self.currentIndexChanged.connect(self.update_asset_attribute)
-		items =  [child.data() for child in asset.Render_States.Children]
-		self._c = QT.QtGui.QCompleter(items, self)
-		self._c.setCaseSensitivity(Qt.CaseInsensitive)
-		self.setCompleter(self._c)
-
+		
 	def update_asset_attribute(self):
 		current_render_layer = cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
 		current_index        = self.currentIndex()
@@ -2275,7 +2270,7 @@ class Standered_List_View(QListView):
 		self.render_states_view     = main_window.render_states_view
 		self.asset_tree_view        = main_window.asset_tree_view
 		self.entity_tree_view       = main_window.entity_tree_view
-		# self.model_editor_widget    = main_window.Model_Editor
+		self.model_editor_widget    = main_window.Model_Editor
 		
 		isinstance(self.beauty_overide_view, Beauty_Overide_View)
 		isinstance(self.matte_overide_view, Matte_Overide_View)
@@ -2284,7 +2279,7 @@ class Standered_List_View(QListView):
 		isinstance(self.render_states_view, Render_States_List_View)
 		isinstance(self.asset_tree_view, Asset_Tree_View)
 		isinstance(self.entity_tree_view, Entity_Tree_View)
-		# isinstance(self.model_editor_widget, Maya_Modle_Editor)
+		isinstance(self.model_editor_widget, Maya_Modle_Editor)
 
 	def dragEnterEvent(self,event):
 		super(Standered_List_View,self).dragEnterEvent(event)
@@ -2470,14 +2465,9 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 	#----------------------------------------------------------------------
 	def contextMenuEvent(self, event):
 		win = self.window()
-		menu = QtGui.QMenu(self)		
-		index = self.indexAt(event.pos())
-		item  = self.item_From_Index(index)
-		if index.isValid():
-			item.contextMenuActions(menu)
-		else:
-			menu.addAction(win.actionAdd_Render_State)
-			menu.addAction(win.actionRemove_Selected_States)
+		menu = QtGui.QMenu(self)
+		menu.addAction(win.actionAdd_Render_State)
+		menu.addAction(win.actionRemove_Selected_States)
 		menu.exec_(event.globalPos())
 		
 	#def dragMoveEvent(self, event):
@@ -3878,31 +3868,12 @@ class Render_State_Item(_Named_Data_Item):
 			self.Invisible           = Invisible_Overides_Item()
 			self.Beauty              = Beauty_Overides_Item()
 			self.Unassined           = Unassined_Overides_Item()
-			self.favorit             = 0
 			self.setChild(0, 0, self.Unassined)
 			self.setChild(1, 0, self.Matte)
 			self.setChild(2, 0, self.Invisible)
 			self.setChild(3, 0, self.Beauty)
 		else:
 			self.from_Yaml(render_state, part_sets)
-	#----------------------------------------------------------------------
-	def contextMenuActions(self, menu):
-		action_Set_Fav = QtGui.QAction(menu)
-		if self.favorit:
-			action_Set_Fav.setText("Remove From Favorits")
-			action_Set_Fav.triggered.connect(self.remove_From_Favorit)
-		else:
-			action_Set_Fav.setText("Add To Favorits")
-			action_Set_Fav.triggered.connect(self.add_To_Favorit)
-		menu.addAction(action_Set_Fav)
-	#----------------------------------------------------------------------
-	def add_To_Favorit(self):
-		""""""
-		self.favorit = 1
-	#----------------------------------------------------------------------
-	def remove_From_Favorit(self):
-		""""""
-		self.favorit = 0
 	#----------------------------------------------------------------------
 	def to_Yaml(self, parts):
 		""""""
@@ -3911,7 +3882,7 @@ class Render_State_Item(_Named_Data_Item):
 		Matte        = self.Matte.to_Yaml(parts)
 		Invisible    = self.Invisible.to_Yaml(parts)
 		Beauty       = self.Beauty.to_Yaml(parts)
-		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty, favorit=self.favorit)
+		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty)
 		
 		Unassined.parent = render_state
 		Matte.parent     = render_state
@@ -3927,10 +3898,7 @@ class Render_State_Item(_Named_Data_Item):
 		self.Invisible           = Invisible_Overides_Item(yaml=render_state.Invisible, part_sets=part_sets)
 		self.Beauty              = Beauty_Overides_Item(yaml=render_state.Beauty, part_sets=part_sets)
 		self.Unassined           = Unassined_Overides_Item(yaml=render_state.Unassined, part_sets=part_sets)
-		if not hasattr(render_state, "favorit"):
-			self.favorit             = 0
-		else:
-			self.favorit             = render_state.favorit
+		
 		self.setChild(0, 0, self.Unassined)
 		self.setChild(1, 0, self.Matte)
 		self.setChild(2, 0, self.Invisible)
@@ -3972,13 +3940,6 @@ class Render_State_Item(_Named_Data_Item):
 	@property
 	def Unassined_Parts(self):
 		return self.Unassined.Children
-	#----------------------------------------------------------------------
-	def data(self, role=Data_Roles.DISPLAY):
-		
-		if role == self.Item_Data_Roles.FOREGROUND and self.favorit:
-			return QT.QtGui.QColor(Qt.green)
-		return super(Render_State_Item, self).data(role)
-	
 ########################################################################
 class Reference_Container_Item(_Named_Data_Item):
 	""""""
@@ -4002,10 +3963,9 @@ class Reference_Container_Item(_Named_Data_Item):
 		isinstance(parts,list)
 		for item in self.rowChildren():
 			isinstance(item, Part_Set_Reference_Item)
-			if item.type() != 0:
-				part = item.to_Yaml(parts)
-				if not part == None:
-					container.links.append(part)
+			part = item.to_Yaml(parts)
+			if not part == None:
+				container.links.append(part)
 		return container
 	#----------------------------------------------------------------------
 	def from_Yaml(self, container, part_sets):
@@ -4536,20 +4496,7 @@ class Sorted_Item_Filter_ProxyModel(Base_ProxyModel):
 		if not sourceParent.isValid():
 			return True
 		parentItem = self.sourceModel().itemFromIndex(sourceParent)
-		if parentItem.child(sourceRow) is None:
-			return False
 		if parentItem.child(sourceRow).Type == Render_State_Item.ITEM_TYPE:
 			if parentItem.child(sourceRow).data() == "Default_Empty":
 				return False
-		if parentItem.data() == "Render States":
-			if self.sourceModel().parentWidget().Favorits_Only_checkBox.isChecked():
-				if not parentItem.child(sourceRow).favorit:
-					return False
-			
-			exp = self.filterRegExp()
-			if exp.pattern() != "":
-				if exp.exactMatch(parentItem.child(sourceRow).data()):
-					return True
-				else:
-					return False
 		return True

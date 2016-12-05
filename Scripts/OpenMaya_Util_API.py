@@ -1295,11 +1295,11 @@ class MPLUG(object):
 			res = MPLUG(res)
 		except:
 			res = None
-		return res	
+		return res
 	#----------------------------------------------------------------------
 	def getValue(self):
 		if self.type in MAT.numerical() or self.type == MDT.string:
-			return cmds.getAttr(self.name)
+			return cmds.getAttr(self.node.name+"."+self.plugName)
 		elif self.type in MAT.complex():
 			return list(cmds.getAttr(self.name)[0])
 		elif self.type == "message":
@@ -1784,7 +1784,7 @@ class MPLUG(object):
 	#----------------------------------------------------------------------
 	@property
 	def type(self):
-		return cmds.getAttr(self.name,typ=True )
+		return cmds.getAttr(self.node.name+"."+self.plugName,typ=True)
 	#----------------------------------------------------------------------
 	@property
 	def logicalIndex(self):
@@ -2800,7 +2800,7 @@ class Shading_Node(Maya_Node):
 ########################################################################
 class Shading_Engine(SelectionSet):
 	def __init__(self,name):
-		kwargs = dict(renderable=True,empty=True,text="")
+		kwargs = dict(empty=True,text="")
 		if not cmds.objExists(name):
 			name = cmds.sets(renderable=True,empty=True,text="",name=name)
 		elif not cmds.objectType(name,isType="shadingEngine"):
@@ -2846,7 +2846,14 @@ class Shading_Engine(SelectionSet):
 	@property
 	def members(self):
 		try:
-			return [Maya_Node(m) for m in cmds.listConnections(self._dagSetMembers_plug.name,shapes=True,destination=False,source=True) if not cmds.objectType(m) in ["renderLayer","displayLayer"]]
+			res = []
+			for m in cmds.listConnections(self._dagSetMembers_plug.name,shapes=True,destination=False,source=True):
+				if not cmds.objectType(m) in ["renderLayer","displayLayer"]:
+					try:
+						res.append(Maya_Node(m))
+					except:
+						continue
+			return res
 		except TypeError:
 			return []
 	#----------------------------------------------------------------------
@@ -3303,7 +3310,14 @@ class Container(Maya_Node):
 #----------------------------------------------------------------------
 def strings_to_Maya_Nodes(strings):
 	if isinstance(strings,list):
-		return [Maya_Node(item) for item in strings]
+		res = []
+		for item in strings:
+			try:
+				item = Maya_Node(item)
+				res.append(item)
+			except:
+				continue
+		return res
 	else:
 		return []
 
