@@ -3,6 +3,9 @@ from maya import cmds
 import pymel.core as pm
 import os
 
+MAYA_VERSION           = int(cmds.about(version=True))
+
+"MayaWindow|mainSelectMenu|selAllHierItem"
 def get_Top_Level_Shelf():
 	res = pm.melGlobals['gShelfTopLevel']
 	return res
@@ -411,9 +414,15 @@ def Build_Artist_Tools(shelfName):
         ,sourceType="python")
 
 def Add_Custom_Menu_Items():
-	maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')	
-	Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
+	if MAYA_VERSION == 2017 or MAYA_VERSION == 2016:
+		maya.mel.eval('buildSelectMenu("MayaWindow|mainSelectMenu");')
+		Select_All_By_Type_MenuItem = "MayaWindow|mainSelectMenu|selAllHierItem"
+	else:
+		maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')
+		Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
+		
 	SelLocatorItem = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
+	
 
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")

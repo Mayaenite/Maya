@@ -190,7 +190,9 @@ class Extrator_Shader_List(Extrator_XML_Data):
 							subelement = Extrator_Shading_Engine(id_num=idnum, name=name)
 							self.append(subelement)
 							for member in shader.members:
-								subelement.append(Member_Assinment_Data(member=member))
+								if member.name in filter_members:
+									subelement.append(Member_Assinment_Data(member=member))
+									# print member.name + "Was Not Added To The Shader ssinments Object Does Not Contain A Extractor ID"
 							self._active_shader_names.append(shader.name)
 							break
 				else:

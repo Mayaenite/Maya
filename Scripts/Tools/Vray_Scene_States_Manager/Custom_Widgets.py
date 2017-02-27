@@ -133,7 +133,7 @@ class Named_Data_Object(object):
 #---------------------------------------------------------------------------------------------------
 #_______________________________________________________________________ Undo Commands
 ########################################################################
-class Active_Asset_Change_Command(QtGui.QUndoCommand):
+class Active_Asset_Change_Command(QT.QUndoCommand):
 	def __init__(self, view, current, previous, parent=None):
 		isinstance(view, Asset_Tree_View)
 		isinstance(previous, _Base_Item)
@@ -180,7 +180,7 @@ class Active_Asset_Change_Command(QtGui.QUndoCommand):
 			self.view.set_Current_Item(self.current)
 			
 ########################################################################
-class Selection_Change_Command(QtGui.QUndoCommand):
+class Selection_Change_Command(QT.QUndoCommand):
 	def __init__(self, view, current, previous, parent=None):
 		previous_name = name_or_none(previous)
 		current_name  = name_or_none(current)
@@ -202,7 +202,7 @@ class Selection_Change_Command(QtGui.QUndoCommand):
 			self.view.set_Current_Item(self.current)
 			
 ########################################################################
-class Rename_Item_Command(QtGui.QUndoCommand):
+class Rename_Item_Command(QT.QUndoCommand):
 	def __init__(self, item, newName, parent=None):
 		super(Rename_Item_Command, self).__init__("Reparent Items")
 		self.newName     = newName
@@ -218,7 +218,7 @@ class Rename_Item_Command(QtGui.QUndoCommand):
 
 
 ########################################################################
-class Reparent_Items_Command(QtGui.QUndoCommand):
+class Reparent_Items_Command(QT.QUndoCommand):
 	def __init__(self, newParent, items, parent=None):
 		super(Reparent_Items_Command, self).__init__("Reparent Items")
 		self.items         =  [self.Item_Data(item, newParent) for item in items]
@@ -256,7 +256,7 @@ class Reparent_Items_Command(QtGui.QUndoCommand):
 
 
 ########################################################################
-class Move_Part_Set_Items_Command(QtGui.QUndoCommand):
+class Move_Part_Set_Items_Command(QT.QUndoCommand):
 	def __init__(self, newParent, items, parent=None):
 		super(Move_Part_Set_Items_Command, self).__init__("Move Part Set Items")
 		self.items         =  [self.Item_Data(item, newParent) for item in items]
@@ -339,7 +339,7 @@ class Move_Part_Set_Items_Command(QtGui.QUndoCommand):
 
 
 ########################################################################
-class Add_Asset_Command(QtGui.QUndoCommand):
+class Add_Asset_Command(QT.QUndoCommand):
 	def __init__(self, asset, name=None, parent=None):
 		super(Add_Asset_Command, self).__init__("Add Asset")
 		isinstance(asset, Asset_Item)
@@ -374,7 +374,7 @@ class Add_Asset_Command(QtGui.QUndoCommand):
 		self.add_state_cmd.redo()
 		
 ########################################################################
-class Add_Part_Set_Command(QtGui.QUndoCommand):
+class Add_Part_Set_Command(QT.QUndoCommand):
 	def __init__(self, single, asset, name=None, parent=None):
 		super(Add_Part_Set_Command, self).__init__("Add Part Set")
 		isinstance(asset,Asset_Item)
@@ -421,7 +421,7 @@ class Add_Part_Set_Command(QtGui.QUndoCommand):
 		self.single.emit(self.PartSet)
 		
 ########################################################################
-class Remove_Part_Set_Command(QtGui.QUndoCommand):
+class Remove_Part_Set_Command(QT.QUndoCommand):
 	def __init__(self, view, parts, parent=None):
 		super(Remove_Part_Set_Command, self).__init__("Add Part Set")
 		asset = view.asset_tree_view.current_item()
@@ -515,7 +515,7 @@ class Remove_Part_Set_Command(QtGui.QUndoCommand):
 					cmds.warning("was Unable to Remove part Set")
 
 ########################################################################
-class Add_Render_State_Command(QtGui.QUndoCommand):
+class Add_Render_State_Command(QT.QUndoCommand):
 	def __init__(self, asset, name=None, parent=None):
 		super(Add_Render_State_Command, self).__init__("Add Remder State")
 		isinstance(asset, Asset_Item)
@@ -541,7 +541,7 @@ class Add_Render_State_Command(QtGui.QUndoCommand):
 				self.Render_State.Unassined.appendRow( ref )
 
 ########################################################################
-class Duplacate_Render_State_Command(QtGui.QUndoCommand):
+class Duplacate_Render_State_Command(QT.QUndoCommand):
 	def __init__(self, render_state, parent=None):
 		super(Duplacate_Render_State_Command, self).__init__("Add Remder State")
 		isinstance(render_state, Render_State_Item)
@@ -560,7 +560,7 @@ class Duplacate_Render_State_Command(QtGui.QUndoCommand):
 
 			
 ########################################################################
-class Remove_Render_State_Command(QtGui.QUndoCommand):
+class Remove_Render_State_Command(QT.QUndoCommand):
 	def __init__(self, view, states, parent=None):
 		super(Remove_Render_State_Command, self).__init__("Remove Render State")
 		asset                   = view.asset_tree_view.current_item()
@@ -791,7 +791,7 @@ class Asset_Restore_Data(object):
 		return asset
 	
 ########################################################################
-class Remove_Asset_Command(QtGui.QUndoCommand):
+class Remove_Asset_Command(QT.QUndoCommand):
 	def __init__(self, view, asset=""):
 		super(Remove_Asset_Command, self).__init__("Remove Assets")
 		if not isinstance(asset, str):
@@ -838,7 +838,7 @@ class Asset_States_ComboBox(QComboBox):
 		self.setCurrentIndex(0)
 		self.currentIndexChanged.connect(self.update_asset_attribute)
 		items =  [child.data() for child in asset.Render_States.Children]
-		self._c = QT.QtGui.QCompleter(items, self)
+		self._c = QT.QCompleter(items, self)
 		self._c.setCaseSensitivity(Qt.CaseInsensitive)
 		self.setCompleter(self._c)
 
@@ -868,15 +868,15 @@ class Asset_States_ComboBox(QComboBox):
 			self.setCurrentIndex(0)
 		
 ########################################################################
-class Asset_Frame(QtGui.QFrame):
+class Asset_Frame(QT.QFrame):
 	def __init__(self, asset, parent=None):
 		isinstance(asset, Asset_Item)
 		super(Asset_Frame, self).__init__(parent=parent)
-		self.setFrameShape(QtGui.QFrame.Box)
-		self.setFrameShadow(QtGui.QFrame.Plain)
+		self.setFrameShape(QT.QFrame.Box)
+		self.setFrameShadow(QT.QFrame.Plain)
 		
-		self.verticalLayout = QtGui.QVBoxLayout(self)
-		self.asset_name     = QtGui.QLabel(self)
+		self.verticalLayout = QT.QVBoxLayout(self)
+		self.asset_name     = QT.QLabel(self)
 		self.asset_states   = Asset_States_ComboBox(asset, self)
 		
 		self.asset_name.setAlignment(QtCore.Qt.AlignCenter)
@@ -886,11 +886,11 @@ class Asset_Frame(QtGui.QFrame):
 		self.verticalLayout.addWidget(self.asset_states)
 		
 ########################################################################
-class Asset_Grid(QtGui.QWidget):
+class Asset_Grid(QT.QWidget):
 	def __init__(self, parent=None):
 		super(Asset_Grid, self).__init__(parent=parent)
 		
-		self.gridLayout  = QtGui.QGridLayout(self)
+		self.gridLayout  = QT.QGridLayout(self)
 		self.items = []
 		self.asset_row = 0
 		self.asset_column = 0
@@ -905,9 +905,9 @@ class Asset_Grid(QtGui.QWidget):
 			self.asset_column = 0
 			self.asset_row += 1
 
-	@QtSlot(QtGui.QStandardItem)
+	@QtSlot(QT.QStandardItem)
 	def build_Master_Assets_Grid(self, root_item):
-		if isinstance(root_item, QT.QtGui.QStandardItem):
+		if isinstance(root_item, QT.QStandardItem):
 			if len(self.items):
 				for item in  self.items:
 					self.gridLayout.removeWidget(item)
@@ -924,7 +924,7 @@ class Asset_Grid(QtGui.QWidget):
 						if len(asset.Render_States.Children):
 							self.add_asset_item(asset)
 		
-	@QtSlot(QtGui.QStandardItem)
+	@QtSlot(QT.QStandardItem)
 	def rebuild_grid(self, file_refence_item):
 		if isinstance(file_refence_item, File_Reference_Item):
 			if len(self.items):
@@ -956,13 +956,13 @@ class ComboBox(QComboBox):
 			self.window().undo_stack.push(cmd)
 			self._last_active_index = self.currentIndex()
 ########################################################################
-class GroupBox(QtGui.QGroupBox):
+class GroupBox(QT.QGroupBox):
 	def __init__(self,*args,**kwargs):
 		super(GroupBox,self).__init__(*args,**kwargs)
 		
 ########################################################################
 class Active_Refence_ComboBox(QComboBox):
-	CURRENT_REFERENCE_CHANGED =  QtSignal(QtGui.QStandardItem)
+	CURRENT_REFERENCE_CHANGED =  QtSignal(QT.QStandardItem)
 	def __init__(self,*args,**kwargs):
 		super(Active_Refence_ComboBox,self).__init__(*args,**kwargs)
 		self.currentIndexChanged.connect(self.current_reference_changed)
@@ -975,12 +975,12 @@ class Active_Refence_ComboBox(QComboBox):
 			self.CURRENT_REFERENCE_CHANGED.emit(item)
 	
 ########################################################################
-class Asset_Line_Edit(QtGui.QLineEdit):
+class Asset_Line_Edit(QT.QLineEdit):
 	def __init__(self,*args,**kwargs):
 		super(Asset_Line_Edit,self).__init__(*args,**kwargs)
 		
 ########################################################################
-class Yaml_Output_Display(QtGui.QTextEdit):
+class Yaml_Output_Display(QT.QTextEdit):
 	def __init__(self,*args,**kwargs):
 		super(Yaml_Output_Display,self).__init__(*args,**kwargs)
 		
@@ -1005,11 +1005,11 @@ class Active_Asset_ComboBox(ComboBox):
 	def hidePopup(self):
 		return super(Active_Asset_ComboBox,self).hidePopup()
 ########################################################################
-class ToolButton(QtGui.QToolButton):
+class ToolButton(QT.QToolButton):
 	""""""
 	def __init__(self,*args,**kwargs):
 		super(ToolButton,self).__init__(*args,**kwargs)
-		self.setMenu(QtGui.QMenu("Display Apperence"))
+		self.setMenu(QT.QMenu("Display Apperence"))
 		self.make_menu()
 		self.triggered.connect(self.set_display)
 		
@@ -1020,16 +1020,16 @@ class ToolButton(QtGui.QToolButton):
 			
 	def make_menu(self):
 		for val in  ["wireframe", "points", "boundingBox", "smoothShaded", "flatShaded"]:
-			action = QtGui.QAction(self)
+			action = QT.QAction(self)
 			action.setText(val)
 			self.menu().addAction(action)
 		
 ########################################################################
-class Camera_List_ToolButton(QtGui.QToolButton):
+class Camera_List_ToolButton(QT.QToolButton):
 	""""""
 	def __init__(self,*args,**kwargs):
 		super(Camera_List_ToolButton,self).__init__(*args,**kwargs)
-		self.setMenu(QtGui.QMenu("Set Active Camera", self))
+		self.setMenu(QT.QMenu("Set Active Camera", self))
 		if _maya_check:
 			self.make_menu()
 			self.triggered.connect(self.set_cam)
@@ -1048,7 +1048,7 @@ class Camera_List_ToolButton(QtGui.QToolButton):
 			
 	def make_menu(self):
 		menu   = self.menu()
-		children = self.findChildren(QtGui.QAction)
+		children = self.findChildren(QT.QAction)
 		if isinstance(children, list):
 			for child in children:
 				data = child.data()
@@ -1061,8 +1061,8 @@ class Camera_List_ToolButton(QtGui.QToolButton):
 		for cam in Scripts.NodeCls.M_Nodes.strings_to_MNODES(cmds.ls(type="camera")):
 			cam_parent = cam.get_parent()
 			action_name = "action_" + cam_parent.nice_name
-			if not self.findChild(QtGui.QAction, action_name):
-				action = QtGui.QAction(self)
+			if not self.findChild(QT.QAction, action_name):
+				action = QT.QAction(self)
 				action.setObjectName(action_name)
 				action.setData([cam, cam.nice_name])
 				action.setText(cam_parent.nice_name)
@@ -1074,7 +1074,7 @@ class Camera_List_ToolButton(QtGui.QToolButton):
 #---------------------------------------------------------------------------------------------------
 #_______________________________________________________________________ Maya Widgets
 ########################################################################
-class Maya_Modle_Editor(QtGui.QWidget):
+class Maya_Modle_Editor(QT.QWidget):
 	""""""
 	#----------------------------------------------------------------------
 	def __init__(self, *args, **kwargs):
@@ -1082,10 +1082,10 @@ class Maya_Modle_Editor(QtGui.QWidget):
 		super(Maya_Modle_Editor, self).__init__(*args, **kwargs)
 		self.m_editor =  None
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QMainWindow)
+	@QtSlot(QT.QMainWindow)
 	def _run_setup(self, main_window):
 		""""""
-		isinstance(main_window, QtGui.QMainWindow)
+		isinstance(main_window, QT.QMainWindow)
 		self.main_window            = main_window
 		self.beauty_overide_view    = main_window.beauty_overide_view
 		self.matte_overide_view     = main_window.matte_overide_view
@@ -2231,10 +2231,10 @@ class Standered_Table_View(QTableView):
 		"""Constructor"""
 		super(Standered_Table_View, self).__init__(*args, **kwargs)
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QMainWindow)
+	@QtSlot(QT.QMainWindow)
 	def _run_setup(self, main_window):
 		""""""
-		isinstance(main_window, QtGui.QMainWindow)
+		isinstance(main_window, QT.QMainWindow)
 		self.main_window            = main_window
 		self.beauty_overide_view    = main_window.beauty_overide_view
 		self.matte_overide_view     = main_window.matte_overide_view
@@ -2263,10 +2263,10 @@ class Standered_List_View(QListView):
 		super(Standered_List_View, self).__init__(*args, **kwargs)
 		
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QMainWindow)
+	@QtSlot(QT.QMainWindow)
 	def _run_setup(self, main_window):
 		""""""
-		isinstance(main_window, QtGui.QMainWindow)
+		isinstance(main_window, QT.QMainWindow)
 		self.main_window            = main_window
 		self.beauty_overide_view    = main_window.beauty_overide_view
 		self.matte_overide_view     = main_window.matte_overide_view
@@ -2298,7 +2298,7 @@ class Filtered_Proxy_List_View(Standered_List_View):
 	""""""
 	ACTIVE_PROXY_INDEX_CHANGED = QtSignal(QtCore.QModelIndex)
 	ACTIVE_INDEX_CHANGED       = QtSignal(QtCore.QModelIndex)
-	ACTIVE_ITEM_CHANGED        = QtSignal(QtGui.QStandardItem)
+	ACTIVE_ITEM_CHANGED        = QtSignal(QT.QStandardItem)
 	SELECTED_ITEMS_CHANGED     = QtSignal(list)
 	ITEM_MEMBERES_SELECTED   = QtSignal(list)
 	ITEM_MEMBERES_DESELECTED = QtSignal(list)
@@ -2322,7 +2322,7 @@ class Filtered_Proxy_List_View(Standered_List_View):
 		isinstance(index, QtCore.QModelIndex)
 		return index
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def set_Current_Item(self, item):
 		index = self.Model.mapFromSource(item.index())
 		self.setCurrentIndex(index)
@@ -2381,7 +2381,7 @@ class Filtered_Proxy_List_View(Standered_List_View):
 		""""""
 		return self.Model.mapFromSource(item.index())
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def set_Root_Item(self, item):
 		""""""
 		index = self.item_To_Destination_Index(item)
@@ -2442,7 +2442,7 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 	""""""
 	Selected_Render_State_Changed = QtSignal(QtCore.QModelIndex)
 	ACTIVE_INDEX_CHANGED          = QtSignal(QtCore.QModelIndex)
-	ACTIVE_ITEM_CHANGED           = QtSignal(QtGui.QStandardItem)
+	ACTIVE_ITEM_CHANGED           = QtSignal(QT.QStandardItem)
 	
 	#----------------------------------------------------------------------
 	def __init__(self, *args, **kwargs):
@@ -2460,7 +2460,7 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 		res = super(Render_States_List_View, self).currentChanged(current, previous)
 	
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def Update_On_Active_Item_Changed(self, item):
 		if item.Type == Asset_Item.ITEM_TYPE:
 			isinstance(item, Asset_Item)
@@ -2470,7 +2470,7 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 	#----------------------------------------------------------------------
 	def contextMenuEvent(self, event):
 		win = self.window()
-		menu = QtGui.QMenu(self)		
+		menu = QT.QMenu(self)		
 		index = self.indexAt(event.pos())
 		item  = self.item_From_Index(index)
 		if index.isValid():
@@ -2503,7 +2503,7 @@ class Part_Sets_List_View(Filtered_Proxy_List_View):
 		super(Part_Sets_List_View, self).__init__(*args, **kwargs)
 		
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def Update_On_Active_Item_Changed(self, item):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
@@ -2517,7 +2517,7 @@ class Part_Sets_List_View(Filtered_Proxy_List_View):
 		win = self.window()
 		index = self.indexAt(event.pos())
 		item  = self.item_From_Index(index)
-		menu = QtGui.QMenu(self)
+		menu = QT.QMenu(self)
 		menu.addAction(win.actionAdd_Part_Set)
 		menu.addAction(win.actionDelete_Parts)
 		if index.isValid():
@@ -2548,7 +2548,7 @@ class Beauty_Overide_View(Filtered_Proxy_List_View):
 		super(Beauty_Overide_View, self).__init__(*args, **kwargs)
 		
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def Update_On_Active_Item_Changed(self, item):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
@@ -2577,7 +2577,7 @@ class Invisible_Overide_View(Filtered_Proxy_List_View):
 		"""Constructor"""
 		super(Invisible_Overide_View, self).__init__(*args, **kwargs)
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def Update_On_Active_Item_Changed(self, item):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
@@ -2605,7 +2605,7 @@ class Matte_Overide_View(Filtered_Proxy_List_View):
 		"""Constructor"""
 		super(Matte_Overide_View, self).__init__(*args, **kwargs)
 	#----------------------------------------------------------------------
-	@QT.QtSlot(QtGui.QStandardItem)
+	@QT.QtSlot(QT.QStandardItem)
 	def Update_On_Active_Item_Changed(self, item):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
@@ -2637,10 +2637,10 @@ class Standered_Tree_View(QTreeView):
 		super(Standered_Tree_View, self).__init__(*args, **kwargs)
 
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QMainWindow)
+	@QtSlot(QT.QMainWindow)
 	def _run_setup(self, main_window):
 		""""""
-		isinstance(main_window, QtGui.QMainWindow)
+		isinstance(main_window, QT.QMainWindow)
 		self.main_window            = main_window
 		self.beauty_overide_view    = main_window.beauty_overide_view
 		self.matte_overide_view     = main_window.matte_overide_view
@@ -2663,11 +2663,11 @@ class Filtered_Proxy_Tree_View(Standered_Tree_View):
 	""""""
 	ACTIVE_PROXY_INDEX_CHANGED = QtSignal(QtCore.QModelIndex)
 	ACTIVE_INDEX_CHANGED       = QtSignal(QtCore.QModelIndex)
-	ACTIVE_ITEM_CHANGED        = QtSignal(QtGui.QStandardItem)
+	ACTIVE_ITEM_CHANGED        = QtSignal(QT.QStandardItem)
 	#----------------------------------------------------------------------
 	def model(self):
 		res = super(Filtered_Proxy_Tree_View, self).model()
-		isinstance(res, QtGui.QSortFilterProxyModel)
+		isinstance(res, QT.QSortFilterProxyModel)
 		return res
 	#----------------------------------------------------------------------
 	def source_Model(self):
@@ -2708,7 +2708,7 @@ class Filtered_Proxy_Tree_View(Standered_Tree_View):
 			res.append(item)
 		return res
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QStandardItem)
+	@QtSlot(QT.QStandardItem)
 	def set_Current_Item(self, item):
 		index = self.Model.mapFromSource(item.index())
 		self.setCurrentIndex(index)
@@ -2722,7 +2722,7 @@ class Filtered_Proxy_Tree_View(Standered_Tree_View):
 		""""""
 		return self.Model.mapFromSource(item.index())
 	#----------------------------------------------------------------------
-	@QtSlot(QtGui.QStandardItem)
+	@QtSlot(QT.QStandardItem)
 	def set_Root_Item(self, item):
 		""""""
 		index = self.item_To_Destination_Index(item)
@@ -2768,7 +2768,7 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 	""""""
 	ACTIVE_PROXY_INDEX_CHANGED = QtSignal(QtCore.QModelIndex)
 	ACTIVE_INDEX_CHANGED       = QtSignal(QtCore.QModelIndex)
-	ACTIVE_ITEM_CHANGED        = QtSignal(QtGui.QStandardItem)
+	ACTIVE_ITEM_CHANGED        = QtSignal(QT.QStandardItem)
 	#----------------------------------------------------------------------
 	def __init__(self, *args, **kwargs):
 		"""Constructor"""
@@ -2822,6 +2822,19 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 			
 	#----------------------------------------------------------------------
 	@QtSlot()
+	def delete_Empty_Part_Sets(self):
+		asset  = self.current_item()
+		parent = asset.Part_Sets
+		empty_items = []
+		for child in parent.Children:
+			if not len(child.node_memberNames):
+				empty_items.append(child)
+		if len(empty_items):
+			cmd = Remove_Part_Set_Command(self, empty_items)
+			self.window().undo_stack.push(cmd)
+	
+	#----------------------------------------------------------------------
+	@QtSlot()
 	def delete_Selected_Render_States(self):
 		items = self.render_states_view.selected_Items()
 		if len(items):
@@ -2832,7 +2845,7 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 	@QT.QtSlot(QtCore.QModelIndex, QtCore.QModelIndex)
 	def Update_On_Selection_Changed(self, current, previous):
 		win = self.window()
-		if isinstance(win, QtGui.QDockWidget):
+		if isinstance(win, QT.QDockWidget):
 			win = win.parentWidget()
 		
 		current_item  = self.item_From_Index(current)
@@ -2877,7 +2890,7 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 		item  = self.item_From_Index(index)
 		if index.isValid():
 			if isinstance(item.model(), Vray_Scene_State_Manager_Item_Model):
-				menu = QtGui.QMenu(self)
+				menu = QT.QMenu(self)
 				if _maya_check:
 					item.contextMenuActions(menu)
 				menu.exec_(event.globalPos())		
@@ -3887,7 +3900,7 @@ class Render_State_Item(_Named_Data_Item):
 			self.from_Yaml(render_state, part_sets)
 	#----------------------------------------------------------------------
 	def contextMenuActions(self, menu):
-		action_Set_Fav = QtGui.QAction(menu)
+		action_Set_Fav = QT.QAction(menu)
 		if self.favorit:
 			action_Set_Fav.setText("Remove From Favorits")
 			action_Set_Fav.triggered.connect(self.remove_From_Favorit)
@@ -3976,7 +3989,7 @@ class Render_State_Item(_Named_Data_Item):
 	def data(self, role=Data_Roles.DISPLAY):
 		
 		if role == self.Item_Data_Roles.FOREGROUND and self.favorit:
-			return QT.QtGui.QColor(Qt.green)
+			return QT.QColor(Qt.green)
 		return super(Render_State_Item, self).data(role)
 	
 ########################################################################
@@ -4172,22 +4185,22 @@ class Asset_Item(Maya_Asset_Item):
 				
 	#----------------------------------------------------------------------
 	def contextMenuActions(self, menu):
-		action_selected_Set = QtGui.QAction(menu)
+		action_selected_Set = QT.QAction(menu)
 		action_selected_Set.setText("Add Selected To Container")
 		action_selected_Set.triggered.connect(self.node_addSelectedNodes)
 		menu.addAction(action_selected_Set)
 		
-		action_selected_members = QtGui.QAction(menu)
+		action_selected_members = QT.QAction(menu)
 		action_selected_members.setText("Select All Descendents")
 		action_selected_members.triggered.connect(self.node_select_All_Descendents)
 		menu.addAction(action_selected_members)
 		
-		action_include_selected = QtGui.QAction(menu)
+		action_include_selected = QT.QAction(menu)
 		action_include_selected.setText("Select Transform Descendents")
 		action_include_selected.triggered.connect(self.node_select_Transform_Descendents)
 		menu.addAction(action_include_selected)
 		
-		action_remove_selected = QtGui.QAction(menu)
+		action_remove_selected = QT.QAction(menu)
 		action_remove_selected.setText("Select Container Contents")
 		action_remove_selected.triggered.connect(self.node_select_Container_Contents)
 		menu.addAction(action_remove_selected)
@@ -4257,22 +4270,22 @@ class Part_Set_Reference_Item(_Reference_Item):
 		isinstance(self._data, Part_Set_Item)
 	#----------------------------------------------------------------------
 	def contextMenuActions(self, menu):
-		action_selected_Set = QtGui.QAction(menu)
+		action_selected_Set = QT.QAction(menu)
 		action_selected_Set.setText("select Maya Node")
 		action_selected_Set.triggered.connect(self._data.node_select_set)
 		menu.addAction(action_selected_Set)
 		
-		action_selected_members = QtGui.QAction(menu)
+		action_selected_members = QT.QAction(menu)
 		action_selected_members.setText("Select Maya Members")
 		action_selected_members.triggered.connect(self._data.node_select_members)
 		menu.addAction(action_selected_members)
 		
-		action_include_selected = QtGui.QAction(menu)
+		action_include_selected = QT.QAction(menu)
 		action_include_selected.setText("Include Selected")
 		action_include_selected.triggered.connect(self._data._data.include_Selected)
 		menu.addAction(action_include_selected)
 		
-		action_remove_selected = QtGui.QAction(menu)
+		action_remove_selected = QT.QAction(menu)
 		action_remove_selected.setText("Remove Selected")
 		action_remove_selected.triggered.connect(self._data._data.remove_selected)
 		menu.addAction(action_remove_selected)

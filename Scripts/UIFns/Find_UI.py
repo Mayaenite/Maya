@@ -6,12 +6,12 @@ import maya.OpenMayaUI as apiUI
 
 def getMayaWindow():
 	"""
-	Get the main Maya window as a QtGui.QMainWindow instance
-	@return: QtGui.QMainWindow instance of the top level Maya windows
+	Get the main Maya window as a QT.QMainWindow instance
+	@return: QT.QMainWindow instance of the top level Maya windows
 	"""
 	ptr = apiUI.MQtUtil.mainWindow()
 	if ptr is not None:
-		return QT.wraperfn(long(ptr), QtGui.QWidget)
+		return QT.wraperfn(long(ptr), QT.QWidget)
 
 def toQtObject(mayaName):
 	"""
@@ -26,6 +26,6 @@ def toQtObject(mayaName):
 	if ptr is None:
 		ptr = apiUI.MQtUtil.findMenuItem(mayaName)
 	if ptr is not None:
-		res = QT.wraperfn(long(ptr), QtGui.QWidget)
-	isinstance(res, QtGui.QWidget)
+		res = QT.wraperfn(long(ptr), QT.QWidget)
+	isinstance(res, QT.QWidget)
 	return res
