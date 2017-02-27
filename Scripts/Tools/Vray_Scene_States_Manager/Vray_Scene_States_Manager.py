@@ -4,13 +4,18 @@ import yaml
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
-import Compiled_UIs.Vray_Scene_State_Manager
+import maya.cmds as cmds
+if int(cmds.about(version=True)) == 2017:
+	import Compiled_UIs.Vray_Scene_State_Manager
+	Compiled_Vray_Scene_State_Manager = Compiled_UIs.Vray_Scene_State_Manager
+else:
+	import Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
+	Compiled_Vray_Scene_State_Manager = Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
 try:
 	_maya_check = True
 	import Scripts.UIFns.Find_UI
 	import Scripts.Global_Constants.Nodes
 	import Scripts.NodeCls.M_Nodes
-	import maya.cmds as cmds
 except ImportError as  e:
 	print e
 	_maya_check = False
@@ -28,11 +33,13 @@ uic       = QT.uic
 
 
 
+# if int(cmds.about(version=True)) == 2017:
+	# ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Manager.ui")
+# else:
+	# ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Manager.ui")
+# uiform, uibase = uic.loadUiType(ui_file)
 
-ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Manager.ui")
-uiform, uibase = uic.loadUiType(ui_file)
-
-isinstance(uiform, Compiled_UIs.Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+# isinstance(uiform, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 
 class Render_State_Layer(object):
 	
@@ -85,28 +92,28 @@ class Render_State_Layer(object):
 			cmds.refresh(f=True)
 			
 ########################################################################
-# uiform, QtGui.QMainWindow
-#class Vray_Scene_States_Manager_MainWindow(uiform, QtGui.QMainWindow):
-class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager,QtGui.QMainWindow):
-	ACTIVATE_RUN_SETUP     = QT.QtSignal(QtGui.QMainWindow)
+# uiform, QT.QMainWindow
+#class Vray_Scene_States_Manager_MainWindow(uiform, QT.QMainWindow):
+class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager,QT.QMainWindow):
+	ACTIVATE_RUN_SETUP     = QT.QtSignal(QT.QMainWindow)
 	PART_SET_DELEATED      = QT.QtSignal((int,),(str,))
-	PART_SET_CREATED       = QT.QtSignal((Custom_Widgets.Part_Set_Item,), (QtGui.QStandardItem,),(QtCore.QModelIndex,))
+	PART_SET_CREATED       = QT.QtSignal((Custom_Widgets.Part_Set_Item,), (QT.QStandardItem,),(QtCore.QModelIndex,))
 	RENDER_STATE_DELEATED  = QT.QtSignal((int,),(str,))
-	RENDER_STATE_CREATED   = QT.QtSignal((Custom_Widgets.Render_State_Item,), (QtGui.QStandardItem,),(QtCore.QModelIndex,))
+	RENDER_STATE_CREATED   = QT.QtSignal((Custom_Widgets.Render_State_Item,), (QT.QStandardItem,),(QtCore.QModelIndex,))
 	ASSET_DELEATED         = QT.QtSignal((int,),(str,))
-	ASSET_CREATED          = QT.QtSignal((Custom_Widgets.Asset_Item,), (QtGui.QStandardItem,),(QtCore.QModelIndex,))
+	ASSET_CREATED          = QT.QtSignal((Custom_Widgets.Asset_Item,), (QT.QStandardItem,),(QtCore.QModelIndex,))
 	_Enable_Model_Editor   = False
 	#----------------------------------------------------------------------
 	def __init__(self, parent=None):
 		if parent == None and _maya_check:
 			parent = Scripts.UIFns.Find_UI.getMayaWindow()
-		isinstance(self, Compiled_UIs.Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 		super(Vray_Scene_States_Manager_MainWindow,self).__init__(parent)
 		self.setupUi(self)
 		self.ACTIVATE_RUN_SETUP.emit(self)
 		# self.verticalGroupBox.hide()
 		self.entity_tree_view.hide()
-		self.undo_stack =  QtGui.QUndoStack()
+		self.undo_stack =  QT.QUndoStack()
 		
 		if self._Enable_Model_Editor:
 			self.part_sets_view.ITEM_MEMBERES_SELECTED.connect(self.add_Objects_To_Model_Editor)
@@ -134,7 +141,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		self.render_layer_helper_button.clicked.connect(self.Construct_Render_Layer_From_Render_State)
 		self.isolateSelect_Button.toggled.connect(self.isolate_Select_Render_State)
 		self.render_states_view.clicked.connect(self.update_isolate_Select_Render_State)
-		self.actionLoadPickle_Data = QtGui.QAction(self)
+		self.actionLoadPickle_Data = QT.QAction(self)
 		self.actionLoadPickle_Data.setEnabled(True)
 		self.actionLoadPickle_Data.setObjectName("actionLoadPickle_Data")
 		self.actionLoadPickle_Data.setText("Load VG Data")
@@ -143,7 +150,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		self.Render_States_Filter_input.textChanged.connect(self.update_on_render_states_filter_Changed)
 		self.Favorits_Only_checkBox.clicked.connect(self.update_on_render_states_filter_Changed)
 		if cmds.objExists("VG_Model_BuilderScriptNode"):
-			self.actionDumpPickle_Data = QtGui.QAction(self)
+			self.actionDumpPickle_Data = QT.QAction(self)
 			self.actionDumpPickle_Data.setEnabled(True)
 			self.actionDumpPickle_Data.setObjectName("actionDumpPickle_Data")
 			self.actionDumpPickle_Data.setText("Dumb VG Data")
@@ -184,7 +191,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		self.asset_tree_view.set_Root_Item(self.model.Assets)
 	###----------------------------------------------------------------------
 	##def contextMenuEvent(self, event):
-		##menu = QtGui.QMenu(self)
+		##menu = QT.QMenu(self)
 		##menu.addAction(self.actionAdd_Part_Set)
 		##menu.addAction(self.actionAdd_Render_State)
 		##menu.exec_(event.globalPos())
@@ -215,6 +222,13 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 	@QT.QtSlot()
 	def Remove_Selected_Part_Sets(self):
 		self.asset_tree_view.delete_Selected_Part_Sets()
+	#----------------------------------------------------------------------
+	@QT.QtSlot()
+	def Remove_Empty_Part_Sets(self):
+		check = cmds.confirmDialog( title='Remove Empty Part Sets', message='Do to a memory sync issue between the Scene States Innerface and maya undo cash.\nPreforming this operation will also flush the undo cash.\nSo you will not be able to undo past this point\nDo you Want To Continue', button=['yes','no'], defaultButton='no', cancelButton='no', dismissString='no', icon="warning")
+		if check == "yes":
+			self.asset_tree_view.delete_Empty_Part_Sets()
+			cmds.flushUndo() 
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def Remove_Selected_Render_States(self):
@@ -380,13 +394,17 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 		item = self.render_states_view.current_item()
 		isinstance(item, Custom_Widgets.Render_State_Item)
 		for part in item.Beauty_Parts:
-			cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
+			if not part._data.node.assinedDisplayLayer == 'defaultLayer':
+				cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
 		for part in item.Invisible_Parts:
-			cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
+			if not part._data.node.assinedDisplayLayer == 'defaultLayer':
+				cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
 		for part in item.Matte_Parts:
-			cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
+			if not part._data.node.assinedDisplayLayer == 'defaultLayer':
+				cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",1)
 		for part in item.Unassined_Parts:
-			cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",0)
+			if not part._data.node.assinedDisplayLayer == 'defaultLayer':
+				cmds.setAttr(part._data.node.assinedDisplayLayer+".visibility",0)
 	@QT.QtSlot()
 	#----------------------------------------------------------------------
 	def Show_All_Diaplay_Layers(self):
@@ -430,7 +448,8 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_UIs.Vray_Scene_State_Manager
 			self.isolate_Select_Render_State(True)
 
 States_Manager = None
-isinstance(States_Manager, Compiled_UIs.Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+isinstance(States_Manager, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+
 _remove_manager_job_id = -1
 def make_ui():
 	global States_Manager, _remove_manager_job_id

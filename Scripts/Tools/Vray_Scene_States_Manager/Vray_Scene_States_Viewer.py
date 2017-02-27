@@ -15,7 +15,14 @@ import yaml
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
-import Compiled_UIs.Vray_Scene_State_Viewer
+
+if int(cmds.about(version=True)) == 2017:
+	import Compiled_UIs.Vray_Scene_State_Viewer
+	Compiled_Vray_Scene_State_Viewer = Compiled_UIs.Vray_Scene_State_Viewer
+else:
+	import Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
+	Compiled_Vray_Scene_State_Viewer = Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
+	
 import Scripts.General_Maya_Util
 Custom_Widgets = Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
 Vray_Scene_State_Viewer_Item_Model  =  Custom_Widgets.Vray_Scene_State_Viewer_Item_Model
@@ -78,7 +85,7 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QtGui.QMainWindow):
 	def __init__(self, parent=None):
 		if parent == None and _maya_check:
 			parent = Scripts.UIFns.Find_UI.getMayaWindow()
-		isinstance(self, Compiled_UIs.Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
+		isinstance(self, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 		super(Vray_Scene_States_Viewer_MainWindow,self).__init__(parent)
 		self.setupUi(self)
 		#self.Asset_Grid_groupBox.hide()
@@ -170,7 +177,7 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QtGui.QMainWindow):
 			self.Rebuild_Render_Layer_States()
 			self.Update_Button.hide()
 States_Viewer = None
-isinstance(States_Viewer, Compiled_UIs.Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
+isinstance(States_Viewer, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 
 def make_ui():
 	global States_Viewer

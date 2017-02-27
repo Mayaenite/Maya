@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '\\isln-smb\aw_config\Git_Live_Code\Software\Maya\Scripts\Tools\Vray_Scene_States_Manager\Split_Frames.ui'
+# Form implementation generated from reading ui file 'c:\Users\dloveridge\Documents\AW_Git_Repo\Maya\Scripts\Tools\Vray_Scene_States_Manager\Split_Frames.ui'
 #
-# Created: Mon Dec 12 15:19:32 2016
-#      by: pyside2-uic  running on PySide2 2.0.0~alpha0
+# Created: Wed Jun 15 12:53:55 2016
+#      by: pyside-uic 0.2.14 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from PySide2 import QtCore, QtGui, QtWidgets
+from PySide import QtCore, QtGui
 
 class Ui_Form(object):
 	def setupUi(self, Form):
 		Form.setObjectName("Form")
 		Form.resize(400, 467)
-		self.verticalLayout = QtWidgets.QVBoxLayout(Form)
+		self.verticalLayout = QtGui.QVBoxLayout(Form)
 		self.verticalLayout.setObjectName("verticalLayout")
-		self.splitter = QtWidgets.QSplitter(Form)
+		self.splitter = QtGui.QSplitter(Form)
 		self.splitter.setOrientation(QtCore.Qt.Vertical)
 		self.splitter.setObjectName("splitter")
-		self.treeWidget = QtWidgets.QTreeWidget(self.splitter)
+		self.treeWidget = QtGui.QTreeWidget(self.splitter)
 		self.treeWidget.setObjectName("treeWidget")
 		self.treeWidget.headerItem().setText(0, "1")
-		self.graphicsView = QtWidgets.QGraphicsView(self.splitter)
+		self.graphicsView = QtGui.QGraphicsView(self.splitter)
 		self.graphicsView.setObjectName("graphicsView")
 		self.verticalLayout.addWidget(self.splitter)
 
@@ -29,13 +29,13 @@ class Ui_Form(object):
 		QtCore.QMetaObject.connectSlotsByName(Form)
 
 	def retranslateUi(self, Form):
-		Form.setWindowTitle(QtWidgets.QApplication.translate("Form", "Form", None, -1))
+		Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
 
 
 if __name__ == "__main__":
 	import sys
-	app = QtWidgets.QApplication(sys.argv)
-	Form = QtWidgets.QWidget()
+	app = QtGui.QApplication(sys.argv)
+	Form = QtGui.QWidget()
 	ui = Ui_Form()
 	ui.setupUi(Form)
 	Form.show()

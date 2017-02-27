@@ -17,16 +17,25 @@ if System_Settings.USE_WING_DEBUG:
 	
 MAYA_VERSION           = int(cmds.about(version=True))
 MAYA_BATCH             = cmds.about(b=True)
-MAYA_GUI               = False if MAYA_BATCH else True 
+MAYA_GUI               = False if MAYA_BATCH else True
+
 os.environ["MAYA_GUI"] = "1" if MAYA_GUI else "0"
-os.environ["QT_PACKAGE"] = "PySide" if MAYA_VERSION >= 2013 else "PyQt4"
+
+if MAYA_VERSION >= 2017:
+	os.environ["QT_PACKAGE"] = "PySide2"
+elif MAYA_VERSION >= 2013:
+	os.environ["QT_PACKAGE"] = "PySide"
+else:
+	os.environ["QT_PACKAGE"] = "PyQt4"
+	
+cmds.setStartupMessage(os.path.join(os.environ["MAYA_LOCATION"],'icons',"MayaStartupImage.png").replace("/", "\\"))
 
 if MAYA_GUI:
 	utilities.add_To_System_Path(System_Paths._CODE_AW_SITE_PACKAGES)
 	if MAYA_VERSION == 2015:
-		cmds.setStartupMessage(os.path.join(System_Paths._CODE_MAYA_XBM_PATH , "MayaStartupImage.png"))
+		# cmds.setStartupMessage(os.path.join(System_Paths._CODE_MAYA_XBM_PATH , "MayaStartupImage.png"))
 		#----------------------------------------------------------------------
-		utilities.add_To_Multi_Path_Environment_Key("MAYA_SCRIPT_PATH", [System_Paths._CODE_MAYA_SCRIPT_PATH, System_Paths._CODE_MAYA_SCRIPT_PATH_2015, System_Paths._CODE_MAYA_BONUS_TOOLS_MEL, System_Paths._CODE_MAYA_BONUS_TOOLS_MEL_2015])
+		utilities.add_To_Multi_Path_Environment_Key("MAYA_SCRIPT_PATH", [item.replace("\\", "/") for item in [System_Paths._CODE_MAYA_SCRIPT_PATH, System_Paths._CODE_MAYA_SCRIPT_PATH_2015, System_Paths._CODE_MAYA_BONUS_TOOLS_MEL, System_Paths._CODE_MAYA_BONUS_TOOLS_MEL_2015]])
 		#----------------------------------------------------------------------
 		utilities.add_To_Multi_Path_Environment_Key("XBMLANGPATH", [System_Paths._CODE_MAYA_BONUS_TOOLS_ICONS, System_Paths._CODE_MAYA_XBM_PATH])
 		#----------------------------------------------------------------------
