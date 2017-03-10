@@ -4,6 +4,10 @@ try:
 	import Scripts.NodeCls.M_Nodes
 	import Scripts.UIFns.Find_UI
 	import maya.cmds as cmds
+	try:
+		cmds.loadPlugin("vrayformaya",qt=True)
+	except:
+		pass
 	if not len(cmds.fileInfo( 'AW_Vray_States_Viewer_Version', query=True )):
 		# version = cmds.confirmDialog( title='Viewer Version', message='The Viewer Version For This File Has Not Been Set\nPlease Select The Version You Would Like To Use\n\nWarning!! Version 2 is Still In Beta', button=['Version 1','Version 2'], defaultButton='Version 1', cancelButton='Version 1', dismissString='Version 1' )[-1]
 		cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "1" )

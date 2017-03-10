@@ -5,6 +5,10 @@ import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
 import maya.cmds as cmds
+try:
+	cmds.loadPlugin("vrayformaya",qt=True)
+except:
+	pass
 if int(cmds.about(version=True)) == 2017:
 	import Compiled_UIs.Vray_Scene_State_Manager
 	Compiled_Vray_Scene_State_Manager = Compiled_UIs.Vray_Scene_State_Manager
