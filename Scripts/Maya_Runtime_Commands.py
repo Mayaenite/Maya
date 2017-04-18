@@ -3,6 +3,24 @@ import pymel.core as pm
 import Scripts.OpenMaya_Util_API
 import random
 
+### HOT PIVOT ACTION ###
+def HOT_PIVOT_ACTION():
+	selection = pm.ls(sl = True)
+	zero = [0,0,0]
+	negative = [-1,-1,-1]
+	
+	for x in selection:
+		print x
+		originPivot = pm.xform(q=True, rp=True)
+	
+		invert = map(lambda x,y:x*y,originPivot,negative)
+	
+		print originPivot
+		print invert
+		pm.xform( t = invert)
+		pm.makeIdentity(a=True, t=True)
+		pm.xform( t = originPivot)
+
 def Visibility_Connect_Maker():
 	"Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected"
 	selection = pm.ls(selection = True)
@@ -200,3 +218,4 @@ cmds.runTimeCommand("VisibilityConnectMaker", annotation="Connect The Visibility
 cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys By There Face Shading Assinments", command=__name__+".Seperate_Poly_By_Shader()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjection With Box Map Settings On All Selected Items", command=__name__+".aw_Box_Map_Selected()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The Resault Back To Its Parent And Display Layer", command=__name__+".AW_PolyUnite()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)

@@ -421,9 +421,13 @@ def Add_Custom_Menu_Items():
 		maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')
 		Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
 		
-	SelLocatorItem = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
+	maya.mel.eval('ModObjectsMenu MayaWindow|mainModifyMenu;')
 	
-
+	Modify_Menu =  "MayaWindow|mainModifyMenu"
+	
+	aw_HOT_PIVOT_ACTION = cmds.menuItem( annotation="Reset The Selected Trasform Matrix", command='aw_HOT_PIVOT_ACTION;', image="menuIconModify.png", label="HOT PIVOT ACTION", version="2015", parent=Modify_Menu, sourceType="mel")
+	SelLocatorItem      = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
+	
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")
 # removeShelfTab("Deadline")
