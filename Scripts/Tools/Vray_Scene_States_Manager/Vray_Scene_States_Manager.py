@@ -345,12 +345,14 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 			if cmds.objExists(dl.nice_name+"_set"):
 				if not ps_link.value is None:
 					vrop = Scripts.NodeCls.M_Nodes.VRayObjectProperties(ps_link.value.name)
+					vrop.unlockNode()
 					if not vrop.attributeExists("displayLayerLink"):
 						dl_link = vrop.Add_Simple_Attribute("displayLayerLink", 'message', shortName="dllnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
 					else:
 						dl_link = vrop.Make_Plug("displayLayerLink")
 				else:
 					vrop = Scripts.NodeCls.M_Nodes.VRayObjectProperties(dl.nice_name+"_set")
+					vrop.unlockNode()
 					dl_link = vrop.Add_Simple_Attribute("displayLayerLink", 'message', shortName="dllnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
 				vrop.unlockNode()
 				ps_link.Simple_Connect(dl_link)
