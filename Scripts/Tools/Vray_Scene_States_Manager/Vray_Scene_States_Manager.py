@@ -316,9 +316,21 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 				asset = self.add_Asset(name="Display_Layers_Asset", subAsset=False)
 			
 			for layer in layers:
+				make_it = False
 				isinstance(layer, Scripts.NodeCls.M_Nodes.DisplayLayer)
 				name = layer.name + "_set"
 				if not asset.child_item_exists(name):
+					if layer.attributeExists("partSetLink"):
+						ps_lnk = layer.Make_Plug("partSetLink")
+						if not ps_lnk.value is None:
+							if not asset.child_item_exists(ps_lnk.value.name):
+								make_it = True
+						else:
+							make_it = True
+					else:
+						make_it = True
+					
+				if make_it:
 					self.asset_tree_view.add_New_Part_Set(name=name)
 					part = self.model.Assets.find_Part_Sets_By_Name(name)[0]
 					part._data.unlockNode()
@@ -331,9 +343,16 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 			isinstance(dl, Scripts.NodeCls.M_Nodes.DisplayLayer)
 			ps_link = dl.Add_Simple_Attribute("partSetLink", 'message', shortName="pslnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
 			if cmds.objExists(dl.nice_name+"_set"):
-				vrop = Scripts.NodeCls.M_Nodes.VRayObjectProperties(dl.nice_name+"_set")
+				if not ps_link.value is None:
+					vrop = Scripts.NodeCls.M_Nodes.VRayObjectProperties(ps_link.value.name)
+					if not vrop.attributeExists("displayLayerLink"):
+						dl_link = vrop.Add_Simple_Attribute("displayLayerLink", 'message', shortName="dllnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
+					else:
+						dl_link = vrop.Make_Plug("displayLayerLink")
+				else:
+					vrop = Scripts.NodeCls.M_Nodes.VRayObjectProperties(dl.nice_name+"_set")
+					dl_link = vrop.Add_Simple_Attribute("displayLayerLink", 'message', shortName="dllnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
 				vrop.unlockNode()
-				dl_link = vrop.Add_Simple_Attribute("displayLayerLink", 'message', shortName="dllnk", hidden=False, writable=True, readable=True, storable=True, keyable=False)
 				ps_link.Simple_Connect(dl_link)
 				if len(dl.members):
 					vrop.addElement(dl.members)

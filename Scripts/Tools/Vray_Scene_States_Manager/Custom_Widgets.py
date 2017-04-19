@@ -2451,10 +2451,14 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 		
 	#----------------------------------------------------------------------
 	def currentChanged(self, current, previous):
-		self.part_sets_view.SelectionModel.clearSelection()
-		self.beauty_overide_view.SelectionModel.clearSelection()
-		self.matte_overide_view.SelectionModel.clearSelection()
-		self.invisible_overide_view.SelectionModel.clearSelection()
+		if not self.part_sets_view.SelectionModel == None:
+			self.part_sets_view.SelectionModel.clearSelection()
+		if not self.beauty_overide_view.SelectionModel == None:
+			self.beauty_overide_view.SelectionModel.clearSelection()
+		if not self.matte_overide_view.SelectionModel == None:
+			self.matte_overide_view.SelectionModel.clearSelection()
+		if not self.invisible_overide_view.SelectionModel == None:
+			self.invisible_overide_view.SelectionModel.clearSelection()
 		if self.main_window._Enable_Model_Editor:
 			self.model_editor_widget.Main_Conn.clear()
 		res = super(Render_States_List_View, self).currentChanged(current, previous)
@@ -4140,10 +4144,35 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 			print "Was Unable to lock %s " % self._data.name
 		
 	#----------------------------------------------------------------------
+	def setData(self, value, role=Data_Roles.DISPLAY):
+		""""""
+		if role in self.Item_Data_Roles.DP_ED and _maya_check:
+			if not value.endswith("_set"):
+				part_set_value = value + "_set"
+				display_layer_value =  value
+			else:
+				part_set_value = value
+				display_layer_value =  value.replace("_set", "")
+			
+			link_dl = self.node_Get_Linked_Display_Layer()
+			if link_dl is not None:
+				link_dl.name =  display_layer_value
+			self._data.unlockNode()
+			self.node_name = part_set_value
+			self._data.lockNode()
+		else:
+			return super(Part_Set_Item, self).setData(value, role)
+	#----------------------------------------------------------------------
 	def to_Yaml(self):
 		""""""
 		res = Yaml_Config_Data.Part_Set(self.data())
 		return res
+	#----------------------------------------------------------------------
+	def node_Get_Linked_Display_Layer(self):
+		""""""
+		link = self._data.Make_Plug("displayLayerLink")
+		return link.value
+		
 ########################################################################
 class Asset_Item(Maya_Asset_Item):
 	ITEM_TYPE  = QT.user_type_counter()
