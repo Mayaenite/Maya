@@ -41,11 +41,11 @@ uic    = QT.uic
 ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Viewer.ui")
 uiform, uibase = uic.loadUiType(ui_file)
 
-class Enum_List_Delegate(QtGui.QItemDelegate):
+class Enum_List_Delegate(QT.QItemDelegate):
 	def get_item_from_index(self, index):
 		isinstance(index, QtCore.QModelIndex)
 		m = index.model()
-		if isinstance(m, QtGui.QSortFilterProxyModel):
+		if isinstance(m, QT.QSortFilterProxyModel):
 			pm = m
 			m  = m.sourceModel()
 			index = pm.mapToSource(index)
@@ -56,21 +56,21 @@ class Enum_List_Delegate(QtGui.QItemDelegate):
 		item = self.get_item_from_index(index)
 		if isinstance(item, Custom_Widgets.Enum_Plug_Item):
 			if len(item.node_listEnumNames):
-				editor = QtGui.QComboBox(parent)
+				editor = QT.QComboBox(parent)
 				editor.addItems(item.node_listEnumNames)
 				return editor
 		editor = super(Enum_List_Delegate, self).createEditor(parent, option, index)
 		return editor
 
 	def setEditorData(self, editor, index):
-		if isinstance(editor, QtGui.QComboBox):
+		if isinstance(editor, QT.QComboBox):
 			item = self.get_item_from_index(index)
 			editor.setCurrentIndex(item._data.value)
 		else:
 			super(Enum_List_Delegate, self).setEditorData(editor, index)
 
 	def setModelData(self, editor, model, index):
-		if isinstance(editor, QtGui.QComboBox):
+		if isinstance(editor, QT.QComboBox):
 			item = self.get_item_from_index(index)
 			item.setData(editor.currentText())
 		else:
@@ -80,9 +80,9 @@ class Enum_List_Delegate(QtGui.QItemDelegate):
 		editor.setGeometry(option.rect)
 
 ########################################################################
-# uiform, QtGui.QMainWindow
-class Vray_Scene_States_Viewer_MainWindow(uiform, QtGui.QMainWindow):
-#class Vray_Scene_States_Viewer_MainWindow(Compiled_UIs.Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer,QtGui.QMainWindow):
+# uiform, QT.QMainWindow
+class Vray_Scene_States_Viewer_MainWindow(uiform, QT.QMainWindow):
+#class Vray_Scene_States_Viewer_MainWindow(Compiled_UIs.Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer,QT.QMainWindow):
 	#----------------------------------------------------------------------
 	ACTIVE_RENDER_LAYER_CHANGED = QT.QtSignal()
 	NEW_RENDER_LAYER_CREATED = QT.QtSignal()
