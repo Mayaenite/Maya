@@ -379,7 +379,8 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		for item in data:
 			for layer in item.layers:
 				if not cmds.objExists(layer):
-					cmds.inViewMessage( statusMessage='<hl>Can Not Reconstruct From Pickle Data\nBecause The Fallowing Display Layer\nWas Not Found In The Scene\n"%s".' % (layer), fadeInTime=200, fadeOutTime=1000, fadeStayTime=3000,fontSize=20, pos='midCenter', fade=True )
+					cmds.inViewMessage( statusMessage='<hl>Can Not Reconstruct From Pickle Data\nBecause The Following Display Layer\nWas Not Found In The Scene\n"%s".' % (layer), fadeInTime=200, fadeOutTime=1000, fadeStayTime=3000,fontSize=20, pos='midCenter', fade=True )
+					cmds.error('Can Not Reconstruct From Pickle Data Because The Following Display Layer "%s" Was Not Found In The Scene".' % layer )
 					return
 		
 		self.Construct_From_Display_Layers()
