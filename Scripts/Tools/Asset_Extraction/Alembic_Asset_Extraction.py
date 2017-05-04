@@ -427,7 +427,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 	def unlock_and_break_Attr_connections(self):
 		nodes = [self.top_level_node]+self.top_level_node.all_transform_Descendents
 		for node in nodes:
-			for att in ["tx","ty","tz","rx","ry","rz","sx","sy","sz"]:
+			for att in ["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]:
 				plg = node.Make_Plug(att)
 				plg.unlock
 				try:
@@ -473,6 +473,9 @@ class Alembic_Asset_Writer(etree.ElementTree):
 					id_extractor_counter += 1
 				except:
 					print "Did Not Add Id To %s" % node.name
+			else:
+				cmds.setAttr(node.name+".AW_Extractor_ID", id_extractor_counter)
+				id_extractor_counter += 1
 			
 	def export_AbcExport(self):
 		cmds.select(self.top_level_node)
