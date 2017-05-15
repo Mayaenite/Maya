@@ -434,7 +434,9 @@ class Alembic_Asset_Writer(etree.ElementTree):
 					plg.Disconnect_All_Inputs()
 				except:
 					pass
-
+		for node in cmds.ls("*.intermediateObject"):
+			if cmds.getAttr(node):
+				cmds.setAttr(node,False)
 		for node in cmds.ls("*.inheritsTransform"):
 			if not cmds.getAttr(node):
 				cmds.setAttr(node,True)
@@ -479,7 +481,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 			
 	def export_AbcExport(self):
 		cmds.select(self.top_level_node)
-		cmds.AbcExport(jobArg='-frameRange 1 1 -attr AW_Extractor_ID -attr assined_display_layer -uvWrite -worldSpace -dataFormat HDF -eulerFilter -stripNamespaces -root %s -file C:/temp/Extracted.abc' % self.top_level_node.name)
+		cmds.AbcExport(jobArg='-frameRange 1 1 -attr AW_Extractor_ID -attr assined_display_layer -uvWrite -dataFormat HDF -eulerFilter -stripNamespaces -root %s -file C:/temp/Extracted.abc' % self.top_level_node.name)
 
 ########################################################################
 class Alembic_Asset_reader(etree.ElementTree):
