@@ -3,6 +3,97 @@ import pymel.core as pm
 import Scripts.OpenMaya_Util_API
 import random
 
+def Make_Seperated_Poly_Group(obj):
+
+	def get_assined_shaders(obj):
+		active_selection =  pm.ls(sl=True)
+		pm.select(obj)
+		cmds.hyperShade(shaderNetworksSelectMaterialNodes=True)
+		shaders = pm.ls(sl=True)
+		pm.select(active_selection)
+		return shaders
+	# Get The Input Nodes Parent
+	obj_parent   = obj.getParent()
+	# Get The List Of Child Transforms Of The Input Node
+	obj_children = obj.getChildren(type="transform")
+	# Get The Child Mesh From The Input Node
+	obj_mesh     = obj.getShapes(typ="mesh")[0]
+	# Get A List Of Shaders Assined To The Input Node 
+	shaders = get_assined_shaders(obj)
+	# Check If Node Had Children
+	if len(obj_children):
+		# If So Create A Group Node To Temparaly House The Children Durning the Duplication Process
+		child_group =  pm.group(obj_children, name="Temparaly_Object_Children_Holder")
+		# Check If The Input Node Had A Parent
+		if not obj_parent is None:
+			# If So Parent The Child Group To That Parent
+			pm.parent(child_group, obj_parent)
+		else:
+			# If not Parent The Child Group To The World
+			pm.parent(child_group, world=True)
+	
+	# Create A Group That Will Hold The New Shader Seperated Objects 
+	# Check If The Input Node Had A Parent
+	if not obj_parent is None:
+		# If So  Parent The Group To That Parent
+		Seperated_group = pm.group(empty=True, name=obj.nodeName() + "_Seperated_Items", parent=obj_parent)
+	else:
+		# If Not Parent The Group To The World
+		Seperated_group = pm.group(empty=True, name=obj.nodeName() + "_Seperated_Items", world=True)
+		
+	# Scan Through Each Shader That is assied To this node on a face level
+	for shader in shaders:
+		# Get The Shader Engine attachted to this shader
+		shading_engine = shader.outputs(type="shadingEngine")[0]
+		# Make A Copy Of The input node
+		shader_obj = pm.duplicate(obj,name=obj.nodeName() + "_" + shader.nodeName())[0]
+		# Add It To The Sperated Items Group
+		pm.parent(shader_obj, Seperated_group)
+		# Get The Mesh Shape for the copied Transform
+		shader_obj_mesh = shader_obj.getShape()
+		# Select All The Poly faces
+		pm.select(shader_obj_mesh.f)
+		# Deselect All the faces that are members of this shader
+		pm.select(pm.ls(shading_engine.members(),sl=True), deselect=True)
+		# we are left with only the faces that are on this mesh and are not assined to this shader 
+		to_remove    = pm.ls(sl=True)
+		# delete the unneeded faces so that we are left with an object that cantains only the faces assied to this shader
+		pm.delete(to_remove)
+		# Now Assine The Shader To The Object As a hole and inturn removing any face assinments
+		pm.sets(shading_engine,edit=True,forceElement=shader_obj_mesh)
+	# Delete The Orignal Mesh not the transform just the mesh shape underneath it
+	pm.delete(obj_mesh)
+	# parent the seperated items group that cantains all the shader seperated version to the now mesh free transform
+	pm.parent(Seperated_group, obj)
+	# check if the input node had children and of so reparent them back to itselff
+	if len(obj_children):
+		pm.parent(obj_children, obj)
+		pm.delete(child_group)
+	
+def Seperate_Selected_By_Shaders():
+	active_selection =  pm.ls(sl=True)
+	transform_meshes = pm.listRelatives(pm.listRelatives(pm.ls(sl=True,type="transform"),type=["mesh"],path=True,noIntermediate=True,shapes=True),parent=True,type="transform",path=True)
+	for transform_item in transform_meshes:
+		Make_Seperated_Poly_Group(transform_item)
+	pm.select(active_selection)
+#----------------------------------------------------------------------
+def aw_Reverse_Selected_Poly_Normals():
+	""""""
+	history_check = cmds.constructionHistory(q=True, tgl=True)
+	selList       = cmds.ls(transforms=True, sl=True)
+	cmds.constructionHistory(tgl=False)	
+	for item in selList:
+		cmds.select(item, r=True)
+		itemShapes = cmds.pickWalk(d='down')
+		if len(itemShapes):
+				itemShape = itemShapes[0]
+				if cmds.objectType(itemShape, isType="mesh"):
+						cmds.select(item, r=True)
+						cmds.polyNormal(constructionHistory=False, normalMode=04)
+	cmds.select(selList, r=True)
+	if history_check:
+		cmds.constructionHistory(tgl=True)
+
 ### HOT PIVOT ACTION ###
 def HOT_PIVOT_ACTION():
 	selection = pm.ls(sl = True)
@@ -65,7 +156,7 @@ def Seperate_Poly_By_Shader():
 						if face.split(".",1)[1].startswith("f") and face.split(".",1)[0].endswith(transform_item):
 							faces.append(face)
 				if len(faces):
-					cmds.polyChipOff(faces, constructionHistory=1, duplicate=0, keepFacesTogether=1, offset=0)
+					cmds.polyChipOff(faces, constructionHistory=1, duplicate=0, keepFacesTogether=1, offset=0.1)
 				else:
 					dont_skip = False
 					break
@@ -144,7 +235,13 @@ def Planar_Proj_Unforld():
 			att = polyPlanarProj+"."+att
 			cmds.setAttr(att,1)
 		cmds.select(clear=True)
-		cmds.Unfold3D(item_UVs,unfold=True,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
+		if not cmds.pluginInfo("Unfold3D", query=True, loaded=True):
+			cmds.loadPlugin("Unfold3D", quiet=True)
+		if cmds.about( version=True) == '2017':
+			cmds.u3dUnfold(item_UVs,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
+		else:
+			cmds.Unfold3D(item_UVs,unfold=True,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
+			
 	if len(_All_UVs):
 		cmds.select(_All_UVs)
 	else:
@@ -198,24 +295,29 @@ def AW_PolyUnite():
 	for obj in Scripts.OpenMaya_Util_API.strings_to_Maya_Nodes(cmds.ls(selection=True)):
 		display_layer_list.add(obj.assinedDisplayLayer)
 	display_layer_list=list(display_layer_list)
-
-	selected_parents = list(set(cmds.listRelatives(p=True,typ="transform")))
-
+	selected_parents =  cmds.listRelatives(p=True,typ="transform")
+	if selected_parents != None:
+		selected_parents = list(set(selected_parents))
+	else:
+		selected_parents =  []
 	if len(display_layer_list)>1 or len(selected_parents)>1:
 		win = AW_Poly_Unite_Result_Options(selected_objects,display_layer_list,selected_parents)
 		pm.showWindow()
 	else:
-		cmds.parent( world=True)
+		if len(selected_parents):
+			cmds.parent( world=True)
 		united_objs = cmds.polyUnite(ch=0,mergeUVSets=1,name="AW_United_Poly");
-		cmds.parent(united_objs,selected_parents[0])
+		if len(selected_parents):
+			cmds.parent(united_objs,selected_parents[0])
 		dl = Scripts.OpenMaya_Util_API.DisplayLayer(display_layer_list[0])
 		dl.addMembers(united_objs)
 		
 aw_hub_check_Ctr1_Hotkey()
+cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("randomizeDisplayLayerColors", annotation="Sets The Color Of All The Display Layers Randomly", command=__name__+".randomize_Display_Layer_Colors()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("VisibilityConnectMaker", annotation="Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected", command=__name__+".Visibility_Connect_Maker()", category="User", commandLanguage="python", default=True)
-cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys By There Face Shading Assinments", command=__name__+".Seperate_Poly_By_Shader()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys By There Face Shading Assinments", command=__name__+".Seperate_Selected_By_Shaders()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjection With Box Map Settings On All Selected Items", command=__name__+".aw_Box_Map_Selected()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The Resault Back To Its Parent And Display Layer", command=__name__+".AW_PolyUnite()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)
