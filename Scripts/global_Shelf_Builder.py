@@ -339,8 +339,8 @@ def Build_DataPrep_Tools(shelfName):
 	cmds.shelfButton(parent=active_shelf
 	        ,annotation = "Does Some Cool Stuff"
 	        ,label      = "Planar Proj Unforld"
-	        ,image      = "pythonFamily.png"
-	        ,image1     = "pythonFamily.png"
+	        ,image      = "easybutton.jpg"
+	        ,image1     = "easybutton.jpg"
 	        ,style      = "iconOnly"
 	        ,command    = "Planar_Proj_Unforld_RTC"
 	        ,sourceType = "mel" )
@@ -388,8 +388,8 @@ def Build_Artist_Tools(shelfName):
             ,annotation="Deadline Submiter"
             ,label     = "Submit To Deadline"
             ,imageOverlayLabel="" 
-            ,image  = "//blue/app_config/deadline/DeadlineRepository6/submission/Maya/Main/Submit.png"
-            ,image1 = "//blue/app_config/deadline/DeadlineRepository6/submission/Maya/Main/Submit.png"
+            ,image  = "Submit_To_Deadline.png"
+            ,image1 = "Submit_To_Deadline.png"
             ,style="iconOnly" 
             ,command="SubmitJobToDeadline"
             ,sourceType="mel")		

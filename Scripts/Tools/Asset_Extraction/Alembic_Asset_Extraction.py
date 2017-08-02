@@ -429,7 +429,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 		for node in nodes:
 			for att in ["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]:
 				plg = node.Make_Plug(att)
-				plg.unlock
+				plg.unlock()
 				try:
 					plg.Disconnect_All_Inputs()
 				except:
