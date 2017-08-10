@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Vray_Scene_State_Manager</class>
- <widget class="QMainWindow" name="Vray_Scene_State_Manager">
+ <widget class="Vray_Scene_States_Manager_MainWindow" name="Vray_Scene_State_Manager">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1346</width>
-    <height>871</height>
+    <width>967</width>
+    <height>872</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,7 +56,16 @@
          <property name="spacing">
           <number>0</number>
          </property>
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -71,7 +80,16 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="margin">
+            <property name="leftMargin">
+             <number>3</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
              <number>3</number>
             </property>
             <item>
@@ -137,7 +155,16 @@
          <enum>QFrame::Plain</enum>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_9">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item>
@@ -152,16 +179,28 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="margin">
+            <property name="leftMargin">
+             <number>3</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
              <number>3</number>
             </property>
             <item>
-             <widget class="QPushButton" name="render_layer_helper_button">
+             <widget class="QPushButton" name="Multi_State_Mode_Button">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="text">
-               <string>Build Render Layer Helper</string>
+               <string>Multi State Mode</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -178,7 +217,7 @@
             <item>
              <widget class="QPushButton" name="Hide_Unasined_Layers_Button">
               <property name="text">
-               <string>Hide Unasined</string>
+               <string>Hide Unassigned</string>
               </property>
              </widget>
             </item>
@@ -201,7 +240,16 @@
                <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="margin">
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
                 <number>0</number>
                </property>
                <item>
@@ -226,7 +274,16 @@
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -274,7 +331,16 @@
           <enum>QFrame::Plain</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -286,9 +352,32 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="Beauty_groupBox_verticalLayout">
-             <property name="margin">
+             <property name="leftMargin">
               <number>3</number>
              </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
+              <number>3</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="Assign_Selected_To_Beauty_Parts_Button">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Assign Selected Parts
+To Beauty</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="Beauty_Overide_View" name="beauty_overide_view">
                <property name="editTriggers">
@@ -324,7 +413,16 @@
           <enum>QFrame::Plain</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -336,11 +434,37 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="Matte_groupBox_verticalLayout">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>3</number>
+             </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
               <number>3</number>
              </property>
              <item>
+              <widget class="QPushButton" name="Assign_Selected_To_Matte_Parts_Button">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Assign Selected Parts
+To Matte</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="Matte_Overide_View" name="matte_overide_view">
+               <property name="autoScrollMargin">
+                <number>13</number>
+               </property>
                <property name="editTriggers">
                 <set>QAbstractItemView::NoEditTriggers</set>
                </property>
@@ -374,7 +498,16 @@
           <enum>QFrame::Plain</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_7">
-          <property name="margin">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
            <number>0</number>
           </property>
           <item>
@@ -386,9 +519,32 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="Invisible_groupBox_verticalLayout">
-             <property name="margin">
+             <property name="leftMargin">
               <number>3</number>
              </property>
+             <property name="topMargin">
+              <number>3</number>
+             </property>
+             <property name="rightMargin">
+              <number>3</number>
+             </property>
+             <property name="bottomMargin">
+              <number>3</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="Assign_Selected_To_Invisible_Parts_Button">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Assign Selected Parts
+To Invisible</string>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="Invisible_Overide_View" name="invisible_overide_view">
                <property name="editTriggers">
@@ -431,9 +587,62 @@
          <enum>QFrame::Plain</enum>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_8">
-         <property name="margin">
+         <property name="leftMargin">
           <number>0</number>
          </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="All_Part_Sets_List_groupBox">
+           <property name="title">
+            <string>All Part Sets</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="leftMargin">
+             <number>3</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
+             <number>3</number>
+            </property>
+            <item>
+             <widget class="Standered_List_View" name="All_Part_Sets_List">
+              <property name="selectionMode">
+               <enum>QAbstractItemView::ExtendedSelection</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="Unassign_Selected_Parts_Button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Unassign Selected Parts</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
          <item>
           <widget class="QGroupBox" name="Part_Sets_groupBox">
            <property name="sizePolicy">
@@ -452,7 +661,16 @@
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="margin">
+            <property name="leftMargin">
+             <number>3</number>
+            </property>
+            <property name="topMargin">
+             <number>3</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
              <number>3</number>
             </property>
             <item>
@@ -479,7 +697,16 @@
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
                <number>0</number>
               </property>
               <item>
@@ -523,7 +750,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1346</width>
+     <width>967</width>
      <height>26</height>
     </rect>
    </property>
@@ -751,6 +978,17 @@
     <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>Vray_Scene_States_Manager_MainWindow</class>
+   <extends>QMainWindow</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Standered_List_View</class>
+   <extends>QListView</extends>
+   <header>standered_list_view.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
@@ -905,8 +1143,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>663</x>
-     <y>672</y>
+     <x>440</x>
+     <y>709</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -921,8 +1159,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>790</x>
-     <y>672</y>
+     <x>555</x>
+     <y>709</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -937,8 +1175,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1202</x>
-     <y>672</y>
+     <x>834</x>
+     <y>709</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -953,8 +1191,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1328</x>
-     <y>672</y>
+     <x>949</x>
+     <y>709</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -989,8 +1227,8 @@
      <y>714</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>241</y>
+     <x>719</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -1005,8 +1243,8 @@
      <y>686</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>457</y>
+     <x>719</x>
+     <y>447</y>
     </hint>
    </hints>
   </connection>
@@ -1021,8 +1259,8 @@
      <y>722</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>673</y>
+     <x>719</x>
+     <y>658</y>
     </hint>
    </hints>
   </connection>
@@ -1037,8 +1275,8 @@
      <y>706</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1329</x>
-     <y>437</y>
+     <x>950</x>
+     <y>495</y>
     </hint>
    </hints>
   </connection>
@@ -1053,8 +1291,8 @@
      <y>685</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>575</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
    </hints>
   </connection>
@@ -1097,8 +1335,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>481</x>
-     <y>644</y>
+     <x>307</x>
+     <y>681</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -1113,8 +1351,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>109</x>
-     <y>644</y>
+     <x>126</x>
+     <y>681</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -1133,8 +1371,8 @@
      <y>445</y>
     </hint>
     <hint type="destinationlabel">
-     <x>791</x>
-     <y>620</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
    </hints>
   </connection>
@@ -1145,12 +1383,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>643</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>241</y>
+     <x>719</x>
+     <y>236</y>
     </hint>
    </hints>
   </connection>
@@ -1161,12 +1399,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>457</y>
+     <x>719</x>
+     <y>447</y>
     </hint>
    </hints>
   </connection>
@@ -1177,12 +1415,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1060</x>
-     <y>673</y>
+     <x>719</x>
+     <y>658</y>
     </hint>
    </hints>
   </connection>
@@ -1193,12 +1431,12 @@
    <slot>Update_On_Active_Item_Changed(QStandardItem*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
-     <y>620</y>
+     <x>556</x>
+     <y>628</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1329</x>
-     <y>437</y>
+     <x>950</x>
+     <y>495</y>
     </hint>
    </hints>
   </connection>
@@ -1225,8 +1463,8 @@
    <slot>trigger()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>211</x>
-     <y>673</y>
+     <x>227</x>
+     <y>710</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -1289,7 +1527,7 @@
    <slot>Apply_Current_State_To_Diaplay_Layers()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
+     <x>556</x>
      <y>141</y>
     </hint>
     <hint type="destinationlabel">
@@ -1305,12 +1543,172 @@
    <slot>Show_All_Diaplay_Layers()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>791</x>
+     <x>556</x>
      <y>169</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
      <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>beauty_overide_view</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>594</x>
+     <y>138</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>matte_overide_view</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>495</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>598</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>invisible_overide_view</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>412</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>621</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>All_Part_Sets_List_groupBox</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>386</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>810</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Assign_Selected_To_Beauty_Parts_Button</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>352</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>618</x>
+     <y>78</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Assign_Selected_To_Matte_Parts_Button</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>364</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>625</x>
+     <y>306</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Assign_Selected_To_Invisible_Parts_Button</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>347</x>
+     <y>74</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>607</x>
+     <y>537</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Part_Sets_groupBox</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>436</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>808</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>asset_tree_view</sender>
+   <signal>ACTIVE_ITEM_CHANGED(QStandardItem*)</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>_update_on_Asset_Selection_Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>-11</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Multi_State_Mode_Button</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Toggle_Multi_State_Mode(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>69</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>-11</y>
     </hint>
    </hints>
   </connection>
@@ -1342,5 +1740,7 @@
   <slot>sync_Display_Layers()</slot>
   <slot>Apply_Current_State_To_Diaplay_Layers()</slot>
   <slot>Show_All_Diaplay_Layers()</slot>
+  <slot>_update_on_Asset_Selection_Changed()</slot>
+  <slot>Toggle_Multi_State_Mode(bool)</slot>
  </slots>
 </ui>

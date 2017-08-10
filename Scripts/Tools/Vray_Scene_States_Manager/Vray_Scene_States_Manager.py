@@ -36,6 +36,15 @@ QtSignal  = QT.QtSignal
 uic       = QT.uic
 
 
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Render_States_List_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Part_Sets_List_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Beauty_Overide_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Invisible_Overide_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Matte_Overide_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Entity_Tree_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Tree_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Filtered_Proxy_List_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Standered_List_View)
 
 # if int(cmds.about(version=True)) == 2017:
 	# ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Manager.ui")
@@ -98,7 +107,11 @@ class Render_State_Layer(object):
 ########################################################################
 # uiform, QT.QMainWindow
 #class Vray_Scene_States_Manager_MainWindow(uiform, QT.QMainWindow):
-class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager,QT.QMainWindow):
+
+
+from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
+
+class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	ACTIVATE_RUN_SETUP     = QT.QtSignal(QT.QMainWindow)
 	PART_SET_DELEATED      = QT.QtSignal((int,),(str,))
 	PART_SET_CREATED       = QT.QtSignal((Custom_Widgets.Part_Set_Item,), (QT.QStandardItem,),(QtCore.QModelIndex,))
@@ -109,11 +122,15 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 	_Enable_Model_Editor   = False
 	#----------------------------------------------------------------------
 	def __init__(self, parent=None):
-		if parent == None and _maya_check:
-			parent = Scripts.UIFns.Find_UI.getMayaWindow()
+		#if parent == None and _maya_check:
+			#parent = Scripts.UIFns.Find_UI.getMayaWindow()
 		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 		super(Vray_Scene_States_Manager_MainWindow,self).__init__(parent)
-		self.setupUi(self)
+		#self.setupUi(self)
+	#----------------------------------------------------------------------
+	def _init(self):
+		""""""
+		
 		self.ACTIVATE_RUN_SETUP.emit(self)
 		# self.verticalGroupBox.hide()
 		self.entity_tree_view.hide()
@@ -142,7 +159,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		self.sorted_proxy_model.setSourceModel(self.model)
 		self.sorted_proxy_model.setFilterCaseSensitivity(QT.Qt.CaseSensitivity.CaseInsensitive)
 		self.run_Item_View_Assinments()
-		self.render_layer_helper_button.clicked.connect(self.Construct_Render_Layer_From_Render_State)
+		#self.render_layer_helper_button.clicked.connect(self.Construct_Render_Layer_From_Render_State)
 		self.isolateSelect_Button.toggled.connect(self.isolate_Select_Render_State)
 		self.render_states_view.clicked.connect(self.update_isolate_Select_Render_State)
 		self.actionLoadPickle_Data = QT.QAction(self)
@@ -153,6 +170,12 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		self.menuFile.addAction(self.actionLoadPickle_Data)
 		self.Render_States_Filter_input.textChanged.connect(self.update_on_render_states_filter_Changed)
 		self.Favorits_Only_checkBox.clicked.connect(self.update_on_render_states_filter_Changed)
+		self.Assign_Selected_To_Matte_Parts_Button.clicked.connect(self.Multi_State_Matte_Assinment)
+		self.Assign_Selected_To_Invisible_Parts_Button.clicked.connect(self.Multi_State_Invisible_Assinment)
+		self.Assign_Selected_To_Beauty_Parts_Button.clicked.connect(self.Multi_State_Beauty_Assinment)
+		self.Unassign_Selected_Parts_Button.clicked.connect(self.Multi_State_Unassined_Assinment)
+		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+		self.asset_tree_view.selected_Items
 		if cmds.objExists("VG_Model_BuilderScriptNode"):
 			self.actionDumpPickle_Data = QT.QAction(self)
 			self.actionDumpPickle_Data.setEnabled(True)
@@ -163,7 +186,22 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		if _maya_check:
 			self.Script_Data = Custom_Widgets.Yaml_Config_Data.find_yaml_config_scripts()
 			cmds.scriptJob(killWithScene=True, event=['SceneSaved',self.Save])
-	
+		self.Multi_State_Mode_Button.click()
+		self.Multi_State_Mode_Button.click()
+	@QT.QtSlot(bool)
+	#----------------------------------------------------------------------
+	def Toggle_Multi_State_Mode(self,val):
+		""""""
+		if val:
+			isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+			
+			self.render_states_view.setSelectionMode(QT.QAbstractItemView.ExtendedSelection)
+			self.render_states_view.setDragDropMode(QT.QAbstractItemView.NoDragDrop)
+			
+		else:
+			self.render_states_view.setSelectionMode(QT.QAbstractItemView.SingleSelection)
+			self.render_states_view.setDragDropMode(QT.QAbstractItemView.DragDrop)
+			
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def update_on_render_states_filter_Changed(self):
@@ -186,6 +224,7 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		self.sorted_proxy_model.setSourceModel(self.model)
 		self.model.run_Vray_States_Setup()
 		self.entity_tree_view.setModel(self.model)
+		self.All_Part_Sets_List.setModel(self.model)
 		self.asset_tree_view.setModel(self.asset_item_filter_proxy_model)
 		self.render_states_view.setModel(self.sorted_proxy_model)
 		self.part_sets_view.setModel(self.sorted_proxy_model)
@@ -193,12 +232,66 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		self.beauty_overide_view.setModel(self.sorted_proxy_model)
 		self.matte_overide_view.setModel(self.sorted_proxy_model)
 		self.asset_tree_view.set_Root_Item(self.model.Assets)
+		
+	#----------------------------------------------------------------------
+	@QT.QtSlot()
+	def _update_on_Asset_Selection_Changed(self):
+		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+		items = self.asset_tree_view.selected_Items()
+		if len(items):
+			self.All_Part_Sets_List.setRootIndex(items[0].Part_Sets.index())
 	###----------------------------------------------------------------------
 	##def contextMenuEvent(self, event):
 		##menu = QT.QMenu(self)
 		##menu.addAction(self.actionAdd_Part_Set)
 		##menu.addAction(self.actionAdd_Render_State)
 		##menu.exec_(event.globalPos())
+	#----------------------------------------------------------------------
+	def Assine_Part_Set_Refs_To_Overide_State(self,overide_state,items):
+		""""""
+		for item in items:
+			if not overide_state.data() == item.get_Overide_assinment().data():
+				item.parent().removeRow(item.row())
+				overide_state.appendRow(item)
+	#----------------------------------------------------------------------
+	def Assine_Part_Sets_To_Selected_Render_States_Overide(self,overide_state):
+		""""""
+		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
+		set_names = [item.data() for item in self.All_Part_Sets_List.selected_Items()]
+		for render_state in self.render_states_view.selected_Items():
+			isinstance(render_state,Custom_Widgets.Render_State_Item)
+			if overide_state == "b":
+				overide_item = render_state.Beauty
+			elif overide_state == "m":
+				overide_item = render_state.Matte
+			elif overide_state == "i":
+				overide_item = render_state.Invisible
+			else:
+				overide_item = render_state.Unassined
+			all_refs = []
+			for name in set_names:
+				for part in render_state.Beauty_Parts + render_state.Matte_Parts + render_state.Invisible_Parts + render_state.Unassined_Parts:
+					if part.data() == name:
+						all_refs.append(part)
+						break
+			self.Assine_Part_Set_Refs_To_Overide_State(overide_item, all_refs)
+			
+	#----------------------------------------------------------------------
+	def Multi_State_Beauty_Assinment(self):
+		""""""
+		self.Assine_Part_Sets_To_Selected_Render_States_Overide("b")
+	#----------------------------------------------------------------------
+	def Multi_State_Matte_Assinment(self):
+		""""""
+		self.Assine_Part_Sets_To_Selected_Render_States_Overide("m")
+	#----------------------------------------------------------------------
+	def Multi_State_Invisible_Assinment(self):
+		""""""
+		self.Assine_Part_Sets_To_Selected_Render_States_Overide("i")
+	#----------------------------------------------------------------------
+	def Multi_State_Unassined_Assinment(self):
+		""""""
+		self.Assine_Part_Sets_To_Selected_Render_States_Overide("u")
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def undo_it(self):
@@ -379,8 +472,9 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		for item in data:
 			for layer in item.layers:
 				if not cmds.objExists(layer):
+					possable_options = [check for check in cmds.ls(typ="displayLayer") if layer.lower() in check.lower()]
 					cmds.inViewMessage( statusMessage='<hl>Can Not Reconstruct From Pickle Data\nBecause The Following Display Layer\nWas Not Found In The Scene\n"%s".' % (layer), fadeInTime=200, fadeOutTime=1000, fadeStayTime=3000,fontSize=20, pos='midCenter', fade=True )
-					cmds.error('Can Not Reconstruct From Pickle Data Because The Following Display Layer "%s" Was Not Found In The Scene".' % layer )
+					cmds.error('Can Not Reconstruct From Pickle Data Because The Following Display Layer "%s" Was Not Found In The Scene\n possable options %s".' % (layer, ",".join(possable_options)) )
 					return
 		
 		self.Construct_From_Display_Layers()
@@ -473,6 +567,8 @@ class Vray_Scene_States_Manager_MainWindow(Compiled_Vray_Scene_State_Manager.Ui_
 		if self.isolateSelect_Button.isChecked():
 			self.isolate_Select_Render_State(True)
 
+QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Manager_MainWindow)
+
 States_Manager = None
 isinstance(States_Manager, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 
@@ -480,7 +576,9 @@ _remove_manager_job_id = -1
 def make_ui():
 	global States_Manager, _remove_manager_job_id
 	if States_Manager == None:
-		States_Manager = Vray_Scene_States_Manager_MainWindow()
+		States_Manager = QT.ui_Loader.load(os.path.join( os.path.dirname(__file__), "Vray_Scene_State_Manager.ui") )
+		States_Manager._init()
+		#States_Manager = Vray_Scene_States_Manager_MainWindow()
 		States_Manager.show()
 		States_Manager.Load()
 		_remove_manager_job_id = cmds.scriptJob(runOnce=True, event= ["deleteAll",remove_manager])
@@ -492,8 +590,8 @@ def remove_manager():
 	global States_Manager
 	States_Manager.hide()
 	check = States_Manager._Enable_Model_Editor
+	States_Manager.setParent(None)
 	States_Manager = None	
-	#States_Manager.setParent(None)
 	#del States_Manager
 	if check:
 		cmds.deleteUI("MyModelEditor", editor = True)

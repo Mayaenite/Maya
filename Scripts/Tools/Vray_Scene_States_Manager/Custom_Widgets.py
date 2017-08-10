@@ -2285,7 +2285,20 @@ class Standered_List_View(QListView):
 		isinstance(self.asset_tree_view, Asset_Tree_View)
 		isinstance(self.entity_tree_view, Entity_Tree_View)
 		# isinstance(self.model_editor_widget, Maya_Modle_Editor)
-
+	#----------------------------------------------------------------------
+	def selected_Items(self):
+		res = []
+		for index in self.selectedIndexes():
+			item = self.item_From_Index(index)
+			res.append(item)
+		return res
+	
+	#----------------------------------------------------------------------
+	def item_From_Index(self, index):
+		item = index.model().itemFromIndex(index)
+		isinstance(index, _Base_Item)
+		return item
+	
 	def dragEnterEvent(self,event):
 		super(Standered_List_View,self).dragEnterEvent(event)
 	def model(self):
