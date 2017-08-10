@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>967</width>
+    <width>919</width>
     <height>872</height>
    </rect>
   </property>
@@ -195,6 +195,9 @@
              <widget class="QPushButton" name="Multi_State_Mode_Button">
               <property name="enabled">
                <bool>true</bool>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This Will Toggle The Multi Render States Selection Mode.&lt;/p&gt;&lt;p&gt;In This Mode You Can Select Multiple States. To Manipulate Or Delete At Once.&lt;/p&gt;&lt;p&gt;The Unassign Part Sets List On The Right Side Will Become All Part Sets List &lt;/p&gt;&lt;p&gt;And Will Display All The Part Sets For This File Regardless &lt;/p&gt;&lt;p&gt;Of What Render State You Select. &lt;/p&gt;&lt;p&gt;It Also Will Disable The Abblity To Drag And Drop.&lt;/p&gt;&lt;p&gt;Clicking and draging will now result in selectiing the items you drag over&lt;/p&gt;&lt;p&gt;The Overide List Views &lt;span style=&quot; font-style:italic;&quot;&gt;(&lt;/span&gt;&lt;span style=&quot; font-style:italic; color:#ff0000;&quot;&gt;Beauty Matte ect..&lt;/span&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;)&lt;/span&gt; Will Become Buttons.&lt;/p&gt;&lt;p&gt;Clicking The Button Will Run The Action Equivalent What The&lt;/p&gt;&lt;p&gt;Drag And Drop Would Have. But Will Do So For All The Currently Selected Part Sets&lt;/p&gt;&lt;p&gt;And Apply That Action To All The Currently Selected States.&lt;/p&gt;&lt;p&gt;Filltering And Favorits Will Also Work In This Mode But You Still Must &lt;/p&gt;&lt;p&gt;Select The States That Are Remaining&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Multi State Mode</string>
@@ -696,7 +699,7 @@ To Invisible</string>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <layout class="QGridLayout" name="gridLayout">
               <property name="leftMargin">
                <number>0</number>
               </property>
@@ -709,17 +712,24 @@ To Invisible</string>
               <property name="bottomMargin">
                <number>0</number>
               </property>
-              <item>
+              <item row="0" column="0" colspan="2">
                <widget class="QPushButton" name="add_part_set_Button">
                 <property name="text">
                  <string>Add Part Set</string>
                 </property>
                </widget>
               </item>
-              <item>
+              <item row="0" column="2">
                <widget class="QPushButton" name="remove_part_sets_Button">
                 <property name="text">
                  <string>Remove Selected</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
+               <widget class="QPushButton" name="pushButton">
+                <property name="text">
+                 <string>Remove Empty Part Sets</string>
                 </property>
                </widget>
               </item>
@@ -750,7 +760,7 @@ To Invisible</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>967</width>
+     <width>919</width>
      <height>26</height>
     </rect>
    </property>
@@ -761,12 +771,17 @@ To Invisible</string>
     <addaction name="actionAdd_Asset"/>
     <addaction name="action_Add_Child_Asset"/>
     <addaction name="actionRemove_Selected_Asset"/>
+    <addaction name="separator"/>
     <addaction name="actionAdd_Part_Set"/>
     <addaction name="actionDelete_Parts"/>
+    <addaction name="separator"/>
     <addaction name="actionAdd_Render_State"/>
     <addaction name="actionRemove_Selected_States"/>
+    <addaction name="separator"/>
     <addaction name="actionDisplay_Layers_To_Part_Sets"/>
     <addaction name="action_Sync_Display_Layers"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemove_Empty_Part_Sets"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -904,6 +919,11 @@ To Invisible</string>
   <action name="action_Sync_Display_Layers">
    <property name="text">
     <string>Sync Display Layers</string>
+   </property>
+  </action>
+  <action name="actionRemove_Empty_Part_Sets">
+   <property name="text">
+    <string>Remove Empty Part Sets</string>
    </property>
   </action>
  </widget>
@@ -1712,6 +1732,38 @@ To Invisible</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionRemove_Empty_Part_Sets</sender>
+   <signal>triggered()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Remove_Empty_Part_Sets()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>435</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Vray_Scene_State_Manager</receiver>
+   <slot>Remove_Empty_Part_Sets()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>851</x>
+     <y>434</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>827</x>
+     <y>-23</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>ACTIVATE_RUN_SETUP(QMainWindow*)</signal>
@@ -1742,5 +1794,6 @@ To Invisible</string>
   <slot>Show_All_Diaplay_Layers()</slot>
   <slot>_update_on_Asset_Selection_Changed()</slot>
   <slot>Toggle_Multi_State_Mode(bool)</slot>
+  <slot>Remove_Empty_Part_Sets()</slot>
  </slots>
 </ui>
