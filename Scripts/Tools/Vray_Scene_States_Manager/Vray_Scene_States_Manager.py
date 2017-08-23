@@ -674,11 +674,11 @@ def make_ui():
 		States_Manager._init()
 		#States_Manager = Vray_Scene_States_Manager_MainWindow()
 		States_Manager.show()
+		States_Manager.move(200,100)
 		States_Manager.Load()
 		_remove_manager_job_id = cmds.scriptJob(runOnce=True, event= ["deleteAll",remove_manager])
 	else:
 		States_Manager.show()
-		States_Manager.move(200,100)
 	return States_Manager
 
 def remove_manager():
