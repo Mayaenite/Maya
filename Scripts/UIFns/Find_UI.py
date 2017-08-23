@@ -1,7 +1,5 @@
 
 import QT
-QtGui = QT.QtGui
-QtCore = QT.QtCore
 import maya.OpenMayaUI as apiUI
 
 def getMayaWindow():

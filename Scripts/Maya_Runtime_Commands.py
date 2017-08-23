@@ -201,7 +201,7 @@ def Seperate_Poly_By_Shader():
 def aw_hub_check_Ctr1_Hotkey():
 	""""""
 	aw_hub_cmd_name = "aw_modeleditorheadsupdisplaycontrols"
-	cmds.nameCommand(aw_hub_cmd_name, annotation="Armstrong White model Editor Heads Up Display Contorls", command='python("import Scripts.UIFns.AW_Master_Control_HUB\\nScripts.UIFns.AW_Master_Control_HUB.AW_HUB_Master_Control()")',)
+	cmds.nameCommand(aw_hub_cmd_name, annotation="Armstrong White model Editor Heads Up Display Contorls", command='python("import Scripts.UIFns.AW_Master_Control_HUB\\nreload(Scripts.UIFns.AW_Master_Control_HUB)\\nScripts.UIFns.AW_Master_Control_HUB.AW_HUB_Master_Control()")',)
 	cmds.hotkey( altModifier=True, ctrlModifier=True, keyShortcut="A", name=aw_hub_cmd_name)
 #----------------------------------------------------------------------
 def aw_Box_Map_Selected():
@@ -312,6 +312,7 @@ def AW_PolyUnite():
 		dl = Scripts.OpenMaya_Util_API.DisplayLayer(display_layer_list[0])
 		dl.addMembers(united_objs)
 		
+
 aw_hub_check_Ctr1_Hotkey()
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)
@@ -321,3 +322,4 @@ cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys 
 cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjection With Box Map Settings On All Selected Items", command=__name__+".aw_Box_Map_Selected()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The Resault Back To Its Parent And Display Layer", command=__name__+".AW_PolyUnite()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)
+
