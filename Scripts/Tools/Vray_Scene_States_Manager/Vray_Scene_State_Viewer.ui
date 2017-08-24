@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Vray_Scene_States_Viewer</class>
- <widget class="QMainWindow" name="Vray_Scene_States_Viewer">
+ <widget class="Vray_Scene_States_Viewer_MainWindow" name="Vray_Scene_States_Viewer">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -61,6 +61,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Assine Overide State To Render Layers By Name </string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="Asset_Tree_View" name="entity_tree_view">
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -102,7 +109,33 @@
     <slot>rebuild_grid(QStandardItem*)</slot>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>Vray_Scene_States_Viewer_MainWindow</class>
+   <extends>QMainWindow</extends>
+   <header>Scripts.Tools.Vray_Scene_States_Manager</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Vray_Scene_States_Viewer</receiver>
+   <slot>Assine_Overide_State_To_Render_Layer_With_Matching_Name()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>358</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>-21</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>Assine_Overide_State_To_Render_Layer_With_Matching_Name()</slot>
+ </slots>
 </ui>

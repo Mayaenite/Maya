@@ -4,6 +4,7 @@ try:
 	import Scripts.NodeCls.M_Nodes
 	import Scripts.UIFns.Find_UI
 	import maya.cmds as cmds
+	from maya.app.general.mayaMixin import MayaQWidgetBaseMixin,MayaQWidgetDockableMixin
 	try:
 		cmds.loadPlugin("vrayformaya",qt=True)
 	except:
@@ -37,9 +38,11 @@ QtCore = QT.QtCore
 QtGui  = QT.QtGui
 uic    = QT.uic
 
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Tree_View)
+QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Grid)
 
 ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Viewer.ui")
-uiform, uibase = uic.loadUiType(ui_file)
+#uiform, uibase = uic.loadUiType(ui_file)
 
 class Enum_List_Delegate(QT.QItemDelegate):
 	def get_item_from_index(self, index):
@@ -81,17 +84,16 @@ class Enum_List_Delegate(QT.QItemDelegate):
 
 ########################################################################
 # uiform, QT.QMainWindow
-class Vray_Scene_States_Viewer_MainWindow(uiform, QT.QMainWindow):
+class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWindow):
 #class Vray_Scene_States_Viewer_MainWindow(Compiled_UIs.Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer,QT.QMainWindow):
 	#----------------------------------------------------------------------
 	ACTIVE_RENDER_LAYER_CHANGED = QT.QtSignal()
 	NEW_RENDER_LAYER_CREATED = QT.QtSignal()
+	
 	def __init__(self, parent=None):
-		if parent == None and _maya_check:
-			parent = Scripts.UIFns.Find_UI.getMayaWindow()
 		isinstance(self, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 		super(Vray_Scene_States_Viewer_MainWindow,self).__init__(parent)
-		self.setupUi(self)
+	def _init(self):
 		#self.Asset_Grid_groupBox.hide()
 		self.entity_tree_view.hide()
 		if self.Version_Check() == 2:
@@ -116,7 +118,32 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QT.QMainWindow):
 	def show(self):
 		super(Vray_Scene_States_Viewer_MainWindow, self).show()
 		self.run_Item_View_Assinments()
-		
+	#----------------------------------------------------------------------
+	def get_asset_states_comboxs(self):
+		res = []
+		for item in self.Asset_Grid_widget.items:
+			res.append(item.asset_states)
+		return res
+	@QT.QtSlot()
+	def Assine_Overide_State_To_Render_Layer_With_Matching_Name(self):
+		state_comboxs = self.get_asset_states_comboxs()
+	
+		for rl in cmds.ls(typ="renderLayer"):
+			if not "defaultRenderLayer" in rl:
+				cmds.editRenderLayerGlobals( currentRenderLayer=rl)
+	
+				for cb in state_comboxs:
+					index=cb.rootModelIndex()
+					m    = index.model()
+					item = m.itemFromIndex(index)
+	
+					for child in item.Children[2:]:
+						if rl.startswith(child.data()):
+							row_num = cb.findText(child.data(),QT.Qt.MatchFlag.MatchExactly)
+							cb.setCurrentIndex(0)
+							cb.setCurrentIndex(row_num)
+							break
+						
 	def emit_render_layer_changed(self):
 		self.ACTIVE_RENDER_LAYER_CHANGED.emit()
 		if self.Version_Check() == 2:
@@ -180,19 +207,25 @@ class Vray_Scene_States_Viewer_MainWindow(uiform, QT.QMainWindow):
 			self.model.run_update(full=True)
 			self.Rebuild_Render_Layer_States()
 			self.Update_Button.hide()
+
+QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Viewer_MainWindow)
 States_Viewer = None
 isinstance(States_Viewer, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 
 def make_ui():
 	global States_Viewer
 	if States_Viewer == None:
-		States_Viewer = Vray_Scene_States_Viewer_MainWindow()
+		States_Viewer = QT.ui_Loader.load(ui_file)#Vray_Scene_States_Viewer_MainWindow()
+		States_Viewer._init()
+		States_Viewer.move(200,100)
 		States_Viewer.show()
 		cmds.scriptJob(runOnce=True, event= ["deleteAll",remove_Viewer])
 	elif Scripts.General_Maya_Util.getModifier() == 'Ctrl+Alt+Shift':
 		cmds.scriptJob(kill=States_Viewer._Render_Layer_Changed_Script_Job_ID)
 		remove_Viewer()
-		States_Viewer = Vray_Scene_States_Viewer_MainWindow()
+		States_Viewer = QT.ui_Loader.load(ui_file)
+		States_Viewer._init()
+		States_Viewer.move(200,100)
 		States_Viewer.show()
 	else:
 		States_Viewer.show()
