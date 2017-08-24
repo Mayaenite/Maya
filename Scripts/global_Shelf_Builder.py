@@ -377,12 +377,20 @@ def Build_Artist_Tools(shelfName):
             ,sourceType="python")
 	# Vray Scene States Viewer
 	cmds.shelfButton(parent=active_shelf
-            ,annotation="Vray Scene States Viewer\n\nHOLD DOWN\n\nCTRL + ALT + SHIFT\n\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA\n\n" 
+            ,annotation="Vray Scene States Viewer\nHOLD DOWN\nCTRL + ALT + SHIFT\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA\nYou Can Also Do This To Switch Between The Different Versions" 
             ,image="vray_scene_states_viewer.png" 
             ,image1="vray_scene_states_viewer.png" 
             ,style="iconOnly" 
             ,command="import Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer\nScripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer.make_ui()"
             ,sourceType="python")
+	# Vray Scene States Viewer Beta
+	cmds.shelfButton(parent=active_shelf
+	         ,annotation="Vray Scene States Viewer Beta Lists\nTo Use Double Click On Any Of The States In The List\nTo Assign That State To The Current Render Layer\nHOLD DOWN\nCTRL + ALT + SHIFT\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA\nYou Can Also Do This To Switch Between The Different Versions" 
+	         ,image="vray_scene_states_viewer_beta.png" 
+	         ,image1="vray_scene_states_viewer_beta.png" 
+	         ,style="iconOnly" 
+	         ,command="import Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer\nScripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer.make_ui(True)"
+	         ,sourceType="python")
 	# Deadline_Submiter
 	cmds.shelfButton(parent=active_shelf
             ,annotation="Deadline Submiter"

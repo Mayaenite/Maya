@@ -122,24 +122,7 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>actionSet_State_By_Name</sender>
-   <signal>triggered()</signal>
-   <receiver>Vray_Scene_States_Viewer</receiver>
-   <slot>Assine_Overide_State_To_Render_Layer_With_Matching_Name()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>251</x>
-     <y>323</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>251</x>
-     <y>322</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>Assine_Overide_State_To_Render_Layer_With_Matching_Name()</slot>
  </slots>

@@ -48,6 +48,7 @@ try:
 	M_Controls           = Scripts.UICls.Controls
 	M_Panels             = Scripts.UICls.Panels
 	M_Windows            = Scripts.UICls.Windows
+	get_Current_Render_Layer = lambda :cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
 	
 
 except:
@@ -866,6 +867,57 @@ class Asset_States_ComboBox(QComboBox):
 			self.setCurrentIndex(self._asset.enum_render_states_plug.value)
 		else:
 			self.setCurrentIndex(0)
+	
+##======================================================================
+########################################################################
+class Asset_States_ListView(QListView):
+	def __init__(self, asset, parent=None):
+		isinstance(asset, Asset_Item)
+		super(Asset_States_ListView, self).__init__(parent=parent)
+		self.setModel(asset.Model)
+		self.setRootIndex(asset.Render_States.index())
+		self._asset = asset
+		self._maya_forced = False
+		self.doubleClicked.connect(self.update_asset_attribute)
+		self.setEditTriggers(self.NoEditTriggers)
+
+	def update_asset_attribute(self):
+		current_render_layer = get_Current_Render_Layer()
+		current_index        = self.currentIndex()
+		current_plug_index   = self._asset.enum_render_states_plug.value
+		if not current_render_layer == "defaultRenderLayer":
+			self._asset.enum_render_states_plug.value = current_index.row()
+			if not self._maya_forced or not current_index.row() == current_plug_index:
+				self._asset.set_Render_States_Plug_Overide()
+				actived_state = self._asset.Render_States.child(current_index.row())
+				isinstance(actived_state, Render_State_Item)
+				actived_state.apply_Vray_Overide_States()
+			else:
+				self._maya_forced = False
+		else:
+			self.setCurrentIndex(self._asset.Render_States.child(0).index())
+			self._asset.enum_render_states_plug.value = 0
+			for layer in Scripts.Global_Constants.Nodes.Display_Layers():
+				layer.visibility.value = 1
+	def update_On_Render_Layer_Change(self):
+		self._maya_forced = True
+		if not get_Current_Render_Layer() == "defaultRenderLayer":
+			self.setCurrentIndex(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index())
+		else:
+			self.model().itemFromIndex(self.rootIndex()).child(0).index()
+			self.setCurrentIndex(self.model().itemFromIndex(self.rootIndex()).child(0).index())
+			
+########################################################################
+class Asset_States_GroupBox(QT.QGroupBox):
+	def __init__(self, asset, parent=None):
+		isinstance(asset, Asset_Item)
+		super(Asset_States_GroupBox, self).__init__(parent=parent)
+		self.verticalLayout = QT.QVBoxLayout(self)
+		self.asset_states   = Asset_States_ListView(asset, self)
+		
+		self.setAlignment(QtCore.Qt.AlignCenter)
+		self.setTitle(asset.Parent.data())
+		self.verticalLayout.addWidget(self.asset_states)
 		
 ########################################################################
 class Asset_Frame(QT.QFrame):
@@ -896,7 +948,11 @@ class Asset_Grid(QT.QWidget):
 		self.asset_column = 0
 		
 	def add_asset_item(self, asset):
-		frame = Asset_Frame(asset, self)
+		if self.window()._use_Beta:
+			frame = Asset_States_GroupBox(asset, self)
+		else:
+			frame = Asset_Frame(asset, self)
+		
 		self.window().ACTIVE_RENDER_LAYER_CHANGED.connect(frame.asset_states.update_On_Render_Layer_Change)
 		self.gridLayout.addWidget(frame, self.asset_row, self.asset_column, 1, 1)
 		self.items.append(frame)

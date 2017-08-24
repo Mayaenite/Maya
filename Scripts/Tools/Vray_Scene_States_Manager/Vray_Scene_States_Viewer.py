@@ -89,10 +89,10 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	#----------------------------------------------------------------------
 	ACTIVE_RENDER_LAYER_CHANGED = QT.QtSignal()
 	NEW_RENDER_LAYER_CREATED = QT.QtSignal()
-	
 	def __init__(self, parent=None):
 		isinstance(self, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 		super(Vray_Scene_States_Viewer_MainWindow,self).__init__(parent)
+		self._use_Beta = False
 	def _init(self):
 		#self.Asset_Grid_groupBox.hide()
 		self.entity_tree_view.hide()
@@ -105,6 +105,8 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 		self.rebuild_Render_layer_states_button.clicked.connect(self.Rebuild_Render_Layer_States)
 		# cmds.scriptJob(e=["renderLayerChange", self.update_on_render_layer_Added], killWithScene=True)
 		self._Render_Layer_Changed_Script_Job_ID = cmds.scriptJob(e=["renderLayerManagerChange", self.emit_render_layer_changed], killWithScene=True)
+		self.actionSet_State_By_Name.triggered.connect(self.Assine_Overide_State_To_Render_Layer_With_Matching_Name_Combo_Box)
+		self.run_Item_View_Assinments()
 		
 	def Version_Check(self):
 		return Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets.Viewer_Version_check()
@@ -117,7 +119,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	#----------------------------------------------------------------------
 	def show(self):
 		super(Vray_Scene_States_Viewer_MainWindow, self).show()
-		self.run_Item_View_Assinments()
+		
 	#----------------------------------------------------------------------
 	def get_asset_states_comboxs(self):
 		res = []
@@ -125,25 +127,47 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 			res.append(item.asset_states)
 		return res
 	@QT.QtSlot()
-	def Assine_Overide_State_To_Render_Layer_With_Matching_Name(self):
-		state_comboxs = self.get_asset_states_comboxs()
+	def Assine_Overide_State_To_Render_Layer_With_Matching_Name_Combo_Box(self):
+		def run_List_View():
+			state_comboxs = self.get_asset_states_comboxs()
 	
-		for rl in cmds.ls(typ="renderLayer"):
-			if not "defaultRenderLayer" in rl:
-				cmds.editRenderLayerGlobals( currentRenderLayer=rl)
+			for rl in cmds.ls(typ="renderLayer"):
+				if not "defaultRenderLayer" in rl:
+					cmds.editRenderLayerGlobals( currentRenderLayer=rl)
 	
-				for cb in state_comboxs:
-					index=cb.rootModelIndex()
-					m    = index.model()
-					item = m.itemFromIndex(index)
+					for cb in state_comboxs:
+						index=cb.rootIndex()
+						m    = index.model()
+						item = m.itemFromIndex(index)
 	
-					for child in item.Children[2:]:
-						if rl.startswith(child.data()):
-							row_num = cb.findText(child.data(),QT.Qt.MatchFlag.MatchExactly)
-							cb.setCurrentIndex(0)
-							cb.setCurrentIndex(row_num)
-							break
-						
+						for child in item.Children[2:]:
+							if rl.startswith(child.data()):
+								cb.setCurrentIndex(child.index())
+								cb.update_asset_attribute()
+								break
+		def run_Combo_Box():
+			state_comboxs = self.get_asset_states_comboxs()
+	
+			for rl in cmds.ls(typ="renderLayer"):
+				if not "defaultRenderLayer" in rl:
+					cmds.editRenderLayerGlobals( currentRenderLayer=rl)
+	
+					for cb in state_comboxs:
+						index=cb.rootModelIndex()
+						m    = index.model()
+						item = m.itemFromIndex(index)
+	
+						for child in item.Children[2:]:
+							if rl.startswith(child.data()):
+								row_num = cb.findText(child.data(),QT.Qt.MatchFlag.MatchExactly)
+								cb.setCurrentIndex(0)
+								cb.setCurrentIndex(row_num)
+								break
+		if self._use_Beta:
+			run_List_View()
+		else:
+			run_Combo_Box()
+			
 	def emit_render_layer_changed(self):
 		self.ACTIVE_RENDER_LAYER_CHANGED.emit()
 		if self.Version_Check() == 2:
@@ -181,15 +205,27 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 			layer.makeCurrent()
 			self.emit_render_layer_changed()
 			# cmds.refresh(force=True)
-			for item in self.Asset_Grid_widget.items:
-				isinstance(item, Custom_Widgets.Asset_Frame)
-				current = item.asset_states.currentIndex()
-				item.asset_states.setCurrentIndex(0)
-				item.asset_states.update_asset_attribute()
-				# cmds.refresh(force=True)
-				item.asset_states.setCurrentIndex(current)
-				item.asset_states.update_asset_attribute()
-				# cmds.refresh(force=True)
+			if self._use_Beta:
+				for item in self.Asset_Grid_widget.items:
+					isinstance(item, Custom_Widgets.Asset_Frame)
+					current = item.asset_states.currentIndex()
+					current_item = self.model.itemFromIndex(current)
+					item.asset_states.setCurrentIndex(current_item.parent().child(0).index())
+					item.asset_states.update_asset_attribute()
+					# cmds.refresh(force=True)
+					item.asset_states.setCurrentIndex(current)
+					item.asset_states.update_asset_attribute()
+					# cmds.refresh(force=True)
+			else:
+				for item in self.Asset_Grid_widget.items:
+					isinstance(item, Custom_Widgets.Asset_Frame)
+					current = item.asset_states.currentIndex()
+					item.asset_states.setCurrentIndex(0)
+					item.asset_states.update_asset_attribute()
+					# cmds.refresh(force=True)
+					item.asset_states.setCurrentIndex(current)
+					item.asset_states.update_asset_attribute()
+					# cmds.refresh(force=True)
 		active_layer.makeCurrent()
 	#----------------------------------------------------------------------
 	def showEvent(self, event):
@@ -212,10 +248,11 @@ QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Viewer_MainWindow)
 States_Viewer = None
 isinstance(States_Viewer, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)
 
-def make_ui():
+def make_ui(useBeta=False):
 	global States_Viewer
 	if States_Viewer == None:
 		States_Viewer = QT.ui_Loader.load(ui_file)#Vray_Scene_States_Viewer_MainWindow()
+		States_Viewer._use_Beta = useBeta
 		States_Viewer._init()
 		States_Viewer.move(200,100)
 		States_Viewer.show()
@@ -224,6 +261,7 @@ def make_ui():
 		cmds.scriptJob(kill=States_Viewer._Render_Layer_Changed_Script_Job_ID)
 		remove_Viewer()
 		States_Viewer = QT.ui_Loader.load(ui_file)
+		States_Viewer._use_Beta = useBeta
 		States_Viewer._init()
 		States_Viewer.move(200,100)
 		States_Viewer.show()
