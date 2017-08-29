@@ -134,6 +134,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 		self.ACTIVATE_RUN_SETUP.emit(self)
 		# self.verticalGroupBox.hide()
 		self.entity_tree_view.hide()
+		self.isolateSelect_Button.hide()
 		self.undo_stack =  QT.QUndoStack()
 		
 		if self._Enable_Model_Editor:
@@ -160,7 +161,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 		self.sorted_proxy_model.setFilterCaseSensitivity(QT.Qt.CaseSensitivity.CaseInsensitive)
 		self.run_Item_View_Assinments()
 		#self.render_layer_helper_button.clicked.connect(self.Construct_Render_Layer_From_Render_State)
-		self.isolateSelect_Button.toggled.connect(self.isolate_Select_Render_State)
+		#self.isolateSelect_Button.toggled.connect(self.isolate_Select_Render_State)
 		self.render_states_view.clicked.connect(self.update_isolate_Select_Render_State)
 		self.actionLoadPickle_Data = QT.QAction(self)
 		self.actionLoadPickle_Data.setEnabled(True)
