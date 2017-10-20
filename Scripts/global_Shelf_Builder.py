@@ -367,6 +367,14 @@ def Build_Artist_Tools(shelfName):
 		,style="iconOnly" 
 		,command="import dmf_scripts.maya_mat_replace_v05\nreload(dmf_scripts.maya_mat_replace_v05)\ndmf_scripts.maya_mat_replace_v05.main()" 
 		,sourceType="python")
+	# Asset Assembly System
+	cmds.shelfButton(parent=active_shelf
+	         ,annotation="Asset Assembly System" 
+	         ,image="Assembly_Model.png" 
+	         ,image1="Assembly_Model.png" 
+	         ,style="iconOnly" 
+	         ,command="if not os.path.join(System_Paths.AW_COMMON_UTILITIES,'Other') in os.sys.path:\n\tos.sys.path.append(os.path.join(System_Paths.AW_COMMON_UTILITIES,'Other'))\nimport AW_Asset_Assembly_System.Simple_Main_Window\n_G_Asset_Assembly_System_UI = AW_Asset_Assembly_System.Simple_Main_Window.load_main_window()"
+	         ,sourceType="python")
 	# Vray Scene States Manager
 	cmds.shelfButton(parent=active_shelf
             ,annotation="Vray Scene States Manager" 
