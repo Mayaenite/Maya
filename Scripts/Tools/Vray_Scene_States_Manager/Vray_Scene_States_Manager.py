@@ -122,15 +122,11 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	_Enable_Model_Editor   = False
 	#----------------------------------------------------------------------
 	def __init__(self, parent=None):
-		#if parent == None and _maya_check:
-			#parent = Scripts.UIFns.Find_UI.getMayaWindow()
 		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 		super(Vray_Scene_States_Manager_MainWindow,self).__init__(parent)
-		#self.setupUi(self)
 	#----------------------------------------------------------------------
 	def _init(self):
 		""""""
-		
 		self.ACTIVATE_RUN_SETUP.emit(self)
 		# self.verticalGroupBox.hide()
 		self.entity_tree_view.hide()
@@ -567,107 +563,89 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	def update_isolate_Select_Render_State(self):
 		if self.isolateSelect_Button.isChecked():
 			self.isolate_Select_Render_State(True)
-
+	#----------------------------------------------------------------------
+	def Create_Render_States_From_Name_List(self,names=[]):
+		current_item = self.asset_tree_view.current_item()
+		if current_item is not None:
+			for name in names:
+				found_items = current_item.find_Render_States_By_Name(name)
+				if not len(found_items):
+					self.add_Render_State(name=name)
+	#----------------------------------------------------------------------
+	def Create_Part_Sets_From_Name_List(self,names=[]):
+		current_item = self.asset_tree_view.current_item()
+		if current_item is not None:
+			for name in names:
+				found_items = current_item.find_Part_Sets_By_Name(name)
+				if not len(found_items):
+					self.add_Part_Set(name=name)
+	#----------------------------------------------------------------------
+	def Assine_Part_Set_Refs_To_Render_State_Overide(self, render_state_names, part_set_names,overide_state):
+		""""""
+		if isinstance(render_state_names,basestring):
+			render_state_names = [render_state_names]
+			
+			current_item = self.asset_tree_view.current_item()
+			if current_item is not None:
+				render_states = []
+				for render_state_name in render_state_names:
+					found_items = current_item.find_Render_States_By_Name(render_state_name)
+					if len(found_items):
+						render_states.append(found_items[0])
+	
+				if len(render_states):
+					overide_state = overide_state.lower()
+	
+					if len(overide_state):
+						overide_state = overide_state[0]
+	
+					for render_state in render_states:
+						if overide_state == "b":
+							overide_item = render_state.Beauty
+						elif overide_state == "m":
+							overide_item = render_state.Matte
+						elif overide_state == "i":
+							overide_item = render_state.Invisible
+						elif overide_state == "u":
+							overide_item = render_state.Unassined
+						else:
+							overide_item = None
+							continue
+	
+						part_sets = []
+						for part_set_name in part_set_names:
+							found_items = render_state.find_child_items(part_set_name)
+							if len(found_items):
+								part_sets.append(found_items[0])
+	
+						if len(part_sets):
+							for part_set in part_sets:
+								if not overide_item.data() == part_set.get_Overide_assinment().data():
+									part_set.parent().removeRow(part_set.row())
+									overide_item.appendRow(part_set)
+						
+	#----------------------------------------------------------------------
+	def Assine_Part_Set_Refs_To_Overide_State(self,overide_state,items):
+		""""""
+		for item in items:
+			if not overide_state.data() == item.get_Overide_assinment().data():
+				item.parent().removeRow(item.row())
+				overide_state.appendRow(item)
+	#----------------------------------------------------------------------
+	def Get_Active_Asset_Render_States(self):
+		current_item = self.asset_tree_view.current_item()
+		if current_item is not None:
+			return current_item.Render_States.Children
+		else:
+			return []
+		
 QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Manager_MainWindow)
 
 States_Manager = None
 isinstance(States_Manager, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 isinstance(States_Manager, Vray_Scene_States_Manager_MainWindow)
 
-def Get_States_Manager_Active_Asset_Render_States():
-	global States_Manager, _remove_manager_job_id
-	if States_Manager is not None:
-		current_item = States_Manager.asset_tree_view.current_item()
-		if current_item is not None:
-			return current_item.Render_States.Children
-		else:
-			return []
 
-def Create_Render_States_From_Name_List(names=[]):
-	global States_Manager, _remove_manager_job_id
-	if States_Manager is not None:
-		current_item = States_Manager.asset_tree_view.current_item()
-		if current_item is not None:
-			for name in names:
-				found_items = current_item.find_Render_States_By_Name(name)
-				if not len(found_items):
-					States_Manager.add_Render_State(name=name)
-				
-def Create_Part_Sets_From_Name_List(names=[]):
-	global States_Manager, _remove_manager_job_id
-	if States_Manager is not None:
-		current_item = States_Manager.asset_tree_view.current_item()
-		if current_item is not None:
-			for name in names:
-				found_items = current_item.find_Part_Sets_By_Name(name)
-				if not len(found_items):
-					States_Manager.add_Part_Set(name=name)
-					
-def Assine_Part_Set_Ref_To_Render_State_Overide():
-	global States_Manager, _remove_manager_job_id
-	if States_Manager is not None:
-		current_item = States_Manager.asset_tree_view.current_item()
-		if current_item is not None:
-			for name in names:
-				found_items = current_item.find_Part_Sets_By_Name(name)
-				if not len(found_items):
-					States_Manager.add_Part_Set(name=name)
-
-#----------------------------------------------------------------------
-def Assine_Part_Set_Refs_To_Overide_State(self,overide_state,items):
-	""""""
-	for item in items:
-		if not overide_state.data() == item.get_Overide_assinment().data():
-			item.parent().removeRow(item.row())
-			overide_state.appendRow(item)
-			#----------------------------------------------------------------------
-			def Assine_Part_Set_Refs_To_Render_State_Overide(render_state_names,part_set_names,overide_state):
-				""""""
-				maya_main_window = getMayaWindow()
-				States_Manager = maya_main_window.findChild(QT.QMainWindow,"Vray_Scene_State_Manager")
-				if isinstance(render_state_names,str):
-					render_state_names = [render_state_names]
-					
-				if States_Manager is not None:
-					current_item = States_Manager.asset_tree_view.current_item()
-					if current_item is not None:
-						render_states = []
-						for render_state_name in render_state_names:
-							found_items = current_item.find_Render_States_By_Name(render_state_name)
-							if len(found_items):
-								render_states.append(found_items[0])
-								
-						if len(render_states):
-							overide_state = overide_state.lower()
-							
-							if len(overide_state):
-								overide_state = overide_state[0]
-								
-							for render_state in render_states:
-								if overide_state == "b":
-									overide_item = render_state.Beauty
-								elif overide_state == "m":
-									overide_item = render_state.Matte
-								elif overide_state == "i":
-									overide_item = render_state.Invisible
-								elif overide_state == "u":
-									overide_item = render_state.Unassined
-								else:
-									overide_item = None
-									continue
-								
-								part_sets = []
-								for part_set_name in part_set_names:
-									found_items = render_state.find_child_items(part_set_name)
-									if len(found_items):
-										part_sets.append(found_items[0])
-								
-								if len(part_sets):
-									for part_set in part_sets:
-										if not overide_item.data() == part_set.get_Overide_assinment().data():
-											part_set.parent().removeRow(part_set.row())
-											overide_item.appendRow(part_set)
-_remove_manager_job_id = -1
 def make_ui():
 	global States_Manager, _remove_manager_job_id
 	if States_Manager == None:

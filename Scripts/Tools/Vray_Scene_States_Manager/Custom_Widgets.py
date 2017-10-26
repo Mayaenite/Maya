@@ -2,6 +2,7 @@
 import os
 import yaml
 import Yaml_Config_Data
+import uuid
 
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
@@ -61,7 +62,7 @@ def Viewer_Version_check():
 	if len(version):
 		version = int(version[0])
 	else:
-		version = 1
+		version = 2
 	return version
 
 _Vray_Scene_States_Viewer_Version = Viewer_Version_check()
@@ -3969,6 +3970,8 @@ class Render_State_Item(_Named_Data_Item):
 			self.setChild(1, 0, self.Matte)
 			self.setChild(2, 0, self.Invisible)
 			self.setChild(3, 0, self.Beauty)
+			self.uid = str(uuid.uuid4())
+			self._asset_assembly_ref = None
 		else:
 			self.from_Yaml(render_state, part_sets)
 	#----------------------------------------------------------------------
@@ -3997,7 +4000,7 @@ class Render_State_Item(_Named_Data_Item):
 		Matte        = self.Matte.to_Yaml(parts)
 		Invisible    = self.Invisible.to_Yaml(parts)
 		Beauty       = self.Beauty.to_Yaml(parts)
-		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty, favorit=self.favorit)
+		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty, favorit=self.favorit,uid=self.uid)
 		
 		Unassined.parent = render_state
 		Matte.parent     = render_state
@@ -4013,10 +4016,21 @@ class Render_State_Item(_Named_Data_Item):
 		self.Invisible           = Invisible_Overides_Item(yaml=render_state.Invisible, part_sets=part_sets)
 		self.Beauty              = Beauty_Overides_Item(yaml=render_state.Beauty, part_sets=part_sets)
 		self.Unassined           = Unassined_Overides_Item(yaml=render_state.Unassined, part_sets=part_sets)
+		
 		if not hasattr(render_state, "favorit"):
 			self.favorit             = 0
 		else:
 			self.favorit             = render_state.favorit
+			
+		if not hasattr(render_state, "uid"):
+			self.uid                 = str(uuid.uuid4())
+		else:
+			self.uid                 = render_state.uid
+		
+		if not hasattr(render_state, "_asset_assembly_ref"):
+			self._asset_assembly_ref = None
+		else:
+			self._asset_assembly_ref = render_state._asset_assembly_ref			
 		self.setChild(0, 0, self.Unassined)
 		self.setChild(1, 0, self.Matte)
 		self.setChild(2, 0, self.Invisible)
@@ -4196,6 +4210,16 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 	def __init__(self,part,**kwargs):
 		if part.__class__.__name__ == Yaml_Config_Data.Part_Set.__name__:
 			isinstance(part, Yaml_Config_Data.Part_Set)
+			if hasattr(part, "uid"):
+				self.uid = part.uid
+			else:
+				self.uid = str(uuid.uuid4())
+				
+			if not hasattr(part, "_asset_assembly_ref"):
+				self._asset_assembly_ref = None
+			else:
+				self._asset_assembly_ref = part._asset_assembly_ref
+				
 			if hasattr(part, "maya_node"):
 				if part.maya_node != None:
 					super(Part_Set_Item,self).__init__(part.maya_node,**kwargs)
@@ -4203,10 +4227,16 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 					super(Part_Set_Item,self).__init__(part.name,**kwargs)
 			else:
 				super(Part_Set_Item,self).__init__(part.name,**kwargs)
+				
 		elif isinstance(part, Named_Data_Object):
 			super(Part_Set_Item,self).__init__(part.name,**kwargs)
+			self.uid = str(uuid.uuid4())
+			self._asset_assembly_ref = None
 		else:
 			super(Part_Set_Item,self).__init__(part,**kwargs)
+			self.uid = str(uuid.uuid4())
+			self._asset_assembly_ref = None
+		
 		try:
 			self._data.lockNode()
 		except:
@@ -4222,7 +4252,7 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 			else:
 				part_set_value = value
 				display_layer_value =  value.replace("_set", "")
-			
+				
 			link_dl = self.node_Get_Linked_Display_Layer()
 			if link_dl is not None:
 				link_dl.name =  display_layer_value
@@ -4234,7 +4264,7 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 	#----------------------------------------------------------------------
 	def to_Yaml(self):
 		""""""
-		res = Yaml_Config_Data.Part_Set(self.data())
+		res = Yaml_Config_Data.Part_Set(name=self.data(), uid=self.uid, asset_assembly_ref=self._asset_assembly_ref)
 		return res
 	#----------------------------------------------------------------------
 	def node_Get_Linked_Display_Layer(self):

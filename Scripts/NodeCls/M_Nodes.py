@@ -1071,6 +1071,7 @@ class MNODE(Attribute_Creator):
 		return res
 	#----------------------------------------------------------------------
 	def delete(self):
+		self.unlockNode()
 		cmds.delete(self.name)
 	#----------------------------------------------------------------------
 	def lockNode(self):

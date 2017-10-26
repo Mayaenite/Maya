@@ -95,6 +95,10 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 		self._use_Beta = False
 	def _init(self):
 		#self.Asset_Grid_groupBox.hide()
+		if not len(cmds.fileInfo( 'AW_Vray_States_Viewer_Version', query=True )):
+			cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "2" )
+			#self.rebuild_Render_layer_states_button.hide()
+		
 		self.entity_tree_view.hide()
 		if self.Version_Check() == 2:
 			self.Update_Button.hide()

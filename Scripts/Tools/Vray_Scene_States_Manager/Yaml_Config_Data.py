@@ -202,7 +202,7 @@ class Unassined_Overides(Overides_Container):
 class Render_State(yaml.YAMLObject):
 	yaml_tag = u'!Render_State'
 	#----------------------------------------------------------------------
-	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None, favorit=0):
+	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None, favorit=0, uid=None):
 		self.name      = name
 		self.parent    = parent
 		self.Unassined = Unassined
@@ -210,6 +210,7 @@ class Render_State(yaml.YAMLObject):
 		self.Invisible = Invisible
 		self.Beauty    = Beauty
 		self.favorit   = favorit
+		self.uid       = uid
 		isinstance(self.parent, Render_States)
 		
 		if not isinstance(self.Unassined, Unassined_Overides):
@@ -226,15 +227,17 @@ class Render_State(yaml.YAMLObject):
 		
 	#----------------------------------------------------------------------
 	def __repr__(self):
-		return "%s(name=%r, Unassined=%r, Matte=%r, Invisible=%r, Beauty=%r,parent=%r)" % (self.__class__.__name__, self.name, self.Unassined, self.Matte, self.Invisible, self.Beauty, self.parent)
+		return "%s(name=%r, Unassined=%r, Matte=%r, Invisible=%r, Beauty=%r, parent=%r)" % (self.__class__.__name__, self.name, self.Unassined, self.Matte, self.Invisible, self.Beauty, self.parent)
 	
 ########################################################################
 class Part_Set(yaml.YAMLObject):
 	yaml_tag = u'!Part_Set'
 	#----------------------------------------------------------------------
-	def __init__(self, name=None, parent=None):
-		self.name = name
-		self.parent = parent
+	def __init__(self, name=None, parent=None, uid=None,asset_assembly_ref=None):
+		self.name               = name
+		self.parent             = parent
+		self.uid                = uid
+		self.asset_assembly_ref = asset_assembly_ref
 		isinstance(self.parent, Part_Sets)
 		#self.maya_node = None
 	def assine_maya_node(self):
@@ -252,7 +255,7 @@ class Part_Set(yaml.YAMLObject):
 					self.maya_node = Scripts.NodeCls.M_Nodes.VRayRenderState(name)
 	#----------------------------------------------------------------------
 	def __repr__(self):
-		return "%s(name=%r,parent=%r)" % (self.__class__.__name__, self.name, self.parent)
+		return "%s(name=%r,parent=%r)" % (self.__class__.__name__, self.name, self.parent.parent.name)
 	
 ########################################################################
 class Part_Set_Refence(yaml.YAMLObject):
