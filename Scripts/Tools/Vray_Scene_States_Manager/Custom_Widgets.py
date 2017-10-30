@@ -4255,7 +4255,7 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 			else:
 				self.uid = str(uuid.uuid4())
 				
-			if not hasattr(part, "_asset_assembly_ref_id"):
+			if not hasattr(part, "asset_assembly_ref_id"):
 				self.asset_assembly_ref_id   = None
 				self.asset_assembly_ref_type = None
 			else:
