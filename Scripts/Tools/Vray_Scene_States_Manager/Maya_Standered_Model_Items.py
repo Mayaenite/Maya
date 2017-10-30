@@ -112,6 +112,12 @@ class _Base_Item(QT.DataModels.QStandardItem.QStandardItem):
 		res = [item for item in self.model().findItems(text=name,flags=Qt.MatchFlag.MatchRecursive|Qt.MatchFlag.MatchExactly,column=0) if item.type() == Render_State_Item.ITEM_TYPE]
 		return res
 	#----------------------------------------------------------------------
+	def find_Render_States_By_asset_assembly_ref(self, ref_id,ref_type):
+		""""""
+		res = [item for item in self.model().findItems(text="*",flags=Qt.MatchFlag.MatchRecursive|Qt.MatchFlag.MatchWildcard,column=0) if item.type() == Render_State_Item.ITEM_TYPE]
+		res = [item for item in res if item.asset_assembly_ref_id == ref_id and item.asset_assembly_ref_type == ref_type]
+		return res
+	#----------------------------------------------------------------------
 	def find_Part_Set_Refs_By_Name(self, name):
 		""""""
 		res = [item for item in self.model().findItems(text=name,flags=Qt.MatchFlag.MatchRecursive|Qt.MatchFlag.MatchExactly,column=0) if item.type() == Part_Set_Reference_Item.ITEM_TYPE]

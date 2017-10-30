@@ -311,7 +311,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	@QT.QtSlot()
 	@QT.QtSlot(str)
 	def add_Part_Set(self, name=None):
-		self.asset_tree_view.add_New_Part_Set(name=name)
+		return self.asset_tree_view.add_New_Part_Set(name=name)
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def Remove_Selected_Part_Sets(self):
@@ -352,7 +352,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	@QT.QtSlot()
 	@QT.QtSlot(str)
 	def add_Render_State(self, name=None):
-		self.asset_tree_view.add_New_Render_State(name=name)
+		return self.asset_tree_view.add_New_Render_State(name=name)
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def open_File(self):
@@ -572,6 +572,29 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 				if not len(found_items):
 					self.add_Render_State(name=name)
 	#----------------------------------------------------------------------
+	def Create_Render_States_From_Assembly_Assets(self,items=[]):
+		current_item = self.asset_tree_view.current_item()
+		if current_item is not None:
+			for item in items:
+				found_items = current_item.find_Render_States_By_Name(item.name)
+				if not len(found_items):
+					if item._vray_state_id_ref != None:
+						found_items = current_item.find_Child_By_UUID(item._vray_state_id_ref)
+					if not len(found_items):
+						found_items = current_item.find_Render_States_By_asset_assembly_ref(item._excel_id_ref,item.__class__.__name__)
+					if not len(found_items):
+						new_item = self.add_Render_State(name=item.name)
+						isinstance(new_item,Custom_Widgets.Render_State_Item)
+						new_item.asset_assembly_ref_id   = item._excel_id_ref
+						new_item.asset_assembly_ref_type = item.__class__.__name__
+						item._vray_state_id_ref = new_item.uid
+				if len(found_items):
+					f_item = found_items[0]
+					f_item.asset_assembly_ref_id   = item._excel_id_ref
+					f_item.asset_assembly_ref_type = item.__class__.__name__
+					item._vray_state_id_ref = f_item.uid
+					f_item.setData(item.name)
+	#----------------------------------------------------------------------
 	def Create_Part_Sets_From_Name_List(self,names=[]):
 		current_item = self.asset_tree_view.current_item()
 		if current_item is not None:
@@ -579,6 +602,32 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 				found_items = current_item.find_Part_Sets_By_Name(name)
 				if not len(found_items):
 					self.add_Part_Set(name=name)
+					
+	#----------------------------------------------------------------------
+	def Create_Part_Sets_From_Assembly_Assets(self,items=[]):
+		current_item = self.Get_Active_Asset()
+		if current_item is not None:
+			for item in items:
+				found_items = current_item.find_Part_Sets_By_Name(item.name+"_set")
+				if not len(found_items):
+					if item._vray_state_id_ref != None:
+						found_items = current_item.find_Child_By_UUID(item._vray_state_id_ref)
+						
+					if not len(found_items):
+						found_items = current_item.find_Part_Sets_By_asset_assembly_ref(item._excel_id_ref,item.__class__.__name__)
+						
+					if not len(found_items):
+						new_item = self.add_Part_Set(name=item.name+"_set")
+						isinstance(new_item,Custom_Widgets.Render_State_Item)
+						new_item.asset_assembly_ref_id   = item._excel_id_ref
+						new_item.asset_assembly_ref_type = item.__class__.__name__
+						item._vray_state_id_ref = new_item.uid
+				if len(found_items):
+					f_item = found_items[0]
+					f_item.asset_assembly_ref_id   = item._excel_id_ref
+					f_item.asset_assembly_ref_type = item.__class__.__name__
+					item._vray_state_id_ref = f_item.uid
+					f_item.setData(item.name)
 	#----------------------------------------------------------------------
 	def Assine_Part_Set_Refs_To_Render_State_Overide(self, render_state_names, part_set_names,overide_state):
 		""""""
@@ -623,7 +672,6 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 								if not overide_item.data() == part_set.get_Overide_assinment().data():
 									part_set.parent().removeRow(part_set.row())
 									overide_item.appendRow(part_set)
-						
 	#----------------------------------------------------------------------
 	def Assine_Part_Set_Refs_To_Overide_State(self,overide_state,items):
 		""""""
@@ -638,7 +686,11 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 			return current_item.Render_States.Children
 		else:
 			return []
-		
+	#----------------------------------------------------------------------
+	def Get_Active_Asset(self):
+		current_item = self.asset_tree_view.current_item()
+		isinstance(current_item,Custom_Widgets.Asset_Item)
+		return current_item
 QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Manager_MainWindow)
 
 States_Manager = None

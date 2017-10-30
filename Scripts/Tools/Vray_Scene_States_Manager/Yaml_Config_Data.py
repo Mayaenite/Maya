@@ -202,7 +202,7 @@ class Unassined_Overides(Overides_Container):
 class Render_State(yaml.YAMLObject):
 	yaml_tag = u'!Render_State'
 	#----------------------------------------------------------------------
-	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None, favorit=0, uid=None):
+	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None, favorit=0, uid=None, asset_assembly_ref_id=None, asset_assembly_ref_type=None):
 		self.name      = name
 		self.parent    = parent
 		self.Unassined = Unassined
@@ -211,6 +211,8 @@ class Render_State(yaml.YAMLObject):
 		self.Beauty    = Beauty
 		self.favorit   = favorit
 		self.uid       = uid
+		self.asset_assembly_ref_id   = asset_assembly_ref_id
+		self.asset_assembly_ref_type = asset_assembly_ref_type
 		isinstance(self.parent, Render_States)
 		
 		if not isinstance(self.Unassined, Unassined_Overides):
@@ -233,11 +235,12 @@ class Render_State(yaml.YAMLObject):
 class Part_Set(yaml.YAMLObject):
 	yaml_tag = u'!Part_Set'
 	#----------------------------------------------------------------------
-	def __init__(self, name=None, parent=None, uid=None,asset_assembly_ref=None):
-		self.name               = name
-		self.parent             = parent
-		self.uid                = uid
-		self.asset_assembly_ref = asset_assembly_ref
+	def __init__(self, name=None, parent=None, uid=None,asset_assembly_ref_id=None, asset_assembly_ref_type=None):
+		self.name                    = name
+		self.parent                  = parent
+		self.uid                     = uid
+		self.asset_assembly_ref_id   = asset_assembly_ref_id
+		self.asset_assembly_ref_type = asset_assembly_ref_type
 		isinstance(self.parent, Part_Sets)
 		#self.maya_node = None
 	def assine_maya_node(self):

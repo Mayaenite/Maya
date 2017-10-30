@@ -72,6 +72,9 @@ class Data_Roles(QT.DataModels.Qt_Roles_And_Enums.Standered_Item_Data_Roles):
 	ITEM           = QT.userRole_counter()
 	ITEM_DATA      = QT.userRole_counter()
 	DATA_OBJECT    = QT.userRole_counter()
+	UUID           = QT.userRole_counter()
+	ASSET_REF_ID   = QT.userRole_counter()
+	ASSET_REF_TYPE = QT.userRole_counter()
 
 #---------------------------------------------------------------------------------------------------
 #_______________________________________________________________________ Utility Functions
@@ -2855,7 +2858,7 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 		isinstance(current_asset,Asset_Item)
 		cmd = Add_Part_Set_Command(self.window().PART_SET_CREATED, current_asset, name=name)
 		self.window().undo_stack.push(cmd)
-		
+		return cmd.PartSet
 	#----------------------------------------------------------------------
 	@QtSlot()	
 	def add_New_Render_State(self, name=None):
@@ -2863,6 +2866,8 @@ class Asset_Tree_View(Filtered_Proxy_Tree_View):
 		current_asset = self.current_item()
 		cmd = Add_Render_State_Command(current_asset, name=name)
 		self.window().undo_stack.push(cmd)
+		isinstance(cmd.Render_State,Render_State_Item)
+		return cmd.Render_State
 		
 	#----------------------------------------------------------------------
 	@QtSlot()	
@@ -3009,14 +3014,30 @@ class _Base_Item(QT.DataModels.QStandardItem.QStandardItem):
 		res = len([item for item in self.Model.findItems(text="*",flags=Qt.MatchRecursive|Qt.MatchWildcard,column=0) if item.type() == Part_Set_Item.ITEM_TYPE])
 		return res	
 	#----------------------------------------------------------------------
+	def find_Child_By_UUID(self, uid):
+		""""""
+		res = self.find_child_items(uid, role=self.Item_Data_Roles.UUID)
+		return res
+	#----------------------------------------------------------------------
 	def find_Part_Sets_By_Name(self, name):
 		""""""
 		res = [item for item in self.model().findItems(text=name,flags=Qt.MatchRecursive|Qt.MatchExactly,column=0) if item.type() == Part_Set_Item.ITEM_TYPE]
 		return res
 	#----------------------------------------------------------------------
+	def find_Part_Sets_By_asset_assembly_ref(self, ref_id,ref_type):
+		""""""
+		res = [item for item in self.model().findItems(text="*",flags=Qt.MatchFlag.MatchRecursive|Qt.MatchFlag.MatchWildcard,column=0) if item.type() == Part_Set_Item.ITEM_TYPE]
+		res = [item for item in res if item.asset_assembly_ref_id == ref_id and item.asset_assembly_ref_type == ref_type]
+		return res
+	#----------------------------------------------------------------------
 	def find_Render_States_By_Name(self, name):
 		""""""
 		res = [item for item in self.model().findItems(text=name,flags=Qt.MatchRecursive|Qt.MatchExactly,column=0) if item.type() == Render_State_Item.ITEM_TYPE]
+		return res
+	#----------------------------------------------------------------------
+	def find_Render_States_By_asset_assembly_ref(self, ref_id,ref_type):
+		""""""
+		res = [item for item in self.model().findItems(text="*",flags=Qt.MatchFlag.MatchRecursive|Qt.MatchFlag.MatchWildcard,column=0) if item.type() == Render_State_Item.ITEM_TYPE and item.data(self.Item_Data_Roles.ASSET_REF_ID) == ref_id and item.data(self.Item_Data_Roles.ASSET_REF_TYPE)==ref_type]
 		return res
 	#----------------------------------------------------------------------
 	def find_Part_Set_Refs_By_Name(self, name):
@@ -3065,8 +3086,19 @@ class _Named_Data_Item(_Data_Item):
 		if role == self.Item_Data_Roles.DATA_OBJECT:
 			return self._data
 		
+		if role == self.Item_Data_Roles.UUID:
+			if hasattr(self,"uid"):
+				return self.uid
+			return None
+		if role == self.Item_Data_Roles.ASSET_REF_ID:
+			if hasattr(self,"asset_assembly_ref_id"):
+				return self.asset_assembly_ref_id
+			return None
+		if role == self.Item_Data_Roles.ASSET_REF_TYPE:
+			if hasattr(self,"asset_assembly_ref_type"):
+				return self.asset_assembly_ref_type
+			return None	
 		return super(_Named_Data_Item, self).data(role)
-
 	def setData(self, value, role=Data_Roles.EDIT):
 		if role in self.Item_Data_Roles.DP_ED:
 			if isinstance(value, (unicode, str)):
@@ -3935,6 +3967,10 @@ class Render_States_Item(_Named_Data_Item):
 			isinstance(render_state,Yaml_Config_Data.Render_State)
 			item = Render_State_Item(None, yaml=render_state, part_sets=part_sets)
 			self.appendRow(item)
+	#----------------------------------------------------------------------
+	def find_Render_State_By_Assembly_Ref(self,ref_id,ref_type):
+		""""""
+		self.find_Render_States_By_Name
 ########################################################################
 class Render_Layers_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
@@ -3971,7 +4007,8 @@ class Render_State_Item(_Named_Data_Item):
 			self.setChild(2, 0, self.Invisible)
 			self.setChild(3, 0, self.Beauty)
 			self.uid = str(uuid.uuid4())
-			self._asset_assembly_ref = None
+			self.asset_assembly_ref_id   = None
+			self.asset_assembly_ref_type = None
 		else:
 			self.from_Yaml(render_state, part_sets)
 	#----------------------------------------------------------------------
@@ -4000,7 +4037,7 @@ class Render_State_Item(_Named_Data_Item):
 		Matte        = self.Matte.to_Yaml(parts)
 		Invisible    = self.Invisible.to_Yaml(parts)
 		Beauty       = self.Beauty.to_Yaml(parts)
-		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty, favorit=self.favorit,uid=self.uid)
+		render_state = Yaml_Config_Data.Render_State(name=name, Unassined=Unassined, Matte=Matte, Invisible=Invisible, Beauty=Beauty, favorit=self.favorit,uid=self.uid, asset_assembly_ref_id=self.asset_assembly_ref_id, asset_assembly_ref_type=self.asset_assembly_ref_type)
 		
 		Unassined.parent = render_state
 		Matte.parent     = render_state
@@ -4027,10 +4064,13 @@ class Render_State_Item(_Named_Data_Item):
 		else:
 			self.uid                 = render_state.uid
 		
-		if not hasattr(render_state, "_asset_assembly_ref"):
-			self._asset_assembly_ref = None
+		if not hasattr(render_state, "asset_assembly_ref_id"):
+			self.asset_assembly_ref_id   = None
+			self.asset_assembly_ref_type = None
 		else:
-			self._asset_assembly_ref = render_state._asset_assembly_ref			
+			self.asset_assembly_ref_id   = render_state.asset_assembly_ref_id
+			self.asset_assembly_ref_type = render_state.asset_assembly_ref_type
+			
 		self.setChild(0, 0, self.Unassined)
 		self.setChild(1, 0, self.Matte)
 		self.setChild(2, 0, self.Invisible)
@@ -4215,11 +4255,12 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 			else:
 				self.uid = str(uuid.uuid4())
 				
-			if not hasattr(part, "_asset_assembly_ref"):
-				self._asset_assembly_ref = None
+			if not hasattr(part, "_asset_assembly_ref_id"):
+				self.asset_assembly_ref_id   = None
+				self.asset_assembly_ref_type = None
 			else:
-				self._asset_assembly_ref = part._asset_assembly_ref
-				
+				self.asset_assembly_ref_id = part.asset_assembly_ref_id
+				self.asset_assembly_ref_type = part.asset_assembly_ref_type
 			if hasattr(part, "maya_node"):
 				if part.maya_node != None:
 					super(Part_Set_Item,self).__init__(part.maya_node,**kwargs)
@@ -4231,11 +4272,13 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 		elif isinstance(part, Named_Data_Object):
 			super(Part_Set_Item,self).__init__(part.name,**kwargs)
 			self.uid = str(uuid.uuid4())
-			self._asset_assembly_ref = None
+			self.asset_assembly_ref_id = None
+			self.asset_assembly_ref_type = None
 		else:
 			super(Part_Set_Item,self).__init__(part,**kwargs)
 			self.uid = str(uuid.uuid4())
-			self._asset_assembly_ref = None
+			self.asset_assembly_ref_id = None
+			self.asset_assembly_ref_type = None
 		
 		try:
 			self._data.lockNode()
@@ -4264,13 +4307,16 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 	#----------------------------------------------------------------------
 	def to_Yaml(self):
 		""""""
-		res = Yaml_Config_Data.Part_Set(name=self.data(), uid=self.uid, asset_assembly_ref=self._asset_assembly_ref)
+		res = Yaml_Config_Data.Part_Set(name=self.data(), uid=self.uid, asset_assembly_ref_id=self.asset_assembly_ref_id, asset_assembly_ref_type=self.asset_assembly_ref_type)
 		return res
 	#----------------------------------------------------------------------
 	def node_Get_Linked_Display_Layer(self):
 		""""""
-		link = self._data.Make_Plug("displayLayerLink")
-		return link.value
+		if self._data.attributeExists("displayLayerLink"):
+			link = self._data.Make_Plug("displayLayerLink")
+			return link.value
+		else:
+			return None
 		
 ########################################################################
 class Asset_Item(Maya_Asset_Item):
