@@ -580,6 +580,9 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 				if not len(found_items):
 					if item._vray_state_id_ref != None:
 						found_items = current_item.find_Child_By_UUID(item._vray_state_id_ref)
+						if len(found_items):
+							if not isinstance(found_items[0],Custom_Widgets.Render_State_Item):
+								found_items = []
 					if not len(found_items):
 						found_items = current_item.find_Render_States_By_asset_assembly_ref(item._excel_id_ref,item.__class__.__name__)
 					if not len(found_items):
@@ -588,11 +591,15 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 						new_item.asset_assembly_ref_id   = item._excel_id_ref
 						new_item.asset_assembly_ref_type = item.__class__.__name__
 						item._vray_state_id_ref = new_item.uid
+						item._scene_state_render_state_id = new_item.uid
+						item._scene_state_render_state_item = new_item
 				if len(found_items):
 					f_item = found_items[0]
 					f_item.asset_assembly_ref_id   = item._excel_id_ref
 					f_item.asset_assembly_ref_type = item.__class__.__name__
 					item._vray_state_id_ref = f_item.uid
+					item._scene_state_render_state_id = f_item.uid
+					item._scene_state_render_state_item = f_item
 					f_item.setData(item.name)
 	#----------------------------------------------------------------------
 	def Create_Part_Sets_From_Name_List(self,names=[]):
@@ -602,7 +609,6 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 				found_items = current_item.find_Part_Sets_By_Name(name)
 				if not len(found_items):
 					self.add_Part_Set(name=name)
-					
 	#----------------------------------------------------------------------
 	def Create_Part_Sets_From_Assembly_Assets(self,items=[]):
 		current_item = self.Get_Active_Asset()
@@ -612,7 +618,9 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 				if not len(found_items):
 					if item._vray_state_id_ref != None:
 						found_items = current_item.find_Child_By_UUID(item._vray_state_id_ref)
-						
+						if len(found_items):
+							if not isinstance(found_items[0],Custom_Widgets.Part_Set_Item):
+								found_items = []
 					if not len(found_items):
 						found_items = current_item.find_Part_Sets_By_asset_assembly_ref(item._excel_id_ref,item.__class__.__name__)
 						
@@ -622,11 +630,15 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 						new_item.asset_assembly_ref_id   = item._excel_id_ref
 						new_item.asset_assembly_ref_type = item.__class__.__name__
 						item._vray_state_id_ref = new_item.uid
+						item._scene_state_part_set_id = new_item.uid
+						item._scene_state_part_set_item = new_item
 				if len(found_items):
 					f_item = found_items[0]
 					f_item.asset_assembly_ref_id   = item._excel_id_ref
 					f_item.asset_assembly_ref_type = item.__class__.__name__
 					item._vray_state_id_ref = f_item.uid
+					item._scene_state_part_set_id = f_item.uid
+					item._scene_state_part_set_item = f_item
 					f_item.setData(item.name)
 	#----------------------------------------------------------------------
 	def Assine_Part_Set_Refs_To_Render_State_Overide(self, render_state_names, part_set_names,overide_state):

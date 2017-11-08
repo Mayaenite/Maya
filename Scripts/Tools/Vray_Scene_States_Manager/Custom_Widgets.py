@@ -1053,7 +1053,7 @@ class Active_Asset_ComboBox(ComboBox):
 	def editing_Finished(self):
 		line = self.lineEdit()
 		text = line.text()
-		print text
+		
 		
 	def setItemText(self,index, value):
 		super(Active_Asset_ComboBox,self).setItemText(index, value)
