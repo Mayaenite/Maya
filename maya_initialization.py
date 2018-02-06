@@ -50,4 +50,12 @@ if MAYA_GUI:
 		utils.executeDeferred ('import Maya_UserTools; Maya_UserTools.pythonScripts()')
 		utils.executeDeferred ('import Scripts.callbacks')
 		utils.executeDeferred ('import Scripts.Maya_Runtime_Commands')
+	try:
+		import socket
+		HOST = socket.getfqdn()
+		PORT = "5555" 	# The same port as used by the server
+		name = "{}:{}".format(HOST,PORT)
+		cmds.commandPort( bufferSize=16, echoOutput=False, name=name, noreturn=True, pickleOutput=False, prefix="", returnNumCommands=False, sourceType="python", securityWarning=False)
+	except:
+		pass
 	# utils.executeDeferred ('import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader; G_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()')
