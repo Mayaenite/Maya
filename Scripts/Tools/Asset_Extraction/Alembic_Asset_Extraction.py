@@ -403,6 +403,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 			Function_Timer(self.item_Collector.shading_engines.export_Shaders)
 			self.write('C:/temp/Alembic_Assets_Extractor_Data.xml')
 			full_section_timer.end_timer()
+			cmds.inViewMessage( amg='<hl>%i intermediateObject \nHave Been Deleated Before Export</hl.' % self.intermediateObject_count, fontSize=30, pos='midCenter', fadeInTime=700,fadeStayTime=700,fadeOutTime=700, fade=True )
 	#----------------------------------------------------------------------
 	def _get_top_level_node(self):
 		""""""
@@ -426,6 +427,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 		
 	def unlock_and_break_Attr_connections(self):
 		nodes = [self.top_level_node]+self.top_level_node.all_transform_Descendents
+		intermediateObject_list = []
 		for node in nodes:
 			for att in ["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]:
 				plg = node.Make_Plug(att)
@@ -434,9 +436,14 @@ class Alembic_Asset_Writer(etree.ElementTree):
 					plg.Disconnect_All_Inputs()
 				except:
 					pass
-		for node in cmds.ls("*.intermediateObject"):
-			if cmds.getAttr(node):
-				cmds.setAttr(node,False)
+		for node_attr in cmds.ls("*.intermediateObject"):
+			if cmds.getAttr(node_attr):
+				cmds.setAttr(node_attr,False)
+				node = node_attr.split(".")[0]
+				if cmds.objectType(node,isType="mesh"):
+					intermediateObject_list.append(node)
+		self.intermediateObject_count = len(intermediateObject_list)
+		cmds.delete(intermediateObject_list)
 		for node in cmds.ls("*.inheritsTransform"):
 			if not cmds.getAttr(node):
 				cmds.setAttr(node,True)
