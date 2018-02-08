@@ -1,9 +1,10 @@
 import pickle
+import os
 import pymel.core as pm
 import maya.cmds as cmds
 import maya.mel as mm
 import xml.etree.ElementTree as etree
-import os
+import Coba_Data_Parser
 class EIM_Config_Data(object):
 	def __init__(self, code, layers):
 		self.code = code
@@ -12,36 +13,11 @@ class EIM_Config_Data(object):
 #----------------------------------------------------------------------
 def Get_XML_EMI_Data():
 	""""""
-	def find_by_id(idnum):
-		Options = root.findall("*//Option")
-		displayLayers = cmds.ls(typ="displayLayer")
-		res = []
-		for child in Options:
-			if child.get("id")==idnum:
-				if child.tag == "Option":
-					for layer in child.findall("Asset//Layer"):
-						for dispLayer in displayLayers:
-							if dispLayer[5:] == layer.get("name"):
-								res.append(dispLayer)
-								break
-		return res
-	
-	vg_script = pm.ls("VGConfigXMLScriptNode")[0]
-	data = etree.fromstring(vg_script.before.get())
-	root = data
+	root = Coba_Data_Parser.Xml_From_Script(script="VGConfigXMLScriptNode")
 	pickle_file            = os.path.join(os.environ["temp"],"EMI_BUILD_DATA.pkl")
 	pickle_Data            = list()
-	SavedStates = root.find("SavedStates")
-	ProductConfigurations = SavedStates.findall("ProductConfiguration")
-	for config in ProductConfigurations:
-		config_data=dict(code=config.get('name')[0:18],dls=[],rls=[])
-		choosenOptions = config.findall("choosenOption")
-		layers = []
-		for option in choosenOptions:
-			found_layers = find_by_id(option.get("id"))
-			if len(found_layers):
-				layers.extend(found_layers)
-		config_data['dls']= list(set(layers))
+	for config in root.SavedStates.ProductConfigurations:
+		config_data=dict(code=config.eim_name,dls=config.maya_display_layers(),rls=[])
 		pickle_Data.append(config_data)
 	with file(pickle_file,'w') as pkf:
 		pickle.dump(pickle_Data,pkf)
