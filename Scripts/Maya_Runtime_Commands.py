@@ -220,7 +220,6 @@ def aw_Box_Map_Selected():
 			cmds.refresh( suspend=False)
 			cmds.refresh(  force=True)
 	
-	
 def Planar_Proj_Unforld():
 	cmds.selectMode(object=True)
 	_G_current_selections = cmds.ls(long=True,sl=True,objectsOnly=True)
@@ -312,6 +311,14 @@ def AW_PolyUnite():
 		dl = Scripts.OpenMaya_Util_API.DisplayLayer(display_layer_list[0])
 		dl.addMembers(united_objs)
 		
+#----------------------------------------------------------------------
+def generate_display_layers_from_selected_transform_groups():
+	""""""
+	selected_groups = [item for item in Scripts.OpenMaya_Util_API.strings_to_Maya_Nodes(cmds.ls(sl=True,typ='transform')) if item.transfromType == 'group']
+	
+	for grp in selected_groups:
+		grp.select_replace()
+		cmds.createDisplayLayer( noRecurse=True, empty=False, name="DL_"+grp.short_name)
 
 aw_hub_check_Ctr1_Hotkey()
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
@@ -322,4 +329,5 @@ cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys 
 cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjection With Box Map Settings On All Selected Items", command=__name__+".aw_Box_Map_Selected()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The Resault Back To Its Parent And Display Layer", command=__name__+".AW_PolyUnite()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("aw_generate_display_layers_from_selected_transform_groups", annotation="Create's a displayLayer for every Selected Transform", command=__name__+".generate_display_layers_from_selected_transform_groups()", category="User", commandLanguage="python", default=True)
 
