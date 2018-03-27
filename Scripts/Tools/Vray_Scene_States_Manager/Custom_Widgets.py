@@ -910,7 +910,7 @@ class Asset_States_ListView(QListView):
 		else:
 			self.model().itemFromIndex(self.rootIndex()).child(0).index()
 			self.setCurrentIndex(self.model().itemFromIndex(self.rootIndex()).child(0).index())
-			
+			self._asset.enum_render_states_plug.value = 0
 ########################################################################
 class Asset_States_GroupBox(QT.QGroupBox):
 	def __init__(self, asset, parent=None):
