@@ -236,10 +236,10 @@ def Planar_Proj_Unforld():
 		cmds.select(clear=True)
 		if not cmds.pluginInfo("Unfold3D", query=True, loaded=True):
 			cmds.loadPlugin("Unfold3D", quiet=True)
-		if cmds.about( version=True) == '2017':
-			cmds.u3dUnfold(item_UVs,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
-		else:
+		if cmds.about( version=True) == '2015':
 			cmds.Unfold3D(item_UVs,unfold=True,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
+		else:
+			cmds.u3dUnfold(item_UVs,iterations=10,pack=False,borderintersection=False,triangleflip=False,mapsize=1024,roomspace=2)
 			
 	if len(_All_UVs):
 		cmds.select(_All_UVs)
@@ -323,7 +323,7 @@ def generate_display_layers_from_selected_transform_groups():
 aw_hub_check_Ctr1_Hotkey()
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)
-cmds.runTimeCommand("randomizeDisplayLayerColors", annotation="Sets The Color Of All The Display Layers Randomly", command=__name__+".randomize_Display_Layer_Colors()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("5", annotation="Sets The Color Of All The Display Layers Randomly", command=__name__+".randomize_Display_Layer_Colors()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("VisibilityConnectMaker", annotation="Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected", command=__name__+".Visibility_Connect_Maker()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("SeperatePolyByShader", annotation="Seperate Selected Polys By There Face Shading Assinments", command=__name__+".Seperate_Selected_By_Shaders()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjection With Box Map Settings On All Selected Items", command=__name__+".aw_Box_Map_Selected()", category="User", commandLanguage="python", default=True)
