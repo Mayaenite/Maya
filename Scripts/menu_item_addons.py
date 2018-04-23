@@ -1,5 +1,6 @@
 import pymel.core as pm
 import maya.cmds as cmds
+import maya.mel
 import maya.utils as utils
 
 MAYA_VERSION           = int(cmds.about(version=True))
