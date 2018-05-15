@@ -253,7 +253,6 @@ class AssetCondition(Coba_ID_Element):
 	def py_booleanExpression(self):
 		''' '''
 		res = self.get("booleanExpression").replace("!", 'not')
-		print res
 		return res
 	#----------------------------------------------------------------------
 	@property
