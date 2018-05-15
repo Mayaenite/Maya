@@ -252,7 +252,9 @@ class AssetCondition(Coba_ID_Element):
 	@property
 	def py_booleanExpression(self):
 		''' '''
-		return self.get("booleanExpression").replace("!", 'not')
+		res = self.get("booleanExpression").replace("!", 'not')
+		print res
+		return res
 	#----------------------------------------------------------------------
 	@property
 	def Asset(self):
@@ -273,6 +275,8 @@ class AssetCondition(Coba_ID_Element):
 				if val != "not" and val != "and" and val != "or" and val != "(" and val != ")" and val != "1" and val != id_num:
 					expression[index]="0"
 		expression = " ".join(expression)
+		if expression == "":
+			expression = "1"
 		return expression
 	#----------------------------------------------------------------------
 	def eval_Boolean_Expression(self,option_ids_list):
@@ -512,4 +516,4 @@ def Xml_From_Script(script="VGConfigXMLScriptNode"):
 		return root
 	
 if __name__ == "__main__":
-	data = Xml_From_File(r"Y:\Infiniti\QX30\2019\Data\A_Raw_Download\MY19_GD1A_EURC_EXT-INT_11-EIMs_22DEC17\MY19_INFINITI_GD1A_EURC_EXTERIOR_11_EIMs_22DEC17_master.xml")
+	data = Xml_From_File(r"U:\dloveridge\Untitled-1.xml")

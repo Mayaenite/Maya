@@ -17,8 +17,9 @@ def Get_XML_EMI_Data():
 	pickle_file            = os.path.join(os.environ["temp"],"EMI_BUILD_DATA.pkl")
 	pickle_Data            = list()
 	for config in root.SavedStates.ProductConfigurations:
-		config_data=dict(code=config.eim_name,dls=config.maya_display_layers(),rls=[])
-		pickle_Data.append(config_data)
+		if not config.name == '__default__':
+			config_data=dict(code=config.eim_name,dls=config.maya_display_layers(),rls=[])
+			pickle_Data.append(config_data)
 	with file(pickle_file,'w') as pkf:
 		pickle.dump(pickle_Data,pkf)
 #----------------------------------------------------------------------
