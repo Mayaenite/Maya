@@ -71,6 +71,11 @@ color: rgb(255, 255, 255);
              </item>
              <item row="1" column="1">
               <widget class="QComboBox" name="useRenderLayerComboBox">
+               <property name="toolTip">
+                <string>If Something Other Than The Default Render Layer Is Selected.
+ Will Take The Shader Assignments From That Layer and Apply Them To
+The Master Layer Before Scan and Export</string>
+               </property>
                <item>
                 <property name="text">
                  <string>defaultRenderLayer</string>
@@ -111,7 +116,12 @@ color: rgb(255, 255, 255);
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QCheckBox" name="replaceShadersWithLambertsCheckBox"/>
+              <widget class="QCheckBox" name="replaceShadersWithLambertsCheckBox">
+               <property name="toolTip">
+                <string>Will Replace Every Shader In This Scene With A Lambert Shader And Assign it to its counter part assignments
+ before scan and export</string>
+               </property>
+              </widget>
              </item>
              <item row="3" column="0">
               <widget class="QLabel" name="removeOtherLayersLabel">
@@ -122,6 +132,9 @@ color: rgb(255, 255, 255);
              </item>
              <item row="3" column="1">
               <widget class="QCheckBox" name="removeOtherLayersCheckBox">
+               <property name="toolTip">
+                <string>If Checked All Other Render Layers Will Be Removed Before scan and export</string>
+               </property>
                <property name="checked">
                 <bool>true</bool>
                </property>
@@ -129,6 +142,9 @@ color: rgb(255, 255, 255);
              </item>
              <item row="2" column="1">
               <widget class="QCheckBox" name="performSceneCleanUpCheckBox">
+               <property name="toolTip">
+                <string>Runs Maya's Built In Optimize Scene Size Tool Before Scan</string>
+               </property>
                <property name="checked">
                 <bool>true</bool>
                </property>
