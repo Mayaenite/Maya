@@ -439,7 +439,7 @@ class Alembic_Asset_Writer(object):
 		def scan_Active_Shader_Engines():
 			""""""
 			progressBar = self.gui_widget.exportShaderCountprogressBar
-			items = cmds.listConnections(cmds.listRelatives(cmds.listRelatives(self.top_level_node.name,fullPath=True, allDescendents=True, type="transform"), shapes=True),t="shadingEngine")
+			items = cmds.listConnections(cmds.listRelatives(cmds.listRelatives(self.top_level_node.name,fullPath=True, allDescendents=True, type="transform"), shapes=True, fullPath=True),t="shadingEngine")
 			if items is not None:
 				items = list(set(items))
 			else:
