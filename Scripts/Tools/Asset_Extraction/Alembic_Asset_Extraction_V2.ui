@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Alembic_Asset_Extractor</class>
+ <widget class="Alembic_Asset_Extraction_GUI" name="Alembic_Asset_Extractor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>857</width>
+    <height>624</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Alembic Asset Extractor</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+.QGroupBox, .QFrame, .QWidget{  
+	color: rgb(255, 0, 0);
+	background-color: rgb(0, 0, 0);
+}
+
+.QTextEdit{  
+	color: rgb(255, 0, 0);
+	background-color: rgb(0, 0, 0);
+}
+
+QLabel , QProgressBar{
+color: rgb(255, 255, 255);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_6">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Tab 1</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
+       <item row="0" column="0">
+        <widget class="QFrame" name="Plain_Boxed_Frame">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Options</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout_3">
+             <item row="2" column="0">
+              <widget class="QLabel" name="performSceneCleanUpLabel">
+               <property name="text">
+                <string>Perform Scene Clean Up</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="useRenderLayerLabel">
+               <property name="text">
+                <string>Use Render Layer</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="useRenderLayerComboBox">
+               <item>
+                <property name="text">
+                 <string>defaultRenderLayer</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="topLevelNodeLabel">
+               <property name="text">
+                <string>Top Level Node</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QLineEdit" name="Top_Level_Node_Input">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="Set_To_Selected_Button">
+                 <property name="text">
+                  <string>Set To Selected</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="replaceShadersWithLambertsLabel">
+               <property name="text">
+                <string>Replace Shaders With Lamberts</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QCheckBox" name="replaceShadersWithLambertsCheckBox"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="removeOtherLayersLabel">
+               <property name="text">
+                <string>Remove Other Layers</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="removeOtherLayersCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="performSceneCleanUpCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="Export_Button">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Export</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QFrame" name="FRAME_Extraction_Log">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QGroupBox" name="GBX_Extraction_Log">
+            <property name="title">
+             <string>Extraction Log</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QTextEdit" name="Extraction_Log_Text">
+               <property name="lineWrapMode">
+                <enum>QTextEdit::NoWrap</enum>
+               </property>
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="html">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QFrame" name="FRAME_Extraction_Scan_Data">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QGroupBox" name="GBX_Extraction_Scan_Data">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="title">
+             <string>Extraction Scan Data</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout_2">
+             <item row="0" column="0">
+              <widget class="QLabel" name="shapeNodesWithNoGeometryLabel">
+               <property name="text">
+                <string>Shape Nodes With No Geometry</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_shapeNodesWithNoGeometry">
+               <item>
+                <widget class="QSpinBox" name="shapeNodesWithNoGeometrySpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="shapeNodesWithNoGeometryprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="totalNumberOfTransfomsExportedLabel">
+               <property name="text">
+                <string>Number Of Transfoms To Be Exported</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_Number_Of_Transfoms_To_Be_Exported">
+               <item>
+                <widget class="QSpinBox" name="Number_Of_Transfoms_To_Be_Exported_SpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="all_descendents_scan_progressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="exportShaderCountLabel">
+               <property name="text">
+                <string>Export Shader Count</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_exportShaderCount">
+               <item>
+                <widget class="QSpinBox" name="exportShaderCountSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="exportShaderCountprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="exportLayerCountLabel">
+               <property name="text">
+                <string>Export Layer Count</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_exportLayerCount">
+               <item>
+                <widget class="QSpinBox" name="exportLayerCountSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="exportLayerCountprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="intermediateObjectCountLabel">
+               <property name="text">
+                <string>Intermediate Object Count</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_intermediateObjectCount">
+               <item>
+                <widget class="QSpinBox" name="intermediateObjectCountSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="intermediateObjectCountprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="illegalPolySurfaceNameLengthCountLabel">
+               <property name="text">
+                <string>Illegal PolySurface Name Length Count</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QSpinBox" name="illegalPolySurfaceNameLengthCountSpinBox">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+               <property name="buttonSymbols">
+                <enum>QAbstractSpinBox::NoButtons</enum>
+               </property>
+               <property name="maximum">
+                <number>99999</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="badUnicodeNameCountLabel">
+               <property name="text">
+                <string>Bad Unicode Name Count</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_badUnicodeNameCount">
+               <item>
+                <widget class="QSpinBox" name="badUnicodeNameCountSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="badUnicodeNameCountprogressBar">
+                 <property name="maximum">
+                  <number>99</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="brokenTransformInheritanceLabel">
+               <property name="text">
+                <string>Broken Transform Inheritance</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_brokenTransformInheritance">
+               <item>
+                <widget class="QSpinBox" name="brokenTransformInheritanceSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="brokenTransformInheritanceprogressBar">
+                 <property name="maximum">
+                  <number>99</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="incorrectVisibleInReflectionPlugsLabel">
+               <property name="text">
+                <string>Incorrect Visible In Reflection Plugs</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_incorrectVisibleInReflectionPlugs">
+               <item>
+                <widget class="QSpinBox" name="incorrectVisibleInReflectionPlugsSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="incorrectVisibleInReflectionPlugsprogressBar">
+                 <property name="maximum">
+                  <number>99</number>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="incorrectVisibleInRefractionPlugsLabel">
+               <property name="text">
+                <string>Incorrect Visible In Refraction Plugs</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_incorrectVisibleInRefractionPlugs">
+               <item>
+                <widget class="QSpinBox" name="incorrectVisibleInRefractionPlugsSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="incorrectVisibleInRefractionPlugsprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QFrame" name="FRAME_Export_Steps">
+         <property name="frameShape">
+          <enum>QFrame::Box</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <item>
+           <widget class="QGroupBox" name="GBX_Export_Steps">
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="title">
+             <string>Extraction Steps</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="deletingAllShapesWithNoGeometryLabel">
+               <property name="text">
+                <string>Deleting All Shapes With No Geometry</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="Tickalbe_ProgressBar" name="deletingAllShapesWithNoGeometry_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="renamingPolySurfaceShapesLabel">
+               <property name="text">
+                <string>Renaming polySurface Shapes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="Tickalbe_ProgressBar" name="renaming_PolySurface_Shapes_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="correctingInvalidUnicodeNamesLabel">
+               <property name="text">
+                <string>Correcting Invalid Unicode Names</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="Tickalbe_ProgressBar" name="correctingInvalidUnicodeNamesProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="addingExtractorIdsLabel">
+               <property name="text">
+                <string>Adding Extractor Ids</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="Tickalbe_ProgressBar" name="apply_Extractor_Ids_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="unlockingBreakAttrConnectionsLabel">
+               <property name="text">
+                <string>Unlocking &amp; Breaking Attr Connections</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="Tickalbe_ProgressBar" name="unlocking_And_Break_Attr_Connections_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="removingIntermediateObjectsLabel">
+               <property name="text">
+                <string>Remove Intermediate Objects</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="Tickalbe_ProgressBar" name="removing_Intermediate_Objects_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="forcingInheritTransformLabel">
+               <property name="text">
+                <string>Forcing Inherit Parent Transforms</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="Tickalbe_ProgressBar" name="fix_Inherit_Transform_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="forcingVisibleInReflectionsLabel">
+               <property name="text">
+                <string>Forcing Visible In Reflections</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="Tickalbe_ProgressBar" name="fix_VisibleIn_Reflections_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="forcingVisibleInRefractionsLabel">
+               <property name="text">
+                <string>Forcing Visible In Refractions</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="Tickalbe_ProgressBar" name="fix_Visible_In_Refractions_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="zeroingOutTransformsLabel">
+               <property name="text">
+                <string>Zeroing Out Transforms</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="Tickalbe_ProgressBar" name="apply_Freeze_Transforms_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="collectingDisplayLayerAssignmentsLabel">
+               <property name="text">
+                <string>Collecting Display Layer Assignments</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="Tickalbe_ProgressBar" name="collecting_Display_Layer_Assignments_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="collectingShaderAssignmentsLabel">
+               <property name="text">
+                <string>Collecting Shader Assignments</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="Tickalbe_ProgressBar" name="collecting_Shader_Assignments_ProgressBar">
+               <property name="value">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+      <zorder>FRAME_Export_Steps</zorder>
+      <zorder>FRAME_Extraction_Scan_Data</zorder>
+      <zorder>Plain_Boxed_Frame</zorder>
+      <zorder>Top_Level_Node_Input</zorder>
+      <zorder>Set_To_Selected_Button</zorder>
+      <zorder>performSceneCleanUpCheckBox</zorder>
+      <zorder>FRAME_Extraction_Log</zorder>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Tab 2</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QPushButton" name="Import_Button">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Import</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+  <zorder>intermediateObjectCountprogressBar</zorder>
+  <zorder>intermediateObjectCountSpinBox</zorder>
+  <zorder>exportShaderCountSpinBox</zorder>
+  <zorder>exportShaderCountprogressBar</zorder>
+  <zorder>exportLayerCountSpinBox</zorder>
+  <zorder>exportLayerCountprogressBar</zorder>
+  <zorder>illegalPolySurfaceNameLengthCountSpinBox</zorder>
+  <zorder>badUnicodeNameCountSpinBox</zorder>
+  <zorder>badUnicodeNameCountprogressBar</zorder>
+  <zorder>Number_Of_Transfoms_To_Be_Exported_SpinBox</zorder>
+  <zorder>brokenTransformInheritanceSpinBox</zorder>
+  <zorder>brokenTransformInheritanceprogressBar</zorder>
+  <zorder>incorrectVisibleInReflectionPlugsSpinBox</zorder>
+  <zorder>incorrectVisibleInReflectionPlugsprogressBar</zorder>
+  <zorder>Number_Of_Transfoms_To_Be_Exported_SpinBox</zorder>
+  <zorder>all_descendents_scan_progressBar</zorder>
+  <zorder>incorrectVisibleInRefractionPlugsSpinBox</zorder>
+  <zorder>incorrectVisibleInRefractionPlugsprogressBar</zorder>
+  <zorder>shapeNodesWithNoGeometrySpinBox</zorder>
+  <zorder>shapeNodesWithNoGeometryprogressBar</zorder>
+  <zorder>tabWidget</zorder>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Alembic_Asset_Extraction_GUI</class>
+   <extends>QWidget</extends>
+   <header>alembic_asset_extraction_gui.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Tickalbe_ProgressBar</class>
+   <extends>QProgressBar</extends>
+   <header>tickalbe_progressbar.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
