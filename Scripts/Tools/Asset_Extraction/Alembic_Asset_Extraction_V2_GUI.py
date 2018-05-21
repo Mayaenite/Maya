@@ -3,6 +3,7 @@ import QT
 import json
 import maya.cmds as cmds
 import maya.mel
+import pymel.core as pm
 import Scripts.NodeCls.M_Nodes
 import Scripts.Global_Constants
 import Scripts.General_Maya_Util
@@ -15,6 +16,18 @@ Shading_Engine = Scripts.OpenMaya_Util_API.Shading_Engine
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
 _Global_Member_ID_Data = dict()
 
+
+#----------------------------------------------------------------------
+def kill_hyperShadePanel():
+	""""""
+	for ui in pm.lsUI(panels=True):
+		if ui.name() == "hyperShadePanel1":
+			hspan = ui
+			ctrl = hspan.getControl()
+			if ctrl:
+				taroff = hspan.tearOffRestore()
+				ctrl_parent = pm.control(taroff,q=True,parent=True)
+				pm.deleteUI(ctrl_parent)	
 
 def clean_maya_shader_file(path):
 	with file(path,"r") as f:
@@ -979,6 +992,7 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 	#----------------------------------------------------------------------
 	def on_Export_Button_Clicked(self):
 		""""""
+		kill_hyperShadePanel()
 		if not self.useRenderLayerComboBox.currentText() == "defaultRenderLayer":
 			Shader_Overides_To_Master_Layer(self.useRenderLayerComboBox.currentText())
 		if self.replaceShadersWithLambertsCheckBox.isChecked():
@@ -993,6 +1007,7 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 	#----------------------------------------------------------------------
 	def on_Import_Button_Clicked(self):
 		""""""
+		kill_hyperShadePanel()
 		Alembic_Asset_Reader()
 				
 QT.ui_Loader.registerCustomWidget(Alembic_Asset_Extraction_GUI)
