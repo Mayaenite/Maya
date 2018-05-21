@@ -21,7 +21,7 @@ def clean_maya_shader_file(path):
 		lines = f.readlines()
 	new_lines = []
 	for line in lines:
-		if not '"Seamour"' in line and not '"ToolBox"' in line and not '"mayaswitchmtl2013"' in line:
+		if not '"Seamour"' in line and not '"ToolBox"' in line and not '"mayaswitchmtl2013"' in line and not '"Stitch"' in line:
 			new_lines.append(line)
 	with file(path,"w") as f:
 		f.writelines(new_lines)
