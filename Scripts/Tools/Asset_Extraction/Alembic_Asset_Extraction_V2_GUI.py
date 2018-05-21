@@ -20,14 +20,7 @@ _Global_Member_ID_Data = dict()
 #----------------------------------------------------------------------
 def kill_hyperShadePanel():
 	""""""
-	for ui in pm.lsUI(panels=True):
-		if ui.name() == "hyperShadePanel1":
-			hspan = ui
-			ctrl = hspan.getControl()
-			if ctrl:
-				taroff = hspan.tearOffRestore()
-				ctrl_parent = pm.control(taroff,q=True,parent=True)
-				pm.deleteUI(ctrl_parent)	
+	maya.mel.eval("closeHypershade")
 
 def clean_maya_shader_file(path):
 	with file(path,"r") as f:
@@ -80,9 +73,10 @@ def replace_all_shaders_with_lambers(use_layer=False):
 		shading_Engines = [item for item in cmds.ls(type="shadingEngine") if not item.startswith("initial")]
 		for engine in shading_Engines:
 			shader = cmds.listConnections(engine+".surfaceShader",d=True)
-			if len(shader):
-				shader = shader[0]
-				res.append((shader,engine))
+			if not shader == None:
+				if len(shader):
+					shader = shader[0]
+					res.append((shader,engine))
 		return res
 	#----------------------------------------------------------------------
 	def shader_To_Lamber(shader,engine):
