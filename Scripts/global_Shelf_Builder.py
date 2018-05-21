@@ -316,6 +316,15 @@ def Build_DataPrep_Tools(shelfName):
 		    # ,command    = "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Asset_Extractor()"
 	        menuItemPython = (0, 1),
 		    sourceType = "python" )
+	# Alembic Asset Extraction V2
+	cmds.shelfButton(parent=active_shelf
+	        ,annotation = "Alembic Asset Extraction V2"
+	        ,label      = "Alembic Asset Extraction V2"
+	        ,image      = "ATB.jpg"
+	        ,image1     = "ATB.jpg"
+	        ,style      = "iconOnly"
+	        ,command    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI.load_Gui()"
+	        ,sourceType = "python" )
 	# Visibility_Connect_Maker
 	cmds.shelfButton(parent=active_shelf
 	        ,annotation = "Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected"
