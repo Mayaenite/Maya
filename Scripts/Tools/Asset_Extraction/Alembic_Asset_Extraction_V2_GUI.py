@@ -35,6 +35,7 @@ def remove_All_Render_Layers():
 #----------------------------------------------------------------------
 def perform_CleanUp():
 	""""""
+	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
 	maya.mel.eval("performCleanUpSceneForEverything")
 
 #----------------------------------------------------------------------
