@@ -668,9 +668,15 @@ class Alembic_Asset_Writer(object):
 		#----------------------------------------------------------------------		
 		def fix_Attribute_Connections():
 			progressBar = self.gui_widget.unlocking_And_Break_Attr_Connections_ProgressBar
-			progressBar.setMaximum(self.all_transform_node_count*9)
+			count = self.all_transform_node_count*9
+			count += self.all_shader_engine_names_count
+			progressBar.setMaximum(count)
 			for node in self.all_transform_nodes:
 				for att in ["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]:
+					try:
+						cmds.lockNode(node,lock=False)
+					except:
+						pass
 					attr = node.name+"."+att
 					if cmds.getAttr(attr,lock=True ):
 						cmds.setAttr(attr,lock=False)
@@ -692,7 +698,12 @@ class Alembic_Asset_Writer(object):
 							# plg.Disconnect_All_Inputs()
 						# except:
 							# pass
-					progressBar.add_Tick()				
+					progressBar.add_Tick()
+			for node in self.all_shader_engine_names:
+				try:
+					cmds.lockNode(node,lock=False)
+				except:
+					pass
 		#----------------------------------------------------------------------
 		def remove_Intermediate_Objects():
 			""""""
