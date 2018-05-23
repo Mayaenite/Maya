@@ -672,11 +672,11 @@ class Alembic_Asset_Writer(object):
 			count += self.all_shader_engine_names_count
 			progressBar.setMaximum(count)
 			for node in self.all_transform_nodes:
+				try:
+					cmds.lockNode(node,lock=False)
+				except:
+					pass
 				for att in ["translateX","translateY","translateZ","rotateX","rotateY","rotateZ","scaleX","scaleY","scaleZ"]:
-					try:
-						cmds.lockNode(node,lock=False)
-					except:
-						pass
 					attr = node.name+"."+att
 					if cmds.getAttr(attr,lock=True ):
 						cmds.setAttr(attr,lock=False)
