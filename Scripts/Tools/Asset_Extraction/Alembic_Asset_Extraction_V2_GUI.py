@@ -80,6 +80,8 @@ def replace_all_shaders_with_lambers(use_layer=False):
 		return res
 	#----------------------------------------------------------------------
 	def shader_To_Lamber(shader,engine):
+		cmds.lockNode(shader,lock=False)
+		cmds.lockNode(engine,lock=False)
 		old_shader = cmds.rename(shader,shader+"_old")
 		old_engine = cmds.rename(engine,engine+"_old")
 	
@@ -668,9 +670,7 @@ class Alembic_Asset_Writer(object):
 		#----------------------------------------------------------------------		
 		def fix_Attribute_Connections():
 			progressBar = self.gui_widget.unlocking_And_Break_Attr_Connections_ProgressBar
-			count = self.all_transform_node_count*9
-			count += self.all_shader_engine_names_count
-			progressBar.setMaximum(count)
+			progressBar.setMaximum(self.all_transform_node_count*9)
 			for node in self.all_transform_nodes:
 				try:
 					cmds.lockNode(node,lock=False)
@@ -699,12 +699,6 @@ class Alembic_Asset_Writer(object):
 						# except:
 							# pass
 					progressBar.add_Tick()
-			for node in self.all_shader_engine_names:
-				try:
-					cmds.lockNode(node,lock=False)
-				except:
-					pass
-				progressBar.add_Tick()
 		#----------------------------------------------------------------------
 		def remove_Intermediate_Objects():
 			""""""
