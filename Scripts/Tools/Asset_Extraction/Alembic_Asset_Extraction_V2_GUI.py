@@ -704,6 +704,7 @@ class Alembic_Asset_Writer(object):
 					cmds.lockNode(node,lock=False)
 				except:
 					pass
+				progressBar.add_Tick()
 		#----------------------------------------------------------------------
 		def remove_Intermediate_Objects():
 			""""""
