@@ -2835,9 +2835,16 @@ class Shading_Engine(SelectionSet):
 	def addElement(self,*items):
 		#self.__rshift__(items)
 		items = flatten(items)
-		items = [item for item in items if cmds.objExists(item)]
-		if len(items):
-			cmds.sets(items, edit=True, forceElement=self)
+		new_items = []
+		for check in items:
+			if not check == None:
+				if cmds.objExists(check):
+					new_items.append(check)
+		if len(new_items):
+			try:
+				cmds.sets(new_items, edit=True, forceElement=self)
+			except:
+				print "Could Not Assing Items {}".format(new_items)
 	#----------------------------------------------------------------------
 	@property
 	def memberNames(self):
