@@ -992,7 +992,10 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 	#----------------------------------------------------------------------
 	def on_Export_Button_Clicked(self):
 		""""""
-		kill_hyperShadePanel()
+		try:
+			kill_hyperShadePanel()
+		except:
+			pass
 		if not self.useRenderLayerComboBox.currentText() == "defaultRenderLayer":
 			Shader_Overides_To_Master_Layer(self.useRenderLayerComboBox.currentText())
 		if self.replaceShadersWithLambertsCheckBox.isChecked():
@@ -1007,7 +1010,10 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 	#----------------------------------------------------------------------
 	def on_Import_Button_Clicked(self):
 		""""""
-		kill_hyperShadePanel()
+		try:
+			kill_hyperShadePanel()
+		except:
+			pass
 		Alembic_Asset_Reader()
 				
 QT.ui_Loader.registerCustomWidget(Alembic_Asset_Extraction_GUI)
