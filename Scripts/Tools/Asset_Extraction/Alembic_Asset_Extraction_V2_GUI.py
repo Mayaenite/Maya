@@ -42,7 +42,8 @@ def remove_All_Render_Layers():
 def perform_CleanUp():
 	""""""
 	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
-	maya.mel.eval("performCleanUpSceneForEverything")
+	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
+		maya.mel.eval(cmd)
 
 #----------------------------------------------------------------------
 def Shader_Overides_To_Master_Layer(layer):
