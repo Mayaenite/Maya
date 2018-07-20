@@ -1,9 +1,17 @@
 import sys, os
 import maya.cmds as cmds
+import maya.mel
 import OpenMaya_Util_API
 import Maya_Callback_Builders
 
 _G_Active_Render_Layer_Before_Save =  ""
+#----------------------------------------------------------------------
+def kill_HyperShadePanel(clientData):
+	""""""
+	try:
+		maya.mel.eval("closeHypershade")
+	except:
+		pass
 #----------------------------------------------------------------------
 def Set_To_Master_Layer_BeFore_Scene_Save(clientData):
 	global _G_Active_Render_Layer_Before_Save
@@ -61,3 +69,4 @@ def Hypergraph_Node_PopupMenu_CallbackFunction(arg1):
 cmds.loadPlugin( addCallback=Add_Custom_Menu_Items_Vray_Plugin_Load )
 callbackId1 = Maya_Callback_Builders.create_Scene_Message_Callback(Maya_Callback_Builders.Scene_Message_Before_Flags.Save, Set_To_Master_Layer_BeFore_Scene_Save, None)
 callbackId2 = Maya_Callback_Builders.create_Scene_Message_Callback(Maya_Callback_Builders.Scene_Message_After_Flags.Save, Reactive_Render_Layer_After_Scene_Save, None)
+callbackId3 = Maya_Callback_Builders.create_Scene_Message_Callback(Maya_Callback_Builders.Scene_Message_Before_Flags.Open, kill_HyperShadePanel, None)
