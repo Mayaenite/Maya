@@ -45,12 +45,12 @@ if MAYA_GUI:
 		if not System_Settings.NO_USER_TOOLS:
 			utilities.add_To_System_Path(System_Paths.MAYA_USER_TOOLS_DIR)
 			utils.executeDeferred ('mel.eval("bonusToolsMenu")')
+	utils.executeDeferred ('import Scripts.global_Shelf_Builder')
+	utils.executeDeferred ('import Scripts.callbacks')
+	utils.executeDeferred ('import Scripts.Maya_Runtime_Commands')
+	utils.executeDeferred ('import Scripts.menu_item_addons')
 	if not System_Settings.NO_USER_TOOLS:
-		utils.executeDeferred ('import Scripts.global_Shelf_Builder')
 		utils.executeDeferred ('import Maya_UserTools; Maya_UserTools.pythonScripts()')
-		utils.executeDeferred ('import Scripts.callbacks')
-		utils.executeDeferred ('import Scripts.Maya_Runtime_Commands')
-		utils.executeDeferred ('import Scripts.menu_item_addons')
 	try:
 		import socket
 		HOST = socket.getfqdn()
