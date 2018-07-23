@@ -320,6 +320,15 @@ def generate_display_layers_from_selected_transform_groups():
 		grp.select_replace()
 		cmds.createDisplayLayer( noRecurse=True, empty=False, name="DL_"+grp.short_name)
 
+#----------------------------------------------------------------------
+def highlight_display_layers_used_in_active_selection():
+	""""""
+	for item in pm.mel.eval("getLayerSelection Display"):
+		pm.mel.eval("layerEditorLayerButtonSelect 4 {}".format(item))
+	
+	for item in pm.listConnections(pm.ls(sl=True),type="displayLayer"):
+		pm.mel.eval("layerEditorLayerButtonSelect 4 {}".format(item.nodeName()))
+
 aw_hub_check_Ctr1_Hotkey()
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)
@@ -330,4 +339,5 @@ cmds.runTimeCommand("aw_Box_Map_Selected_RTC", annotation="Run polyAutoProjectio
 cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The Resault Back To Its Parent And Display Layer", command=__name__+".AW_PolyUnite()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_generate_display_layers_from_selected_transform_groups", annotation="Create's a displayLayer for every Selected Transform", command=__name__+".generate_display_layers_from_selected_transform_groups()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("aw_highlight_display_layers_used_in_active_selection", annotation="Highlights The Display Layers That Are Currently Used In the Active Selection", command=__name__+".highlight_display_layers_used_in_active_selection()", category="User", commandLanguage="python", default=True)
 

@@ -3,6 +3,7 @@ import maya.cmds as cmds
 import maya.mel
 import maya.utils as utils
 
+
 MAYA_VERSION           = int(cmds.about(version=True))
 
 def Add_Custom_Menu_Items():
@@ -37,8 +38,12 @@ def create_AW_Display_Layer_Tab_Menu():
 	DisplayLayerTab = find_UI_By_Name("DisplayLayerTab")
 	if DisplayLayerTab is not None:
 		AW_DisplayLayerTab_Menu = pm.menu("AW_DisplayLayerTab_Menu", tearOff=False,label="AW", parent=DisplayLayerTab)
+		# Create
 		create_sub_menu         = pm.menuItem("AW_DisplayLayerTab_Create_Sub_Menu", tearOff=True, label="Create", subMenu=True, parent=AW_DisplayLayerTab_Menu)
 		pm.menuItem("aw_display_layers_from_selected_transform_groups",annotation="Create A Display Layer For Every Selected Transform Group With The Name Matching That Group", command="aw_generate_display_layers_from_selected_transform_groups", label="Selection To Layers",sourceType="mel")
+		# Display
+		display_sub_menu        = pm.menuItem("AW_DisplayLayerTab_Create_Sub_Menu", tearOff=True, label="Display", subMenu=True, parent=AW_DisplayLayerTab_Menu)
+		pm.menuItem("aw_highlight_display_layers_used_in_active_selection",annotation="Highlights The Display Layers That Are Currently Used In the Active Selection", command="aw_highlight_display_layers_used_in_active_selection", label="Highlight From Selection",sourceType="mel")
 		
 utils.executeDeferred(__name__+".create_AW_Display_Layer_Tab_Menu()")
 utils.executeDeferred(__name__+".Add_Custom_Menu_Items()")
