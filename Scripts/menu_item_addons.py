@@ -37,13 +37,21 @@ def create_AW_Display_Layer_Tab_Menu():
 	""""""
 	DisplayLayerTab = find_UI_By_Name("DisplayLayerTab")
 	if DisplayLayerTab is not None:
+		try:
+			rlay = pm.rowLayout(numberOfColumns=3, parent=DisplayLayerTab.getChildren()[0])
+			pm.button("AW_DisplayLayerTab_force_update_item", command='import pymel.core as pm\npm.mel.eval("updateLayerEditor")',annotation="Force Update",statusBarMessage="Force Update", label="FU", parent=rlay)
+			pm.button("AW_highlight_display_layers_used_in_active_selection", command='import pymel.core as pm\npm.mel.eval("aw_highlight_display_layers_used_in_active_selection")',annotation="Highlight From Selection",statusBarMessage="Highlights The Display Layers That Are Currently Used In the Active Selection", label="HFS", parent=rlay)
+			pm.button("aw_show_layer_by_expression_name", command='import pymel.core as pm\npm.mel.eval("aw_show_layer_by_expression_name")',annotation="Make Visibility Only\nDisplay Layers With Matching Critera",statusBarMessage="Make Visibility Only Display Layers With Matching Critera", label="SML", parent=rlay)
+			
+		except:
+			pass
 		AW_DisplayLayerTab_Menu = pm.menu("AW_DisplayLayerTab_Menu", tearOff=False,label="AW", parent=DisplayLayerTab)
 		# Create
 		create_sub_menu         = pm.menuItem("AW_DisplayLayerTab_Create_Sub_Menu", tearOff=True, label="Create", subMenu=True, parent=AW_DisplayLayerTab_Menu)
 		pm.menuItem("aw_display_layers_from_selected_transform_groups",annotation="Create A Display Layer For Every Selected Transform Group With The Name Matching That Group", command="aw_generate_display_layers_from_selected_transform_groups", label="Selection To Layers",sourceType="mel")
 		# Display
-		display_sub_menu        = pm.menuItem("AW_DisplayLayerTab_Create_Sub_Menu", tearOff=True, label="Display", subMenu=True, parent=AW_DisplayLayerTab_Menu)
-		pm.menuItem("aw_highlight_display_layers_used_in_active_selection",annotation="Highlights The Display Layers That Are Currently Used In the Active Selection", command="aw_highlight_display_layers_used_in_active_selection", label="Highlight From Selection",sourceType="mel")
+		#display_sub_menu        = pm.menuItem("AW_DisplayLayerTab_Create_Sub_Menu", tearOff=True, label="Display", subMenu=True, parent=AW_DisplayLayerTab_Menu)
+		#pm.menuItem("aw_highlight_display_layers_used_in_active_selection",annotation="Highlights The Display Layers That Are Currently Used In the Active Selection", command="aw_highlight_display_layers_used_in_active_selection", label="Highlight From Selection",sourceType="mel")
 		
 utils.executeDeferred(__name__+".create_AW_Display_Layer_Tab_Menu()")
 utils.executeDeferred(__name__+".Add_Custom_Menu_Items()")

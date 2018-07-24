@@ -328,6 +328,53 @@ def highlight_display_layers_used_in_active_selection():
 	
 	for item in pm.listConnections(pm.ls(sl=True),type="displayLayer"):
 		pm.mel.eval("layerEditorLayerButtonSelect 4 {}".format(item.nodeName()))
+		
+class Show_Layer_By_Expression_Class(object):
+	def __init__(self):
+		self.window     = pm.window( width=250 ,title="Find And Show Display Layer Match")
+		self.col        = pm.columnLayout(adjustableColumn=True)
+		self.row        = pm.rowLayout(numberOfColumns=2,adjustableColumn=2)
+		self.options    = pm.optionMenu( label='Search Type')
+		pm.menuItem( label='Starts With' )
+		pm.menuItem( label= 'Ends With')
+		pm.menuItem( label='Contains' )
+		self.input_name = pm.textField()
+
+		self.row        = pm.rowLayout(numberOfColumns=1,adjustableColumn=True,parent=self.col)
+		self.button     = pm.button( label='Make It So',command=self.run_it)
+		self.window.show()
+		
+	#----------------------------------------------------------------------
+	def _find_Matching_Display_Layers(self):
+		""""""
+		if self.options.getValue() == 'Contains':
+			layers = pm.ls("*"+self.input_name.getText()+"*",type="displayLayer")
+			return layers
+		else:
+			layers = []
+			for lay in pm.ls(typ="displayLayer"):
+				if self.options.getValue() == 'Starts With':
+					if lay.nodeName().startswith(self.input_name.getText()):
+						layers.append(lay)
+				elif self.options.getValue() == 'Ends With':
+					if lay.nodeName().endswith(self.input_name.getText()):
+						layers.append(lay)
+			return layers
+	def run_it(self,*args):
+		layers = self._find_Matching_Display_Layers()
+		for item in pm.ls(typ="displayLayer"):
+			if not item.nodeName() == "defaultLayer":
+				item.visibility.set(False)
+
+		for item in layers:
+			if not item.nodeName() == "defaultLayer":
+				item.visibility.set(True)
+		pm.mel.eval("updateLayerEditor")
+
+#----------------------------------------------------------------------
+def Show_Layer_By_Expression_Name():
+	""""""
+	Show_Layer_By_Expression_Class()
 
 aw_hub_check_Ctr1_Hotkey()
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
@@ -340,4 +387,5 @@ cmds.runTimeCommand("aw_Poly_Unite_RTC", annotation="Run polyUnite And Sets The 
 cmds.runTimeCommand("aw_HOT_PIVOT_ACTION", annotation="Resets The Transform Matrix", command=__name__+".HOT_PIVOT_ACTION()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_generate_display_layers_from_selected_transform_groups", annotation="Create's a displayLayer for every Selected Transform", command=__name__+".generate_display_layers_from_selected_transform_groups()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("aw_highlight_display_layers_used_in_active_selection", annotation="Highlights The Display Layers That Are Currently Used In the Active Selection", command=__name__+".highlight_display_layers_used_in_active_selection()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("aw_show_layer_by_expression_name", annotation="Make Visibility Only Display Layers With Matching Critera", command=__name__+".Show_Layer_By_Expression_Name()", category="User", commandLanguage="python", default=True)
 
