@@ -1,14 +1,12 @@
-display_Layer_Editor_Window, display_Layer_Editor_Doc = None, None
+import pymel.core as pm
 import  os
-os.sys.path.append(os.path.dirname(__file__))
 
 def create_display_Layer_editor():
-	global display_Layer_Editor_Window, display_Layer_Editor_Doc
-	import Scripts.Tools.Display_Layer_Editor
+	import Scripts.Tools.Display_Layer_Editor.Layer_Editor
 	try:
-		display_Layer_Editor_Window.display_layer_tree.remove_Maya_Scene_CallBacks()
-		display_Layer_Editor_Window.display_layer_tree.cleanup()
+		wig = Scripts.Tools.Display_Layer_Editor.Layer_Editor.Initialize_Layer_Editor()
+		return wig
 	except:
 		pass
-	reload(Scripts.Tools.Display_Layer_Editor)
-	display_Layer_Editor_Window, display_Layer_Editor_Doc = Scripts.Tools.Display_Layer_Editor.make_Editor(True)
+	
+AW_Display_Layer_Editor = pm.evalDeferred(create_display_Layer_editor,lowestPriority=True)

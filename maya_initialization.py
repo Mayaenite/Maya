@@ -49,6 +49,7 @@ if MAYA_GUI:
 	utils.executeDeferred ('import Scripts.callbacks')
 	utils.executeDeferred ('import Scripts.Maya_Runtime_Commands')
 	utils.executeDeferred ('import Scripts.menu_item_addons')
+	utils.executeDeferred ('import Scripts.Tools.Tool_Loaders')
 	if not System_Settings.NO_USER_TOOLS:
 		utils.executeDeferred ('import Maya_UserTools; Maya_UserTools.pythonScripts()')
 	try:
