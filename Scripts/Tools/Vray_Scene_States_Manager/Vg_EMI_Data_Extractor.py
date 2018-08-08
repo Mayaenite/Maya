@@ -5,10 +5,24 @@ import maya.cmds as cmds
 import maya.mel as mm
 import xml.etree.ElementTree as etree
 import Coba_Data_Parser
+import Coba_Json_Data_Parser
 class EIM_Config_Data(object):
 	def __init__(self, code, layers):
 		self.code = code
 		self.layers = layers
+
+#----------------------------------------------------------------------
+def Get_JSON_EMI_Data():
+	""""""
+	json_config_data = Coba_Json_Data_Parser.Json_Config_Data()
+	pickle_file            = os.path.join(os.environ["temp"],"EMI_BUILD_DATA.pkl")
+	pickle_Data            = list()
+	for eim_build in json_config_data.Eim_Builds:
+		isinstance(eim_build,Coba_Json_Data_Parser.EIM)
+		config_data=dict(code=eim_build.name,dls=eim_build.get_layer_names(),rls=[])
+		pickle_Data.append(config_data)
+	with file(pickle_file,'w') as pkf:
+		pickle.dump(pickle_Data,pkf)
 
 #----------------------------------------------------------------------
 def Get_XML_EMI_Data():
@@ -64,7 +78,9 @@ def Get_EIM_Data():
 		cmds.error("Cannot find procedure VGConfigWindow")
 #----------------------------------------------------------------------
 def dump_EIM_Data():
-	if pm.objExists("VGConfigXMLScriptNode"):
+	if pm.objExists("JSON_document"):
+		Get_JSON_EMI_Data()
+	elif pm.objExists("VGConfigXMLScriptNode"):
 		Get_XML_EMI_Data()
 	else:
 		Get_EIM_Data()
