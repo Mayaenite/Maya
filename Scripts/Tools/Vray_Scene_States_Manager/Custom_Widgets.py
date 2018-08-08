@@ -3,7 +3,7 @@ import os
 import yaml
 import Yaml_Config_Data
 import uuid
-
+import re
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import QT.DataModels.QTreeView
@@ -878,8 +878,10 @@ class Asset_States_ListView(QListView):
 	def __init__(self, asset, parent=None):
 		isinstance(asset, Asset_Item)
 		super(Asset_States_ListView, self).__init__(parent=parent)
-		self.setModel(asset.Model)
-		self.setRootIndex(asset.Render_States.index())
+		self.asset_filtered_model = States_Viewer_Item_Filter_ProxyModel(parent=self)
+		self.asset_filtered_model.setSourceModel(asset.Model)
+		self.setModel(self.asset_filtered_model)
+		self.setRootIndex(self.asset_filtered_model.mapFromSource(asset.Render_States.index()))
 		self._asset = asset
 		self._maya_forced = False
 		self.doubleClicked.connect(self.update_asset_attribute)
@@ -888,6 +890,7 @@ class Asset_States_ListView(QListView):
 	def update_asset_attribute(self):
 		current_render_layer = get_Current_Render_Layer()
 		current_index        = self.currentIndex()
+		current_index        = self.Model.mapToSource(current_index)
 		current_plug_index   = self._asset.enum_render_states_plug.value
 		if not current_render_layer == "defaultRenderLayer":
 			self._asset.enum_render_states_plug.value = current_index.row()
@@ -906,10 +909,10 @@ class Asset_States_ListView(QListView):
 	def update_On_Render_Layer_Change(self):
 		self._maya_forced = True
 		if not get_Current_Render_Layer() == "defaultRenderLayer":
-			self.setCurrentIndex(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index())
+			self.setCurrentIndex(self.Model.mapFromSource(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index()))
 		else:
-			self.model().itemFromIndex(self.rootIndex()).child(0).index()
-			self.setCurrentIndex(self.model().itemFromIndex(self.rootIndex()).child(0).index())
+			# self.model().item_From_Index(self.rootIndex()).child(0).index()
+			self.setCurrentIndex(self.rootIndex().child(0,0))
 			self._asset.enum_render_states_plug.value = 0
 ########################################################################
 class Asset_States_GroupBox(QT.QGroupBox):
@@ -918,11 +921,20 @@ class Asset_States_GroupBox(QT.QGroupBox):
 		super(Asset_States_GroupBox, self).__init__(parent=parent)
 		self.verticalLayout = QT.QVBoxLayout(self)
 		self.asset_states   = Asset_States_ListView(asset, self)
-		
+		self.asset_name_filter   = QT.QLineEdit(self)
 		self.setAlignment(QtCore.Qt.AlignCenter)
 		self.setTitle(asset.Parent.data())
-		self.verticalLayout.addWidget(self.asset_states)
 		
+		self.verticalLayout.addWidget(self.asset_name_filter)
+		self.verticalLayout.addWidget(self.asset_states)
+		self.asset_name_filter.textChanged.connect(self._update_filter)
+	#----------------------------------------------------------------------
+	def _update_filter(self):
+		""""""
+		regexp = self.asset_states.Model.filterRegExp()
+		regexp.setPattern(self.asset_name_filter.text())
+		self.asset_states.Model.setFilterRegExp(regexp)
+		self.asset_states.update_On_Render_Layer_Change()
 ########################################################################
 class Asset_Frame(QT.QFrame):
 	def __init__(self, asset, parent=None):
@@ -4682,6 +4694,25 @@ class Base_ProxyModel(QSortFilterProxyModel):
 		res = super(Base_ProxyModel,self).sourceModel()
 		isinstance(res,Vray_Scene_State_Manager_Item_Model)
 		return res
+	
+########################################################################
+class States_Viewer_Item_Filter_ProxyModel(Base_ProxyModel):
+	def __init__(self,parent=None):
+		super(States_Viewer_Item_Filter_ProxyModel,self).__init__(parent)
+	#----------------------------------------------------------------------
+	def filterAcceptsRow(self, sourceRow, sourceParent):
+		if not sourceParent.isValid():
+			return True
+		if self.FilterRegExp.pattern() == "" or self.FilterRegExp.pattern() == "**":
+			return True
+		parentItem = self.sourceModel().itemFromIndex(sourceParent)
+		if parentItem.data() == "Render States":
+			if self.FilterRegExp.pattern() in parentItem.child(sourceRow).data():
+				return True
+			else:
+				return False
+		return True
+	
 ########################################################################
 class Asset_Item_Filter_ProxyModel(Base_ProxyModel):
 	def __init__(self,parent=None):

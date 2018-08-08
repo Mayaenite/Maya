@@ -105,9 +105,11 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 		self.model                = Vray_Scene_State_Viewer_Item_Model(self)
 		self.asset_filtered_model = Custom_Widgets.Master_Asset_Item_Filter_ProxyModel(parent=self)
 		self.asset_filtered_model.setSourceModel(self.model)
+		# Custom_Widgets.Master_Asset_Item_Filter_ProxyModel
 		self.Update_Button.clicked.connect(self.Run_Update)
-		self.rebuild_Render_layer_states_button.clicked.connect(self.Rebuild_Render_Layer_States)
-		# cmds.scriptJob(e=["renderLayerChange", self.update_on_render_layer_Added], killWithScene=True)
+		self.rebuild_Render_layer_states_button.clicked.connect(self.Rebuild_Render_Layer_States) 
+		self._Render_Layer_Added_Script_Job_ID = cmds.scriptJob(e=["renderLayerChange", self.update_on_render_layer_Added], killWithScene=True)
+		self._Post_Scene_Read_Script_Job_ID = cmds.scriptJob(e=["PostSceneRead", self.update_on_render_layer_Added], killWithScene=True)
 		self._Render_Layer_Changed_Script_Job_ID = cmds.scriptJob(e=["renderLayerManagerChange", self.emit_render_layer_changed], killWithScene=True)
 		self.actionSet_State_By_Name.triggered.connect(self.Assine_Overide_State_To_Render_Layer_With_Matching_Name_Combo_Box)
 		self.run_Item_View_Assinments()
@@ -262,7 +264,12 @@ def make_ui(useBeta=False):
 		States_Viewer.show()
 		cmds.scriptJob(runOnce=True, event= ["deleteAll",remove_Viewer])
 	elif Scripts.General_Maya_Util.getModifier() == 'Ctrl+Alt+Shift':
-		cmds.scriptJob(kill=States_Viewer._Render_Layer_Changed_Script_Job_ID)
+		try:
+			cmds.scriptJob(kill=States_Viewer._Render_Layer_Changed_Script_Job_ID)
+			cmds.scriptJob(kill=States_Viewer._Render_Layer_Added_Script_Job_ID)
+			cmds.scriptJob(kill=States_Viewer._Post_Scene_Read_Script_Job_ID)
+		except:
+			pass
 		remove_Viewer()
 		States_Viewer = QT.ui_Loader.load(ui_file)
 		States_Viewer._use_Beta = useBeta
