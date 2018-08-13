@@ -215,8 +215,8 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 				for item in self.Asset_Grid_widget.items:
 					isinstance(item, Custom_Widgets.Asset_Frame)
 					current = item.asset_states.currentIndex()
-					current_item = self.model.itemFromIndex(current)
-					item.asset_states.setCurrentIndex(current_item.parent().child(0).index())
+					if not current.data() == 'Default_Empty':
+						item.asset_states.CurrentIndex.parent().child(0,0).data()
 					item.asset_states.update_asset_attribute()
 					# cmds.refresh(force=True)
 					item.asset_states.setCurrentIndex(current)
