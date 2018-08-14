@@ -13,7 +13,11 @@ if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
 	except:
-		pass
+		os.sys.path.append(r"C:\Program Files (x86)\Wing IDE 6.1")
+		try:
+			import wingdbstub
+		except:
+			print "Could Not Import Wing Debuger"
 	
 MAYA_VERSION           = int(cmds.about(version=True))
 MAYA_BATCH             = cmds.about(b=True)

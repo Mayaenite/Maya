@@ -607,7 +607,6 @@ class WidgetDelegate(PYQT.QStyledItemDelegate):
 ########################################################################
 class Display_Layer_Container_Tree_Item(BASE_CLASS_DEFINITIONS.DATA_TYPES.Model_Items.Base_Model_Item):
 	""""""
-
 	#----------------------------------------------------------------------
 	def __init__(self,model=None, parent_item=None):
 		"""Constructor"""
@@ -1189,6 +1188,11 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 		action.triggered.connect(self.Hilight_Tool_Action_Hilight_From_Active_Selection)
 		self.Hilight_Selection_Tools_Button.addAction(action)
 		
+		action = PYQT.QAction("Hilight Empty Layers",self.Hilight_Selection_Tools_Button)
+		action.setToolTip("Hilight The Display Layers That Have Nothing In Them ")
+		action.setStatusTip("Hilight The Display Layers That Have Nothing In Them")
+		action.triggered.connect(self.Hilight_Tool_Action_Hilight_Empty_Display_Layers)
+		self.Hilight_Selection_Tools_Button.addAction(action)
 	#----------------------------------------------------------------------
 	def _Disable_Add_Button_On_Multi_Selection(self):
 		""""""
@@ -1205,6 +1209,17 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 			tree_item = self._data_model.layer_container.find_child(item.nodeName())
 			if tree_item is not None:
 				items.append(tree_item)
+		if len(items):
+			self.listView.replace_Selection(items)
+	#----------------------------------------------------------------------
+	@PYQT.Slot()
+	def Hilight_Tool_Action_Hilight_Empty_Display_Layers(self):
+		""""""
+		items = []
+		for child in self._data_model.layer_container.childItems:
+			isinstance(child,Display_Layer_Tree_Item)
+			if not child.get_internal_Data().get_Member_Count():
+				items.append(child)
 		if len(items):
 			self.listView.replace_Selection(items)
 	#----------------------------------------------------------------------
