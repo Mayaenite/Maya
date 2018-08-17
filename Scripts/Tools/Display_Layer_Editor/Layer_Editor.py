@@ -684,6 +684,7 @@ class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data
 	def __init__(self, node,**kwargs):
 		#if not len(node.drawInfo.connections()):
 			#kwargs["foreground_color"]=PYQT.Constants.Colors.CYAN
+		kwargs["checkable"]=True
 		if node.visibility.get():
 			kwargs["foreground_color"]=PYQT.Constants.Colors.WHITE
 		else:
@@ -692,7 +693,27 @@ class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data
 		## WING IDE CODE COMPLEASHION ##
 		if False:
 			isinstance(self.internal_data,DML_Display_Layer_Virtual_Class)
-
+	#----------------------------------------------------------------------
+	def _fn_get_checked_value(self):
+		""""""
+		try:
+			if self.internal_data.visibility.get():
+				return PYQT.Qt.CheckState.Checked
+			else:
+				return PYQT.Qt.CheckState.Unchecked
+		except:
+			return None
+	#----------------------------------------------------------------------
+	def _fn_set_checked_value(self,value):
+		""""""
+		try:
+			if value:
+				self.internal_data.visibility.set(True)
+			else:
+				self.internal_data.visibility.set(False)
+		except:
+			pass
+		super(Display_Layer_Tree_Item_Data,self)._fn_set_checked_value(value)
 	#----------------------------------------------------------------------
 	def _selection_contains_members(self):
 		""""""
