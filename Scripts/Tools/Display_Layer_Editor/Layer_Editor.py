@@ -1209,6 +1209,12 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 		action.triggered.connect(self.Hilight_Tool_Action_Hilight_From_Active_Selection)
 		self.Hilight_Selection_Tools_Button.addAction(action)
 		
+		action = PYQT.QAction("Hilight From Active And Parents",self.Hilight_Selection_Tools_Button)
+		action.setToolTip("Hilight The Display Layers Invalved With The Acive Selection And All Of There Parents")
+		action.setStatusTip("Hilight The Display Layers Invalved With The Acive Selection And All Of There Parents")
+		action.triggered.connect(self.Hilight_Tool_Action_Hilight_From_Active_Selection_And_Parents)
+		self.Hilight_Selection_Tools_Button.addAction(action)
+		
 		action = PYQT.QAction("Hilight Empty Layers",self.Hilight_Selection_Tools_Button)
 		action.setToolTip("Hilight The Display Layers That Have Nothing In Them ")
 		action.setStatusTip("Hilight The Display Layers That Have Nothing In Them")
@@ -1221,6 +1227,20 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 			self.Add_Layers_Members_Button.setEnabled(False)
 		else:
 			self.Add_Layers_Members_Button.setEnabled(True)
+	#----------------------------------------------------------------------
+	@PYQT.Slot()
+	def Hilight_Tool_Action_Hilight_From_Active_Selection_And_Parents(self):
+		""""""
+		items = []
+		layers = pm.listConnections(pm.ls(sl=True),type="displayLayer")
+		layers += pm.listConnections(pm.listRelatives(pm.ls(sl=True),allParents=True),type="displayLayer")
+		layers = list(set(layers))
+		for item in layers:
+			tree_item = self._data_model.layer_container.find_child(item.nodeName())
+			if tree_item is not None:
+				items.append(tree_item)
+		if len(items):
+			self.listView.replace_Selection(items)
 	#----------------------------------------------------------------------
 	@PYQT.Slot()
 	def Hilight_Tool_Action_Hilight_From_Active_Selection(self):
