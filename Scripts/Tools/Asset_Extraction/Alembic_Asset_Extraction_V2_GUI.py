@@ -45,14 +45,23 @@ def perform_CleanUp():
 	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
 		maya.mel.eval(cmd)
 
+
 #----------------------------------------------------------------------
-def Shader_Overides_To_Master_Layer(layer):
+def check_If_Shading_Engine_Contains_Face_Assignments(engine,items,log_text):
+	for item in items:
+		if ".f" in item:
+			log_text.insertHtml('<html><head/><body><p><span style=" font-size:8.25pt; color:#ff0000;">Warning:</span><span style=" font-size:8.25pt; color:#ffffff;"> Face Assinments Found On </span><span style=" font-size:8.25pt; font-weight:600; color:#55ff00;">{} </span><span style=" font-size:8.25pt; color:#ffffff;">From </span><span style=" font-size:8.25pt; font-weight:600; color:#55ff00;">{}<br/></span></p></body></html>'.format(engine,item))	
+			
+#----------------------------------------------------------------------
+def Shader_Overides_To_Master_Layer(layer,log_text):
 	#----------------------------------------------------------------------
 	def get_ShadingEngine_dict():
 		res    = dict()
 		shading_Engines = cmds.ls(type="shadingEngine")
 		for engine in shading_Engines:
-			items = cmds.ls(cmds.sets(engine,q=True),geometry=True)
+			items = cmds.ls(cmds.sets(engine,q=True))
+			check_If_Shading_Engine_Contains_Face_Assignments(engine, items, log_text)
+			items = cmds.ls(items,objectsOnly=True)
 			res[engine] = items
 		return res
 	#----------------------------------------------------------------------
@@ -62,12 +71,14 @@ def Shader_Overides_To_Master_Layer(layer):
 				cmds.sets(items,edit=True,forceElement=sg)
 	
 	cmds.editRenderLayerGlobals(currentRenderLayer=layer)
+	cmds.refresh(f=True)
 	overides_assignments = get_ShadingEngine_dict()
 	cmds.editRenderLayerGlobals(currentRenderLayer="defaultRenderLayer")
+	cmds.refresh(f=True)
 	apply_Shading_Engine_dict(overides_assignments)
 
 #----------------------------------------------------------------------
-def replace_all_shaders_with_lambers(use_layer=False):
+def replace_all_shaders_with_lambers(log_text,use_layer=False):
 	#----------------------------------------------------------------------
 	def get_ShadingNodes():
 		res    = []
@@ -96,13 +107,15 @@ def replace_all_shaders_with_lambers(use_layer=False):
 			cmds.setAttr(shader+".transparency",tr,tb,tg, type="double3")
 		except:
 			pass
-		items = cmds.ls(cmds.sets(old_engine,q=True),geometry=True)
+		items = cmds.ls(cmds.sets(old_engine,q=True))
+		check_If_Shading_Engine_Contains_Face_Assignments(old_engine,items,log_text)
+		items = cmds.ls(items,objectsOnly=True)
 		if len(items):
 			cmds.sets(items,edit=True,forceElement=engine)
 
 	if use_layer:
 		if cmds.objExists(use_layer) and cmds.objectType(use_layer)=="renderLayer":
-			Shader_Overides_To_Master_Layer(use_layer)
+			Shader_Overides_To_Master_Layer(log_text,use_layer)
 	for item in get_ShadingNodes():
 		shader_To_Lamber(item[0],item[1])
 
@@ -998,9 +1011,9 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		except:
 			pass
 		if not self.useRenderLayerComboBox.currentText() == "defaultRenderLayer":
-			Shader_Overides_To_Master_Layer(self.useRenderLayerComboBox.currentText())
+			Shader_Overides_To_Master_Layer(self.useRenderLayerComboBox.currentText(),self.Extraction_Log_Text)
 		if self.replaceShadersWithLambertsCheckBox.isChecked():
-			replace_all_shaders_with_lambers()
+			replace_all_shaders_with_lambers(self.Extraction_Log_Text)
 		if self.removeOtherLayersCheckBox.isChecked():
 			remove_All_Render_Layers()
 		if self.performSceneCleanUpCheckBox.isChecked():
