@@ -30,7 +30,10 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 	mainDir = Path(mainDir)
 	ignors  = ["__init__.py", "userSetup.py", "pythonScripts.py"]
 	files   = [f for f in mainDir.glob("*.py") if not f.parts[-1] in ignors]
-	folders = [folder for folder in mainDir.iterdir(True) if not folder.baseName.startswith(".")]
+	try:
+		folders = [folder for folder in mainDir.iterdir(True) if not folder.baseName.startswith(".")]
+	except:
+		folders = [folder for folder in mainDir.iterfolders() if not folder.baseName.startswith(".")]
 	folders = sorted(folders)
 	
 	#folders = mainDir.dirs(pattern=None, realpath=False)
