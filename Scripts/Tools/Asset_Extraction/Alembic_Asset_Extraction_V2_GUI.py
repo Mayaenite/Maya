@@ -35,7 +35,9 @@ def clean_maya_shader_file(path):
 #----------------------------------------------------------------------
 def remove_All_Render_Layers():
 	cmds.editRenderLayerGlobals(currentRenderLayer="defaultRenderLayer")
-	cmds.delete([layer for layer in cmds.ls(type="renderLayer") if not layer == "defaultRenderLayer"])
+	layers = [layer for layer in cmds.ls(type="renderLayer") if not layer == "defaultRenderLayer"]
+	if len(layers):
+		cmds.delete([layer for layer in cmds.ls(type="renderLayer") if not layer == "defaultRenderLayer"])
 
 
 #----------------------------------------------------------------------
@@ -332,6 +334,9 @@ class Alembic_Asset_Writer(object):
 		self.bad_visible_in_refraction_plugs = []
 		self.bad_visible_in_refraction_plug_count = 0
 		
+		self.meshes_with_Multi_Uvs_Sets = []
+		self.meshes_with_Multi_Uvs_Sets_count = 0
+		
 	#----------------------------------------------------------------------
 	def set_Top_Level_Node(self,top_level_node):
 		""""""
@@ -360,6 +365,7 @@ class Alembic_Asset_Writer(object):
 		""""""
 		with file('C:/temp/Alembic_Assets_Extractor_Data.json','w') as f:
 			self.item_Collector["shader_file_is_ascii"] = self._shader_file_is_ascii
+			self.item_Collector["shaders_should_be_loaded"] = self._shaders_should_be_loaded
 			json.dump(self.item_Collector, f, indent=4, sort_keys=True)
 	#----------------------------------------------------------------------
 	def find_Most_Likely_Master_Item(self):
@@ -586,7 +592,21 @@ class Alembic_Asset_Writer(object):
 			self.bad_visible_in_refraction_plugs = res
 			self.bad_visible_in_refraction_plug_count = len(res)
 			self.gui_widget.incorrectVisibleInRefractionPlugsSpinBox.setValue(self.bad_visible_in_refraction_plug_count)
-		
+		#----------------------------------------------------------------------
+		def scan_Multi_Uv_Sets():
+			""""""
+			progressBar = self.gui_widget.meshsWithMultiUvSetsprogressBar
+			res = []
+			progressBar.setMaximum(len(self.all_mesh_nodes_for_multi_Uv_Set_Scanning))
+			for mesh in self.all_mesh_nodes_for_multi_Uv_Set_Scanning:
+				if len(cmds.polyUVSet( mesh, query=True, allUVSets=True)):
+					res.append(mesh)
+				progressBar.add_Tick()
+			self.meshes_with_Multi_Uvs_Sets = res
+			self.meshes_with_Multi_Uvs_Sets_count = len(res)
+			self.gui_widget.meshsWithMultiUvSetsSpinBox.setValue(self.meshes_with_Multi_Uvs_Sets_count)
+			
+		self.all_mesh_nodes_for_multi_Uv_Set_Scanning                 = cmds.ls(type="mesh",l=True)
 		self.all_top_level_node_transform_descendent_node_names       = cmds.listRelatives(self.top_level_node.name, allDescendents=True, path=True, type='transform')
 		self.all_top_level_node_transform_descendent_node_names_count = len(self.all_top_level_node_transform_descendent_node_names)
 		
@@ -596,6 +616,7 @@ class Alembic_Asset_Writer(object):
 		self.all_shader_engine_names  = [item for item in cmds.ls(type="shadingEngine") if not "initial" in item]
 		self.all_shader_engine_names_count = len(self.all_shader_engine_names)
 		
+		scan_Multi_Uv_Sets()
 		scan_For_Shape_Nodes_With_No_Geo()
 		scan_All_Top_Level_Node_Descendents()
 		scan_Bad_PolySurface_Node_Names()
@@ -769,6 +790,40 @@ class Alembic_Asset_Writer(object):
 				cmds.setAttr(node,True)
 				progressBar.add_Tick()
 		#----------------------------------------------------------------------
+		def fix_Visible_In_Refraction_Plugs():
+			""""""
+			progressBar = self.gui_widget.fix_Visible_In_Refractions_ProgressBar
+			if self.bad_visible_in_refraction_plug_count:
+				progressBar.setMaximum(self.bad_visible_in_refraction_plug_count)
+			else:
+				progressBar.setMaximum(100)
+				progressBar.setValue(100)
+				
+			for node in self.bad_visible_in_refraction_plugs:
+				cmds.setAttr(node,True)
+				progressBar.add_Tick()
+		#----------------------------------------------------------------------
+		def fix_Meshes_With_Multiple_UV_Sets():
+			""""""
+			progressBar = self.gui_widget.meshsWithMultiUvSetsprogressBar
+			if not self.gui_widget.removeUvSetsCheckBox.isChecked() or self.meshes_with_Multi_Uvs_Sets_count == 0:
+				progressBar.setMaximum(100)
+				progressBar.setValue(100)
+			else:
+				progressBar.setMaximum(self.meshes_with_Multi_Uvs_Sets_count)
+				for node in self.meshes_with_Multi_Uvs_Sets:
+					try:
+						default_uv_set = cmds.getAttr(node+".uvSet[0].uvSetName")
+						if not cmds.polyUVSet( node ,query=True, currentUVSet=True) == default_uv_set:
+							cmds.polyUVSet(node,currentUVSet=True, uvSet=default_uv_set)
+							
+						for uv_set in cmds.polyUVSet( node, query=True, allUVSets=True):
+							if not uv_set == default_uv_set:
+								cmds.polyUVSet(node, delete=True, uvSet=uv_set)
+					except:
+						pass
+					progressBar.add_Tick()
+		#----------------------------------------------------------------------
 		def apply_Freeze_Transforms():
 			""""""
 			progressBar = self.gui_widget.apply_Freeze_Transforms_ProgressBar
@@ -787,6 +842,7 @@ class Alembic_Asset_Writer(object):
 					pass
 				progressBar.add_Tick()
 
+		fix_Meshes_With_Multiple_UV_Sets()
 		remove_Shapes_With_No_Geometry()
 		fix_PolySurface_Names()
 		fix_Bad_Unicode_Names()
@@ -799,11 +855,14 @@ class Alembic_Asset_Writer(object):
 		apply_Freeze_Transforms()
 	#----------------------------------------------------------------------
 	def export_AbcExport(self):
+		if not cmds.pluginInfo( "AbcExport", query=True, loaded=True):
+			cmds.loadPlugin("AbcExport")
 		cmds.select(self.top_level_node)
 		cmds.AbcExport(jobArg='-frameRange 1 1 -attr AW_Extractor_ID -attr assined_display_layer -uvWrite -dataFormat HDF -eulerFilter -stripNamespaces -root %s -file C:/temp/Extracted.abc' % self.top_level_node.name)
 	#----------------------------------------------------------------------
 	def export_Shaders(self):
 		cmds.select(clear=True)
+		self._shaders_should_be_loaded = True
 		for shader in self.active_shaders:
 			isinstance(shader,Shading_Engine)
 			if not shader.assined_material == None:
@@ -814,14 +873,18 @@ class Alembic_Asset_Writer(object):
 					if not items == None:
 						if len(items):
 							cmds.select(items,add=True)
-		
-		try:
-			cmds.file("C:/temp/shaders.ma",force=True,op="v=1;",typ="mayaAscii",es=True)
-			clean_maya_shader_file("C:/temp/shaders.ma")
-			self._shader_file_is_ascii = True
-		except:
-			cmds.file("C:/temp/shaders.mb",force=True,op="v=1;",typ="mayaBinary",es=True)
-			self._shader_file_is_ascii = False
+							
+		self._shader_file_is_ascii = None
+		if len(cmds.ls(sl=True)):
+			try:
+				cmds.file("C:/temp/shaders.ma",force=True,op="v=1;",typ="mayaAscii",es=True)
+				clean_maya_shader_file("C:/temp/shaders.ma")
+				self._shader_file_is_ascii = True
+			except:
+				cmds.file("C:/temp/shaders.mb",force=True,op="v=1;",typ="mayaBinary",es=True)
+				self._shader_file_is_ascii = False
+		else:
+			self._shaders_should_be_loaded = False
 ########################################################################
 class Alembic_Asset_Reader(object):
 	""""""
@@ -846,10 +909,11 @@ class Alembic_Asset_Reader(object):
 		# self.top_level_node = MNODE(self.top_level_node_name)
 
 	def import_Shaders(self):
-		if self.json_data["shader_file_is_ascii"]:
-			cmds.file("C:/temp/shaders.ma",i=True,type="mayaAscii", ignoreVersion=True, ra=1,mergeNamespacesOnClash=0,namespace="extracted_shaders",options="v=0;",pr=True,loadReferenceDepth="all")
-		else:
-			cmds.file("C:/temp/shaders.mb",i=True,type="mayaBinary", ignoreVersion=True, ra=1,mergeNamespacesOnClash=0,namespace="extracted_shaders",options="v=0;",pr=True,loadReferenceDepth="all")
+		if self.json_data["shaders_should_be_loaded"]:
+			if self.json_data["shader_file_is_ascii"]:
+				cmds.file("C:/temp/shaders.ma",i=True,type="mayaAscii", ignoreVersion=True, ra=1,mergeNamespacesOnClash=0,namespace="extracted_shaders",options="v=0;",pr=True,loadReferenceDepth="all")
+			else:
+				cmds.file("C:/temp/shaders.mb",i=True,type="mayaBinary", ignoreVersion=True, ra=1,mergeNamespacesOnClash=0,namespace="extracted_shaders",options="v=0;",pr=True,loadReferenceDepth="all")
 
 ######################################################################## CUSTOM QT WIDGETS
 ########################################################################
@@ -960,6 +1024,10 @@ class _CODE_COMPLEATION_HELPER(QT.QWidget):
 			self.FRAME_Extraction_Log = QT.QFrame()
 			self.GBX_Extraction_Log = QT.QGroupBox()
 			self.Extraction_Log_Text = QT.QTextEdit()
+			self.meshsWithMultiUvSetsSpinBox = QT.QSpinBox()
+			self.meshsWithMultiUvSetsprogressBar = Tickalbe_ProgressBar()
+			self.meshsWithMultiUvSetsLabel = QT.QLabel()
+			self.removeUvSetsCheckBox = QT.QCheckBox()
 ########################################################################
 class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER):
 	#----------------------------------------------------------------------

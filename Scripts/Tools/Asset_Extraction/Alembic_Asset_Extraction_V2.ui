@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>857</width>
-    <height>624</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -150,6 +150,16 @@ The Master Layer Before Scan and Export</string>
                </property>
               </widget>
              </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="removeUvSetsLabel">
+               <property name="text">
+                <string>Remove Uv Sets</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QCheckBox" name="removeUvSetsCheckBox"/>
+             </item>
             </layout>
            </widget>
           </item>
@@ -240,14 +250,14 @@ p, li { white-space: pre-wrap; }
              <string>Extraction Scan Data</string>
             </property>
             <layout class="QFormLayout" name="formLayout_2">
-             <item row="0" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="shapeNodesWithNoGeometryLabel">
                <property name="text">
                 <string>Shape Nodes With No Geometry</string>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
+             <item row="1" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_shapeNodesWithNoGeometry">
                <item>
                 <widget class="QSpinBox" name="shapeNodesWithNoGeometrySpinBox">
@@ -271,14 +281,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="totalNumberOfTransfomsExportedLabel">
                <property name="text">
                 <string>Number Of Transfoms To Be Exported</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
+             <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_Number_Of_Transfoms_To_Be_Exported">
                <item>
                 <widget class="QSpinBox" name="Number_Of_Transfoms_To_Be_Exported_SpinBox">
@@ -302,14 +312,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="exportShaderCountLabel">
                <property name="text">
                 <string>Export Shader Count</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="3" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_exportShaderCount">
                <item>
                 <widget class="QSpinBox" name="exportShaderCountSpinBox">
@@ -333,14 +343,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="3" column="0">
+             <item row="4" column="0">
               <widget class="QLabel" name="exportLayerCountLabel">
                <property name="text">
                 <string>Export Layer Count</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="4" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_exportLayerCount">
                <item>
                 <widget class="QSpinBox" name="exportLayerCountSpinBox">
@@ -364,14 +374,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="4" column="0">
+             <item row="5" column="0">
               <widget class="QLabel" name="intermediateObjectCountLabel">
                <property name="text">
                 <string>Intermediate Object Count</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_intermediateObjectCount">
                <item>
                 <widget class="QSpinBox" name="intermediateObjectCountSpinBox">
@@ -395,14 +405,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="5" column="0">
+             <item row="6" column="0">
               <widget class="QLabel" name="illegalPolySurfaceNameLengthCountLabel">
                <property name="text">
                 <string>Illegal PolySurface Name Length Count</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="6" column="1">
               <widget class="QSpinBox" name="illegalPolySurfaceNameLengthCountSpinBox">
                <property name="readOnly">
                 <bool>true</bool>
@@ -415,14 +425,14 @@ p, li { white-space: pre-wrap; }
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="7" column="0">
               <widget class="QLabel" name="badUnicodeNameCountLabel">
                <property name="text">
                 <string>Bad Unicode Name Count</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="7" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_badUnicodeNameCount">
                <item>
                 <widget class="QSpinBox" name="badUnicodeNameCountSpinBox">
@@ -449,14 +459,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="7" column="0">
+             <item row="8" column="0">
               <widget class="QLabel" name="brokenTransformInheritanceLabel">
                <property name="text">
                 <string>Broken Transform Inheritance</string>
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="8" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_brokenTransformInheritance">
                <item>
                 <widget class="QSpinBox" name="brokenTransformInheritanceSpinBox">
@@ -483,14 +493,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="8" column="0">
+             <item row="9" column="0">
               <widget class="QLabel" name="incorrectVisibleInReflectionPlugsLabel">
                <property name="text">
                 <string>Incorrect Visible In Reflection Plugs</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="1">
+             <item row="9" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_incorrectVisibleInReflectionPlugs">
                <item>
                 <widget class="QSpinBox" name="incorrectVisibleInReflectionPlugsSpinBox">
@@ -517,14 +527,14 @@ p, li { white-space: pre-wrap; }
                </item>
               </layout>
              </item>
-             <item row="9" column="0">
+             <item row="10" column="0">
               <widget class="QLabel" name="incorrectVisibleInRefractionPlugsLabel">
                <property name="text">
                 <string>Incorrect Visible In Refraction Plugs</string>
                </property>
               </widget>
              </item>
-             <item row="9" column="1">
+             <item row="10" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_incorrectVisibleInRefractionPlugs">
                <item>
                 <widget class="QSpinBox" name="incorrectVisibleInRefractionPlugsSpinBox">
@@ -541,6 +551,37 @@ p, li { white-space: pre-wrap; }
                </item>
                <item>
                 <widget class="Tickalbe_ProgressBar" name="incorrectVisibleInRefractionPlugsprogressBar">
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="meshsWithMultiUvSetsLabel">
+               <property name="text">
+                <string>Meshs With Multiple Uv Sets</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_meshsWithMultiUvSets">
+               <item>
+                <widget class="QSpinBox" name="meshsWithMultiUvSetsSpinBox">
+                 <property name="readOnly">
+                  <bool>true</bool>
+                 </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
+                 <property name="maximum">
+                  <number>999999</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="Tickalbe_ProgressBar" name="meshsWithMultiUvSetsprogressBar">
                  <property name="value">
                   <number>0</number>
                  </property>
@@ -768,9 +809,6 @@ p, li { white-space: pre-wrap; }
       <zorder>FRAME_Export_Steps</zorder>
       <zorder>FRAME_Extraction_Scan_Data</zorder>
       <zorder>Plain_Boxed_Frame</zorder>
-      <zorder>Top_Level_Node_Input</zorder>
-      <zorder>Set_To_Selected_Button</zorder>
-      <zorder>performSceneCleanUpCheckBox</zorder>
       <zorder>FRAME_Extraction_Log</zorder>
      </widget>
      <widget class="QWidget" name="tab_2">
@@ -799,27 +837,6 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
   </layout>
-  <zorder>intermediateObjectCountprogressBar</zorder>
-  <zorder>intermediateObjectCountSpinBox</zorder>
-  <zorder>exportShaderCountSpinBox</zorder>
-  <zorder>exportShaderCountprogressBar</zorder>
-  <zorder>exportLayerCountSpinBox</zorder>
-  <zorder>exportLayerCountprogressBar</zorder>
-  <zorder>illegalPolySurfaceNameLengthCountSpinBox</zorder>
-  <zorder>badUnicodeNameCountSpinBox</zorder>
-  <zorder>badUnicodeNameCountprogressBar</zorder>
-  <zorder>Number_Of_Transfoms_To_Be_Exported_SpinBox</zorder>
-  <zorder>brokenTransformInheritanceSpinBox</zorder>
-  <zorder>brokenTransformInheritanceprogressBar</zorder>
-  <zorder>incorrectVisibleInReflectionPlugsSpinBox</zorder>
-  <zorder>incorrectVisibleInReflectionPlugsprogressBar</zorder>
-  <zorder>Number_Of_Transfoms_To_Be_Exported_SpinBox</zorder>
-  <zorder>all_descendents_scan_progressBar</zorder>
-  <zorder>incorrectVisibleInRefractionPlugsSpinBox</zorder>
-  <zorder>incorrectVisibleInRefractionPlugsprogressBar</zorder>
-  <zorder>shapeNodesWithNoGeometrySpinBox</zorder>
-  <zorder>shapeNodesWithNoGeometryprogressBar</zorder>
-  <zorder>tabWidget</zorder>
  </widget>
  <customwidgets>
   <customwidget>
