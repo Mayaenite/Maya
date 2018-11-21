@@ -814,11 +814,13 @@ class Alembic_Asset_Writer(object):
 				for node in self.meshes_with_Multi_Uvs_Sets:
 					try:
 						default_uv_set = cmds.getAttr(node+".uvSet[0].uvSetName")
-						if not cmds.polyUVSet( node ,query=True, currentUVSet=True) == default_uv_set:
-							cmds.polyUVSet(node,currentUVSet=True, uvSet=default_uv_set)
+						if not default_uv_set == "map1":
+							cmds.polyUVSet(node, rename=True, newUVSet='map1', uvSet=default_uv_set)
+						if not cmds.polyUVSet( node ,query=True, currentUVSet=True) == 'map1':
+							cmds.polyUVSet(node,currentUVSet=True, uvSet='map1')
 							
 						for uv_set in cmds.polyUVSet( node, query=True, allUVSets=True):
-							if not uv_set == default_uv_set:
+							if not uv_set == "map1":
 								cmds.polyUVSet(node, delete=True, uvSet=uv_set)
 					except:
 						pass
