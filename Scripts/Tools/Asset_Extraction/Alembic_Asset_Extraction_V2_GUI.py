@@ -337,6 +337,9 @@ class Alembic_Asset_Writer(object):
 		self.meshes_with_Multi_Uvs_Sets = []
 		self.meshes_with_Multi_Uvs_Sets_count = 0
 		
+		self.meshes_with_Bad_Default_Uv_Set_Name = []
+		self.meshes_with_Bad_Default_Uv_Set_Name_count = 0
+		
 	#----------------------------------------------------------------------
 	def set_Top_Level_Node(self,top_level_node):
 		""""""
@@ -599,12 +602,29 @@ class Alembic_Asset_Writer(object):
 			res = []
 			progressBar.setMaximum(len(self.all_mesh_nodes_for_multi_Uv_Set_Scanning))
 			for mesh in self.all_mesh_nodes_for_multi_Uv_Set_Scanning:
-				if len(cmds.polyUVSet( mesh, query=True, allUVSets=True)):
-					res.append(mesh)
+				all_uv_sets = cmds.polyUVSet( mesh, query=True, allUVSets=True)
+				if not all_uv_sets == None:
+					if len(all_uv_sets) > 1:
+						res.append(mesh)
 				progressBar.add_Tick()
 			self.meshes_with_Multi_Uvs_Sets = res
 			self.meshes_with_Multi_Uvs_Sets_count = len(res)
 			self.gui_widget.meshsWithMultiUvSetsSpinBox.setValue(self.meshes_with_Multi_Uvs_Sets_count)
+		#----------------------------------------------------------------------
+		def scan_Bad_Default_Uv_Sets():
+			""""""
+			progressBar = self.gui_widget.badDefaultUvMapNameprogressBar
+			res = []
+			progressBar.setMaximum(len(self.all_mesh_nodes_for_multi_Uv_Set_Scanning))
+			for node in self.all_mesh_nodes_for_multi_Uv_Set_Scanning:
+				default_uv_set = cmds.getAttr(node+".uvSet[0].uvSetName")
+				if not default_uv_set == "map1":
+					res.append(node)
+				progressBar.add_Tick()
+				
+			self.meshes_with_Bad_Default_Uv_Set_Name = res
+			self.meshes_with_Bad_Default_Uv_Set_Name_count = len(res)
+			self.gui_widget.badDefaultUvMapNameSpinBox.setValue(self.meshes_with_Bad_Default_Uv_Set_Name_count)
 			
 		self.all_mesh_nodes_for_multi_Uv_Set_Scanning                 = cmds.ls(type="mesh",l=True)
 		self.all_top_level_node_transform_descendent_node_names       = cmds.listRelatives(self.top_level_node.name, allDescendents=True, path=True, type='transform')
@@ -617,6 +637,7 @@ class Alembic_Asset_Writer(object):
 		self.all_shader_engine_names_count = len(self.all_shader_engine_names)
 		
 		scan_Multi_Uv_Sets()
+		scan_Bad_Default_Uv_Sets()
 		scan_For_Shape_Nodes_With_No_Geo()
 		scan_All_Top_Level_Node_Descendents()
 		scan_Bad_PolySurface_Node_Names()
@@ -805,7 +826,7 @@ class Alembic_Asset_Writer(object):
 		#----------------------------------------------------------------------
 		def fix_Meshes_With_Multiple_UV_Sets():
 			""""""
-			progressBar = self.gui_widget.meshsWithMultiUvSetsprogressBar
+			progressBar = self.gui_widget.fixingMeshesWithMultipleUvSets_ProgressBar
 			if not self.gui_widget.removeUvSetsCheckBox.isChecked() or self.meshes_with_Multi_Uvs_Sets_count == 0:
 				progressBar.setMaximum(100)
 				progressBar.setValue(100)
@@ -825,6 +846,23 @@ class Alembic_Asset_Writer(object):
 					except:
 						pass
 					progressBar.add_Tick()
+				progressBar.setValue(100)
+		#----------------------------------------------------------------------
+		def fix_Meshes_Bad_Default_Uv_Set_Name():
+			""""""
+			progressBar = self.gui_widget.fixBadDefaultUvMapName_ProgressBar
+			if self.meshes_with_Bad_Default_Uv_Set_Name_count == 0:
+				progressBar.setMaximum(100)
+				progressBar.setValue(100)
+			else:
+				progressBar.setMaximum(self.meshes_with_Bad_Default_Uv_Set_Name_count)
+				for node in self.meshes_with_Bad_Default_Uv_Set_Name:
+					default_uv_set = cmds.getAttr(node+".uvSet[0].uvSetName")
+					cmds.polyUVSet(node, rename=True, newUVSet='map1', uvSet=default_uv_set)
+					if not cmds.polyUVSet( node ,query=True, currentUVSet=True) == 'map1':
+						cmds.polyUVSet(node,currentUVSet=True, uvSet='map1')
+					progressBar.add_Tick()
+				progressBar.setValue(100)
 		#----------------------------------------------------------------------
 		def apply_Freeze_Transforms():
 			""""""
@@ -843,7 +881,7 @@ class Alembic_Asset_Writer(object):
 				except:
 					pass
 				progressBar.add_Tick()
-
+		fix_Meshes_Bad_Default_Uv_Set_Name()
 		fix_Meshes_With_Multiple_UV_Sets()
 		remove_Shapes_With_No_Geometry()
 		fix_PolySurface_Names()
@@ -1026,9 +1064,20 @@ class _CODE_COMPLEATION_HELPER(QT.QWidget):
 			self.FRAME_Extraction_Log = QT.QFrame()
 			self.GBX_Extraction_Log = QT.QGroupBox()
 			self.Extraction_Log_Text = QT.QTextEdit()
+			
+			self.badDefaultUvMapNameLabel = QT.QLabel()
+			self.badDefaultUvMapNameSpinBox = QT.QSpinBox()
+			self.badDefaultUvMapNameprogressBar = Tickalbe_ProgressBar()
+			
+			self.fixBadDefaultUvMapName_ProgressBar = Tickalbe_ProgressBar()
+			
 			self.meshsWithMultiUvSetsSpinBox = QT.QSpinBox()
 			self.meshsWithMultiUvSetsprogressBar = Tickalbe_ProgressBar()
 			self.meshsWithMultiUvSetsLabel = QT.QLabel()
+			
+			self.fixingMeshesWithMultipleUvSetsLabel = QT.QLabel()
+			self.fixingMeshesWithMultipleUvSets_ProgressBar = Tickalbe_ProgressBar()
+			
 			self.removeUvSetsCheckBox = QT.QCheckBox()
 ########################################################################
 class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER):
