@@ -107,7 +107,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 		self.asset_filtered_model.setSourceModel(self.model)
 		# Custom_Widgets.Master_Asset_Item_Filter_ProxyModel
 		self.Update_Button.clicked.connect(self.Run_Update)
-		self.rebuild_Render_layer_states_button.clicked.connect(self.Rebuild_Render_Layer_States) 
+		self.rebuild_Render_layer_states_button.clicked.connect(self.Rebuild_Render_Layer_States)
 		self._Render_Layer_Added_Script_Job_ID = cmds.scriptJob(e=["renderLayerChange", self.update_on_render_layer_Added], killWithScene=True)
 		self._Post_Scene_Read_Script_Job_ID = cmds.scriptJob(e=["PostSceneRead", self.update_on_render_layer_Added], killWithScene=True)
 		self._Render_Layer_Changed_Script_Job_ID = cmds.scriptJob(e=["renderLayerManagerChange", self.emit_render_layer_changed], killWithScene=True)
@@ -125,13 +125,13 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	#----------------------------------------------------------------------
 	def show(self):
 		super(Vray_Scene_States_Viewer_MainWindow, self).show()
-		
 	#----------------------------------------------------------------------
 	def get_asset_states_comboxs(self):
 		res = []
 		for item in self.Asset_Grid_widget.items:
 			res.append(item.asset_states)
 		return res
+	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def Assine_Overide_State_To_Render_Layer_With_Matching_Name_Combo_Box(self):
 		def run_List_View():
@@ -173,7 +173,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 			run_List_View()
 		else:
 			run_Combo_Box()
-			
+	#----------------------------------------------------------------------		
 	def emit_render_layer_changed(self):
 		self.ACTIVE_RENDER_LAYER_CHANGED.emit()
 		if self.Version_Check() == 2:
@@ -186,16 +186,18 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 					master_node = None
 			except:
 				master_node = None
+	#----------------------------------------------------------------------
 	def update_on_render_layer_Added(self):
 		for file_ref in self.model.File_References.Children:
 			for asset in file_ref.Children:
 				isinstance(asset, Custom_Widgets.Asset_Item)
 				for layer in [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]:
 					asset.enum_render_states_plug.enable_Render_Layer_Overide(layer=layer)
-	
+	#----------------------------------------------------------------------
 	def Rebuild_Render_Layer_States(self):
 		active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
 		layers = [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]
+		
 		if self.Version_Check() == 1:
 			for layer in  layers:
 				layer.makeCurrent()
@@ -205,7 +207,6 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 					for asset in file_ref.Children:
 						isinstance(asset, Custom_Widgets.Asset_Item)
 						asset.clear_Children_From_Render_Layer()
-						# cmds.refresh(force=True)
 		for layer in layers:
 			isinstance(layer, Scripts.NodeCls.M_Nodes.RenderLayer)
 			layer.makeCurrent()
@@ -243,12 +244,75 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	#----------------------------------------------------------------------
 	def Run_Update(self):
 		""""""
-		check = cmds.confirmDialog( title='Viewer Version', message='If You Update To Version 2.\nAll Your Render Layers Will Be Cleared\nAnd Group Node Called\nVray_Scene_States_Global_Render_Group Will Be Added\nParent All Top Level Reference Node Under It\nAnd The Display Layers Will Take Care Of The Rest\n\n WARNING!!! BEFORE YOU UPDATE!!!\nANY FILES THAT ARE REFS.\nTHAT THE SCENE STATE MANAGER WAS USED ON\nNEED TO HAVE HAD THE Sync Display Layers RUN FOR THE NEW VERSION TO WORK\n\nDo you Want To Continue', button=['yes','no'], defaultButton='no', cancelButton='no', dismissString='no' )
-		if check == "yes":
-			cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "2" )
-			self.model.run_update(full=True)
-			self.Rebuild_Render_Layer_States()
-			self.Update_Button.hide()
+		#----------------------------------------------------------------------
+		def Rebuild_Render_Layer_States(self):
+			active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
+			layers = [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]
+			for layer in layers:
+				isinstance(layer, Scripts.NodeCls.M_Nodes.RenderLayer)
+				layer.makeCurrent()
+				self.emit_render_layer_changed()
+				# cmds.refresh(force=True)
+				if self._use_Beta:
+					for item in self.Asset_Grid_widget.items:
+						isinstance(item, Custom_Widgets.Asset_Frame)
+						current = item.asset_states.currentIndex()
+						if not current.data() == 'Default_Empty':
+							item.asset_states.CurrentIndex.parent().child(0,0).data()
+						item.asset_states.update_asset_attribute()
+						# cmds.refresh(force=True)
+						item.asset_states.setCurrentIndex(current)
+						item.asset_states.update_asset_attribute()
+						# cmds.refresh(force=True)
+				else:
+					for item in self.Asset_Grid_widget.items:
+						isinstance(item, Custom_Widgets.Asset_Frame)
+						current = item.asset_states.currentIndex()
+						item.asset_states.setCurrentIndex(0)
+						item.asset_states.update_asset_attribute()
+						# cmds.refresh(force=True)
+						item.asset_states.setCurrentIndex(current)
+						item.asset_states.update_asset_attribute()
+						# cmds.refresh(force=True)
+			active_layer.makeCurrent()
+
+		if self.Version_Check() == 1:
+			message = "Your Verion Is {}\n".format(self.Version_Check())
+			message += "The Current Version is {}\n".format(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version)
+			message += 'If You Update To Version 2.\n'
+			message += 'All Your Render Layers Will Be Cleared\n'
+			message += 'And Group Node Called\n'
+			message += 'Vray_Scene_States_Global_Render_Group Will Be Added\n'
+			message += 'Parent All Top Level Reference Node Under It\n'
+			message += 'And The Display Layers Will Take Care Of The Rest\n\n'
+			message += 'WARNING!!! BEFORE YOU UPDATE!!!\n'
+			message += 'ANY FILES THAT ARE REFS.\n'
+			message += 'THAT THE SCENE STATE MANAGER WAS USED ON\n'
+			message += 'NEED TO HAVE HAD THE Sync Display Layers RUN FOR THE NEW VERSION TO WORK\n\n'
+			message += 'Do you Want To Continue'
+			check = cmds.confirmDialog( title='Out Of Date Version', message=message, button=['yes','no'], defaultButton='no', cancelButton='no', dismissString='no' )
+			if check == "yes":
+				cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "2" )
+				self.model.run_update(full=True)
+				# self.Update_Button.hide()
+		if self.Version_Check() >= 2 :
+			message = "Your Verion Is {}\n".format(self.Version_Check())
+			message += "The Current Version is {}\n\n".format(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version)
+			message += 'Do To Your Horribly Incompetent Coder.\n\n'
+			message += 'A Bug Was Found That Produces An Inconsistent Display\n'
+			message += 'Of What State Was Last Assigned To A Render Layer.\n\n'
+			message += 'These Inconsistencies Produced Incorrect Rebuilds\n'
+			message += 'By Applying A Different State Than Originally Assigned.\n\n'
+			message += 'The Bug Is Instantiated When A State In The Manager Is Removed\n'
+			message += 'And The Indexing Order Of State Assinment Becomes Offset.\n\n'
+			message += 'This Update Will Force A Render Layer Rebuild\n'
+			message += 'Witch Will Implement The New Lookup Mechanism And Remove The Old One.\n\n'
+			message += 'It Is Impossible To Compinsate For The Index Offset\n'
+			message += 'Do To Not Knowing How Many States May Have Been Deleted.\n\n'
+			message += 'Because The Forced Rebuild Has To Relay On The Old Lookup Mechanism\n'
+			message += 'You Should Make Sure Each Render Layer Has Its Correct State Assigned.\n'
+			check = cmds.confirmDialog( title='Viewer Version', message=message, button=['ok'], defaultButton='ok')
+			
 
 QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Viewer_MainWindow)
 States_Viewer = None
