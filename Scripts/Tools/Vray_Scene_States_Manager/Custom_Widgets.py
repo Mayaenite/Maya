@@ -55,6 +55,8 @@ try:
 except:
 	_maya_check = False
 
+
+_Vray_Scene_States_Viewer_Current_Version = 3
 #----------------------------------------------------------------------
 def Viewer_Version_check():
 	""""""
@@ -62,7 +64,7 @@ def Viewer_Version_check():
 	if len(version):
 		version = int(version[0])
 	else:
-		version = 2
+		version = _Vray_Scene_States_Viewer_Current_Version
 	return version
 
 _Vray_Scene_States_Viewer_Version = Viewer_Version_check()
@@ -886,16 +888,18 @@ class Asset_States_ListView(QListView):
 		self._maya_forced = False
 		self.doubleClicked.connect(self.update_asset_attribute)
 		self.setEditTriggers(self.NoEditTriggers)
-
+	#----------------------------------------------------------------------
 	def update_asset_attribute(self):
-		current_render_layer = get_Current_Render_Layer()
 		current_index        = self.currentIndex()
 		current_index        = self.Model.mapToSource(current_index)
 		current_plug_index   = self._asset.enum_render_states_plug.value
-		if not current_render_layer == "defaultRenderLayer":
+		current_state_uuid   = current_index.data(Data_Roles.UUID)
+		if not get_Current_Render_Layer() == "defaultRenderLayer":
 			self._asset.enum_render_states_plug.value = current_index.row()
+			self._asset.assigned_State_plug.value     = current_state_uuid
 			if not self._maya_forced or not current_index.row() == current_plug_index:
 				self._asset.set_Render_States_Plug_Overide()
+				uuid_active_state = self._asset.Render_States.find_Child_By_UUID(current_state_uuid)
 				actived_state = self._asset.Render_States.child(current_index.row())
 				isinstance(actived_state, Render_State_Item)
 				actived_state.apply_Vray_Overide_States()
@@ -904,16 +908,19 @@ class Asset_States_ListView(QListView):
 		else:
 			self.setCurrentIndex(self._asset.Render_States.child(0).index())
 			self._asset.enum_render_states_plug.value = 0
+			self._asset.assigned_State_plug.value = ""
 			for layer in Scripts.Global_Constants.Nodes.Display_Layers():
 				layer.visibility.value = 1
+	#----------------------------------------------------------------------
 	def update_On_Render_Layer_Change(self):
 		self._maya_forced = True
 		if not get_Current_Render_Layer() == "defaultRenderLayer":
 			self.setCurrentIndex(self.Model.mapFromSource(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index()))
 		else:
-			# self.model().item_From_Index(self.rootIndex()).child(0).index()
 			self.setCurrentIndex(self.rootIndex().child(0,0))
 			self._asset.enum_render_states_plug.value = 0
+			self._asset.assigned_State_plug.value = ""
+
 ########################################################################
 class Asset_States_GroupBox(QT.QGroupBox):
 	def __init__(self, asset, parent=None):
@@ -952,7 +959,6 @@ class Asset_Frame(QT.QFrame):
 		
 		self.verticalLayout.addWidget(self.asset_name)
 		self.verticalLayout.addWidget(self.asset_states)
-		
 ########################################################################
 class Asset_Grid(QT.QWidget):
 	def __init__(self, parent=None):
@@ -3983,6 +3989,7 @@ class Render_States_Item(_Named_Data_Item):
 	def find_Render_State_By_Assembly_Ref(self,ref_id,ref_type):
 		""""""
 		self.find_Render_States_By_Name
+		
 ########################################################################
 class Render_Layers_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
@@ -4091,7 +4098,6 @@ class Render_State_Item(_Named_Data_Item):
 	#----------------------------------------------------------------------
 	def apply_Vray_Overide_States(self):
 		if not cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ) == "defaultRenderLayer":
-			# self.parent().parent().clear_Children_From_Render_Layer()
 			for child in  self.Children:
 				child.apply_Vray_Overide_States()
 				
@@ -4202,7 +4208,7 @@ class Overides_Item(Reference_Container_Item):
 						ref._data.Add_Members_To_Render_Layer()
 					else:
 						ref._data._data.Remove_Members_From_Render_Layer()
-							
+				
 				if self.ITEM_TYPE == Beauty_Overides_Item.ITEM_TYPE:
 					ref._data.apply_Beauty_Layer_Override()
 				elif self.ITEM_TYPE == Matte_Overides_Item.ITEM_TYPE:
@@ -4369,6 +4375,11 @@ class Asset_Item(Maya_Asset_Item):
 			else:
 				self.enum_render_states_plug = self._data.Make_Enum_Plug("renderStates")
 				
+			if not self._data.attributeExists("assignedState"):
+				self.assigned_State_plug = self._data.Add_Simple_Attribute("assignedState",'string',shortName="ast")
+			else:
+				self.assigned_State_plug = self._data.Make_Enum_Plug("assignedState")
+				
 	#----------------------------------------------------------------------
 	def contextMenuActions(self, menu):
 		action_selected_Set = QT.QAction(menu)
@@ -4441,6 +4452,7 @@ class Asset_Item(Maya_Asset_Item):
 			layer = cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
 		if layer != "defaultRenderLayer":
 			self.enum_render_states_plug.enable_Render_Layer_Overide(layer)
+			self.assigned_State_plug.enable_Render_Layer_Overide(layer)
 
 	#----------------------------------------------------------------------
 	def clear_Children_From_Render_Layer(self, layer=None):
@@ -4667,11 +4679,11 @@ class Vray_Scene_State_Viewer_Item_Model(QStandardItemModel):
 			self.run_update()
 	#----------------------------------------------------------------------
 	def run_update(self, full=False):
-		""""""
-		
+		""""""		
 		if full:
 			for rl in Scripts.Global_Constants.Nodes.Render_Layers():
-				cmds.editRenderLayerMembers(str(rl),cmds.editRenderLayerMembers(str(rl), query=True, fullNames=True) ,remove=True)
+				cmds.editRenderLayerMembers(str(rl) , cmds.editRenderLayerMembers(str(rl), query=True, fullNames=True) ,remove=True)
+		
 		if not cmds.objExists("Vray_Scene_States_Global_Render_Group"):
 			master_node = M_Nodes.MNODE(cmds.group(name="Vray_Scene_States_Global_Render_Group", empty=True))
 		else:
