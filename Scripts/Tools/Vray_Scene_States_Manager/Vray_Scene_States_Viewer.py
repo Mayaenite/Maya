@@ -11,7 +11,7 @@ try:
 		pass
 	if not len(cmds.fileInfo( 'AW_Vray_States_Viewer_Version', query=True )):
 		# version = cmds.confirmDialog( title='Viewer Version', message='The Viewer Version For This File Has Not Been Set\nPlease Select The Version You Would Like To Use\n\nWarning!! Version 2 is Still In Beta', button=['Version 1','Version 2'], defaultButton='Version 1', cancelButton='Version 1', dismissString='Version 1' )[-1]
-		cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "2" )
+		cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "3" )
 except:
 	_maya_check = False
 import os
@@ -42,6 +42,7 @@ QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Tree_View)
 QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Grid)
 
 ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Viewer.ui")
+update_warning_file = os.path.realpath(os.path.dirname(__file__)+"\UI\Warning_Message.ui")
 #uiform, uibase = uic.loadUiType(ui_file)
 
 class Enum_List_Delegate(QT.QItemDelegate):
@@ -96,12 +97,16 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	def _init(self):
 		#self.Asset_Grid_groupBox.hide()
 		if not len(cmds.fileInfo( 'AW_Vray_States_Viewer_Version', query=True )):
-			cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "2" )
+			cmds.fileInfo( 'AW_Vray_States_Viewer_Version', str(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version) )
 			#self.rebuild_Render_layer_states_button.hide()
 		
 		self.entity_tree_view.hide()
-		if self.Version_Check() == 2:
+		if self.Version_Check() >= Custom_Widgets._Vray_Scene_States_Viewer_Current_Version:
 			self.Update_Button.hide()
+		else:
+			self.Update_Button.setText("Transfer To New System")
+			self.rebuild_Render_layer_states_button.setEnabled(False)
+			self.Update_Button.show()
 		self.model                = Vray_Scene_State_Viewer_Item_Model(self)
 		self.asset_filtered_model = Custom_Widgets.Master_Asset_Item_Filter_ProxyModel(parent=self)
 		self.asset_filtered_model.setSourceModel(self.model)
@@ -119,8 +124,8 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 	#----------------------------------------------------------------------
 	def run_Item_View_Assinments(self):
 		self.entity_tree_view.setModel(self.asset_filtered_model)
-		delegate = Enum_List_Delegate()
-		self.entity_tree_view.setItemDelegate(delegate)
+		# delegate = Enum_List_Delegate()
+		# self.entity_tree_view.setItemDelegate(delegate)
 		self.Asset_Grid_widget.build_Master_Assets_Grid(self.model.File_References)
 	#----------------------------------------------------------------------
 	def show(self):
@@ -169,14 +174,10 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 								cb.setCurrentIndex(0)
 								cb.setCurrentIndex(row_num)
 								break
-		if self._use_Beta:
-			run_List_View()
-		else:
-			run_Combo_Box()
 	#----------------------------------------------------------------------		
 	def emit_render_layer_changed(self):
 		self.ACTIVE_RENDER_LAYER_CHANGED.emit()
-		if self.Version_Check() == 2:
+		if self.Version_Check() >= 2:
 			try:
 				active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
 				if cmds.objExists("Vray_Scene_States_Global_Render_Group"):
@@ -192,90 +193,68 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 			for asset in file_ref.Children:
 				isinstance(asset, Custom_Widgets.Asset_Item)
 				for layer in [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]:
-					asset.enum_render_states_plug.enable_Render_Layer_Overide(layer=layer)
+					if asset._data.attributeExists("renderStates"):
+						asset.enum_render_states_plug.enable_Render_Layer_Overide(layer=layer)
+					asset.assigned_State_plug.enable_Render_Layer_Overide(layer=layer)
 	#----------------------------------------------------------------------
 	def Rebuild_Render_Layer_States(self):
 		active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
 		layers = [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]
-		
-		if self.Version_Check() == 1:
-			for layer in  layers:
+		cmds.progressWindow(title="Rebuilding Layers",progress=0, maxValue = len(layers), status="", isInterruptable=True)
+		try:
+			warnings = {}
+			cmds.refresh(suspend=True)
+			if self.Version_Check() == 1:
+				for layer in  layers:
+					layer.makeCurrent()
+					self.emit_render_layer_changed()
+					for file_ref in self.model.File_References.Children:
+						for asset in file_ref.Children:
+							isinstance(asset, Custom_Widgets.Asset_Item)
+							asset.clear_Children_From_Render_Layer()
+			for layer in layers:
+				isinstance(layer, Scripts.NodeCls.M_Nodes.RenderLayer)
 				layer.makeCurrent()
 				self.emit_render_layer_changed()
-				# cmds.refresh(force=True)
-				for file_ref in self.model.File_References.Children:
-					for asset in file_ref.Children:
-						isinstance(asset, Custom_Widgets.Asset_Item)
-						asset.clear_Children_From_Render_Layer()
-		for layer in layers:
-			isinstance(layer, Scripts.NodeCls.M_Nodes.RenderLayer)
-			layer.makeCurrent()
-			self.emit_render_layer_changed()
-			# cmds.refresh(force=True)
-			if self._use_Beta:
 				for item in self.Asset_Grid_widget.items:
-					isinstance(item, Custom_Widgets.Asset_Frame)
-					current = item.asset_states.currentIndex()
-					if not current.data() == 'Default_Empty':
-						item.asset_states.CurrentIndex.parent().child(0,0).data()
-					item.asset_states.update_asset_attribute()
-					# cmds.refresh(force=True)
-					item.asset_states.setCurrentIndex(current)
-					item.asset_states.update_asset_attribute()
-					# cmds.refresh(force=True)
+					isinstance(item, Custom_Widgets.Asset_States_GroupBox)
+					scan_result = item.asset_states._asset.Render_States.find_Child_By_UUID(item.asset_states._asset.assigned_State_plug.value)
+					if len(scan_result):
+						current = item.asset_states.currentIndex()
+						if not current.data() == 'Default_Empty':
+							item.asset_states.CurrentIndex.parent().child(0,0).data()
+						item.asset_states.update_asset_attribute()
+						item.asset_states.setCurrentIndex(current)
+						item.asset_states.update_asset_attribute()
+					else:
+						if not item.title() in warnings.keys():
+							warnings[item.title()]=[]
+						warnings[item.title()].append(str(layer))
+				cmds.progressWindow( edit=True, step=1)
+				
+			if not len(warnings):
+				cmds.confirmDialog( title='Rebuild', message="Rebuild Finished Without Errors")
 			else:
-				for item in self.Asset_Grid_widget.items:
-					isinstance(item, Custom_Widgets.Asset_Frame)
-					current = item.asset_states.currentIndex()
-					item.asset_states.setCurrentIndex(0)
-					item.asset_states.update_asset_attribute()
-					# cmds.refresh(force=True)
-					item.asset_states.setCurrentIndex(current)
-					item.asset_states.update_asset_attribute()
-					# cmds.refresh(force=True)
-		active_layer.makeCurrent()
+				message = ""
+				for asset_name,layers in warnings.iteritems():
+					message = "The Layers For Reference {}.\nCould Not Be Rebuilt Because Assigned State Does Not Exist\n".format(asset_name)
+					message += ",".join(layers)+"\n\n"
+				cmds.confirmDialog( title='Rebuild Warnings', message=message)
+		except Exception as e:
+			cmds.confirmDialog( title='Rebuild Error', message="Rebuild Faild With Error "+ str(e))
+		finally:
+			cmds.refresh( suspend=False)
+			cmds.progressWindow(endProgress=1)
+			active_layer.makeCurrent()
 	#----------------------------------------------------------------------
 	def showEvent(self, event):
 		super(Vray_Scene_States_Viewer_MainWindow, self).showEvent(event)
 	#----------------------------------------------------------------------
 	def hideEvent(self, event):
 		super(Vray_Scene_States_Viewer_MainWindow, self).hideEvent(event)
-
 	#----------------------------------------------------------------------
 	def Run_Update(self):
 		""""""
-		#----------------------------------------------------------------------
-		def Rebuild_Render_Layer_States(self):
-			active_layer = Scripts.NodeCls.M_Nodes.RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
-			layers = [layer for layer in Scripts.Global_Constants.Nodes.Render_Layers() if not ":" in layer.name]
-			for layer in layers:
-				isinstance(layer, Scripts.NodeCls.M_Nodes.RenderLayer)
-				layer.makeCurrent()
-				self.emit_render_layer_changed()
-				# cmds.refresh(force=True)
-				if self._use_Beta:
-					for item in self.Asset_Grid_widget.items:
-						isinstance(item, Custom_Widgets.Asset_Frame)
-						current = item.asset_states.currentIndex()
-						if not current.data() == 'Default_Empty':
-							item.asset_states.CurrentIndex.parent().child(0,0).data()
-						item.asset_states.update_asset_attribute()
-						# cmds.refresh(force=True)
-						item.asset_states.setCurrentIndex(current)
-						item.asset_states.update_asset_attribute()
-						# cmds.refresh(force=True)
-				else:
-					for item in self.Asset_Grid_widget.items:
-						isinstance(item, Custom_Widgets.Asset_Frame)
-						current = item.asset_states.currentIndex()
-						item.asset_states.setCurrentIndex(0)
-						item.asset_states.update_asset_attribute()
-						# cmds.refresh(force=True)
-						item.asset_states.setCurrentIndex(current)
-						item.asset_states.update_asset_attribute()
-						# cmds.refresh(force=True)
-			active_layer.makeCurrent()
-
 		if self.Version_Check() == 1:
 			message = "Your Verion Is {}\n".format(self.Version_Check())
 			message += "The Current Version is {}\n".format(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version)
@@ -296,24 +275,31 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 				self.model.run_update(full=True)
 				# self.Update_Button.hide()
 		if self.Version_Check() >= 2 :
-			message = "Your Verion Is {}\n".format(self.Version_Check())
-			message += "The Current Version is {}\n\n".format(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version)
-			message += 'Do To Your Horribly Incompetent Coder.\n\n'
-			message += 'A Bug Was Found That Produces An Inconsistent Display\n'
-			message += 'Of What State Was Last Assigned To A Render Layer.\n\n'
-			message += 'These Inconsistencies Produced Incorrect Rebuilds\n'
-			message += 'By Applying A Different State Than Originally Assigned.\n\n'
-			message += 'The Bug Is Instantiated When A State In The Manager Is Removed\n'
-			message += 'And The Indexing Order Of State Assinment Becomes Offset.\n\n'
-			message += 'This Update Will Force A Render Layer Rebuild\n'
-			message += 'Witch Will Implement The New Lookup Mechanism And Remove The Old One.\n\n'
-			message += 'It Is Impossible To Compinsate For The Index Offset\n'
-			message += 'Do To Not Knowing How Many States May Have Been Deleted.\n\n'
-			message += 'Because The Forced Rebuild Has To Relay On The Old Lookup Mechanism\n'
-			message += 'You Should Make Sure Each Render Layer Has Its Correct State Assigned.\n'
-			check = cmds.confirmDialog( title='Viewer Version', message=message, button=['ok'], defaultButton='ok')
+			# message = "Your Verion Is {}\n".format(self.Version_Check())
+			# message += "The Current Version is {}\n\n".format(Custom_Widgets._Vray_Scene_States_Viewer_Current_Version)
+			# message += 'Do To Your Horribly Incompetent Coder.\n\n'
+			# message += 'A Bug Was Found That Produces An Inconsistent Display\n'
+			# message += 'Of What State Was Last Assigned To A Render Layer.\n\n'
+			# message += 'These Inconsistencies Produced Incorrect Rebuilds\n'
+			# message += 'By Applying A Different State Than Originally Assigned.\n\n'
+			# message += 'The Bug Is Instantiated When A State In The Manager Is Removed\n'
+			# message += 'And The Indexing Order Of State Assinment Becomes Offset.\n\n'
+			# message += 'This Update Will Force A Render Layer Rebuild\n'
+			# message += 'Witch Will Implement The New Lookup Mechanism And Remove The Old One.\n\n'
+			# message += 'It Is Impossible To Compinsate For The Index Offset\n'
+			# message += 'Do To Not Knowing How Many States May Have Been Deleted.\n\n'
+			# message += 'Because The Forced Rebuild Has To Relay On The Old Lookup Mechanism\n'
+			# message += 'You Should Make Sure Each Render Layer Has Its Correct State Assigned.\n'
+			# check = cmds.confirmDialog( title='Viewer Version', message=message, button=['yes','no'], defaultButton='no', cancelButton='no', dismissString='no')
+			States_Viewer = QT.ui_Loader.load(update_warning_file)
+			res = States_Viewer.exec_()
+			if res:
+				self.Rebuild_Render_Layer_States()
+				cmds.fileInfo( 'AW_Vray_States_Viewer_Version', "3" )
+				# Custom_Widgets._Vray_Scene_States_Viewer_Version = 3
+				self.rebuild_Render_layer_states_button.setEnabled(True)
+				self.Update_Button.hide()
 			
-
 QT.ui_Loader.registerCustomWidget(Vray_Scene_States_Viewer_MainWindow)
 States_Viewer = None
 isinstance(States_Viewer, Compiled_Vray_Scene_State_Viewer.Ui_Vray_Scene_States_Viewer)

@@ -39,6 +39,7 @@ try:
 	import Scripts.UICls.Panels
 	import Scripts.Global_Constants.Nodes
 	import maya.cmds as cmds
+	import maya.OpenMaya as OM
 	M_Nodes              = Scripts.NodeCls.M_Nodes
 	Render_Layer         = M_Nodes.RenderLayer
 	Container            = M_Nodes.Container
@@ -845,9 +846,9 @@ class Asset_States_ComboBox(QComboBox):
 		self.setCurrentIndex(0)
 		self.currentIndexChanged.connect(self.update_asset_attribute)
 		items =  [child.data() for child in asset.Render_States.Children]
-		self._c = QT.QCompleter(items, self)
-		self._c.setCaseSensitivity(Qt.CaseInsensitive)
-		self.setCompleter(self._c)
+		# self._c = QT.QCompleter(items, self)
+		# self._c.setCaseSensitivity(Qt.CaseInsensitive)
+		# self.setCompleter(self._c)
 
 	def update_asset_attribute(self):
 		current_render_layer = cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
@@ -889,17 +890,17 @@ class Asset_States_ListView(QListView):
 		self.doubleClicked.connect(self.update_asset_attribute)
 		self.setEditTriggers(self.NoEditTriggers)
 	#----------------------------------------------------------------------
-	def update_asset_attribute(self):
+	def _v2_update_asset_attribute(self):
 		current_index        = self.currentIndex()
 		current_index        = self.Model.mapToSource(current_index)
 		current_plug_index   = self._asset.enum_render_states_plug.value
-		current_state_uuid   = current_index.data(Data_Roles.UUID)
+		# current_state_uuid   = current_index.data(Data_Roles.UUID)
 		if not get_Current_Render_Layer() == "defaultRenderLayer":
 			self._asset.enum_render_states_plug.value = current_index.row()
-			self._asset.assigned_State_plug.value     = current_state_uuid
+			# self._asset.assigned_State_plug.value     = current_state_uuid
 			if not self._maya_forced or not current_index.row() == current_plug_index:
 				self._asset.set_Render_States_Plug_Overide()
-				uuid_active_state = self._asset.Render_States.find_Child_By_UUID(current_state_uuid)
+				# uuid_active_state = self._asset.Render_States.find_Child_By_UUID(current_state_uuid)
 				actived_state = self._asset.Render_States.child(current_index.row())
 				isinstance(actived_state, Render_State_Item)
 				actived_state.apply_Vray_Overide_States()
@@ -908,17 +909,59 @@ class Asset_States_ListView(QListView):
 		else:
 			self.setCurrentIndex(self._asset.Render_States.child(0).index())
 			self._asset.enum_render_states_plug.value = 0
+			# self._asset.assigned_State_plug.value = ""
+			for layer in Scripts.Global_Constants.Nodes.Display_Layers():
+				layer.visibility.value = 1
+		
+		self._v3_update_asset_attribute()
+	#----------------------------------------------------------------------
+	def _v3_update_asset_attribute(self):
+		current_index        = self.currentIndex()
+		current_index        = self.Model.mapToSource(current_index)
+		actived_state_uuid   = current_index.data(Data_Roles.UUID)
+		if not get_Current_Render_Layer() == "defaultRenderLayer":
+			if not self._maya_forced or not current_index.data(Data_Roles.UUID) == self._asset.assigned_State_plug.value:
+				self._asset.assigned_State_plug.value = actived_state_uuid
+				self._asset.set_Render_States_Plug_Overide()
+				actived_state = self._asset.Render_States.find_Child_By_UUID(actived_state_uuid)[0]
+				isinstance(actived_state, Render_State_Item)
+				actived_state.apply_Vray_Overide_States()
+			else:
+				self._maya_forced = False
+		else:
+			self.setCurrentIndex(self._asset.Render_States.child(0).index())
 			self._asset.assigned_State_plug.value = ""
 			for layer in Scripts.Global_Constants.Nodes.Display_Layers():
 				layer.visibility.value = 1
 	#----------------------------------------------------------------------
+	def update_asset_attribute(self):
+		if Viewer_Version_check() == 2 or Viewer_Version_check() == 1:
+			self._v2_update_asset_attribute()
+		else:
+			self._v3_update_asset_attribute()
+	#----------------------------------------------------------------------
 	def update_On_Render_Layer_Change(self):
 		self._maya_forced = True
 		if not get_Current_Render_Layer() == "defaultRenderLayer":
-			self.setCurrentIndex(self.Model.mapFromSource(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index()))
+			if Viewer_Version_check() == 2 or Viewer_Version_check() == 1:
+				self.setCurrentIndex(self.Model.mapFromSource(self._asset.Render_States.child(self._asset.enum_render_states_plug.value).index()))
+			else:
+				if self._asset.assigned_State_plug.value in ["",None]:
+					self.setCurrentIndex(self.rootIndex().child(0,0))
+				else:
+					search_result = self._asset.Render_States.find_Child_By_UUID(self._asset.assigned_State_plug.value)
+					if not len(search_result):
+						message = "State Assigned To Render Layer '{}' Of Refence {} No Longer Exists And Must Be Reassigned".format(get_Current_Render_Layer(),self._asset.node.nice_name.split(":")[0])
+						OM.MGlobal.displayError(message)
+						self.clearSelection()
+					else:
+						current_state = search_result[0]
+						current_index = self.Model.mapFromSource(current_state.Index)
+						self.setCurrentIndex(current_index)
 		else:
 			self.setCurrentIndex(self.rootIndex().child(0,0))
-			self._asset.enum_render_states_plug.value = 0
+			if self._asset._data.attributeExists("renderStates"):
+				self._asset.enum_render_states_plug.value = 0
 			self._asset.assigned_State_plug.value = ""
 
 ########################################################################
@@ -942,23 +985,7 @@ class Asset_States_GroupBox(QT.QGroupBox):
 		regexp.setPattern(self.asset_name_filter.text())
 		self.asset_states.Model.setFilterRegExp(regexp)
 		self.asset_states.update_On_Render_Layer_Change()
-########################################################################
-class Asset_Frame(QT.QFrame):
-	def __init__(self, asset, parent=None):
-		isinstance(asset, Asset_Item)
-		super(Asset_Frame, self).__init__(parent=parent)
-		self.setFrameShape(QT.QFrame.Box)
-		self.setFrameShadow(QT.QFrame.Plain)
-		
-		self.verticalLayout = QT.QVBoxLayout(self)
-		self.asset_name     = QT.QLabel(self)
-		self.asset_states   = Asset_States_ComboBox(asset, self)
-		
-		self.asset_name.setAlignment(QtCore.Qt.AlignCenter)
-		self.asset_name.setText(asset.Parent.data())
-		
-		self.verticalLayout.addWidget(self.asset_name)
-		self.verticalLayout.addWidget(self.asset_states)
+
 ########################################################################
 class Asset_Grid(QT.QWidget):
 	def __init__(self, parent=None):
@@ -970,10 +997,7 @@ class Asset_Grid(QT.QWidget):
 		self.asset_column = 0
 		
 	def add_asset_item(self, asset):
-		if self.window()._use_Beta:
-			frame = Asset_States_GroupBox(asset, self)
-		else:
-			frame = Asset_Frame(asset, self)
+		frame = Asset_States_GroupBox(asset, self)
 		
 		self.window().ACTIVE_RENDER_LAYER_CHANGED.connect(frame.asset_states.update_On_Render_Layer_Change)
 		self.gridLayout.addWidget(frame, self.asset_row, self.asset_column, 1, 1)
@@ -1038,24 +1062,24 @@ class GroupBox(QT.QGroupBox):
 	def __init__(self,*args,**kwargs):
 		super(GroupBox,self).__init__(*args,**kwargs)
 		
-########################################################################
-class Active_Refence_ComboBox(QComboBox):
-	CURRENT_REFERENCE_CHANGED =  QtSignal(QT.QStandardItem)
-	def __init__(self,*args,**kwargs):
-		super(Active_Refence_ComboBox,self).__init__(*args,**kwargs)
-		self.currentIndexChanged.connect(self.current_reference_changed)
+# ########################################################################
+# class Active_Refence_ComboBox(QComboBox):
+	# CURRENT_REFERENCE_CHANGED =  QtSignal(QT.QStandardItem)
+	# def __init__(self,*args,**kwargs):
+		# super(Active_Refence_ComboBox,self).__init__(*args,**kwargs)
+		# self.currentIndexChanged.connect(self.current_reference_changed)
 		
 	
-	@QtSlot(int)
-	def current_reference_changed(self, index):
-		item = self.model().item(index, 0)
-		if not item is None:
-			self.CURRENT_REFERENCE_CHANGED.emit(item)
+	# @QtSlot(int)
+	# def current_reference_changed(self, index):
+		# item = self.model().item(index, 0)
+		# if not item is None:
+			# self.CURRENT_REFERENCE_CHANGED.emit(item)
 	
-########################################################################
-class Asset_Line_Edit(QT.QLineEdit):
-	def __init__(self,*args,**kwargs):
-		super(Asset_Line_Edit,self).__init__(*args,**kwargs)
+# ########################################################################
+# class Asset_Line_Edit(QT.QLineEdit):
+	# def __init__(self,*args,**kwargs):
+		# super(Asset_Line_Edit,self).__init__(*args,**kwargs)
 		
 ########################################################################
 class Yaml_Output_Display(QT.QTextEdit):
@@ -2574,21 +2598,7 @@ class Render_States_List_View(Filtered_Proxy_List_View):
 			menu.addAction(win.actionAdd_Render_State)
 			menu.addAction(win.actionRemove_Selected_States)
 		menu.exec_(event.globalPos())
-		
-	#def dragMoveEvent(self, event):
-		#md =  event.mimeData()
-		#self.matte_overide_view.setAcceptDrops(True)
-		#self.part_sets_view.setAcceptDrops(True)
-		#self.beauty_overide_view.setAcceptDrops(True)
-		#self.invisible_overide_view.setAcceptDrops(True)
-		#self.asset_tree_view.setAcceptDrops(True)
-		#self.render_states_view.setAcceptDrops(True)
-		#if isinstance(md, QT.DataModels.MimeData.Drag_And_Drop_MimeData):
-			#if isinstance(md.drag_source, (Part_Sets_List_View, Beauty_Overide_View, Matte_Overide_View, Invisible_Overides_Item, Asset_Tree_View)):
-				#self.setAcceptDrops(False)
-			#else:
-				#self.setAcceptDrops(True)
-		#return super(Render_States_List_View, self).dragMoveEvent(event)
+
 ########################################################################
 class Part_Sets_List_View(Filtered_Proxy_List_View):
 	""""""
@@ -2619,21 +2629,7 @@ class Part_Sets_List_View(Filtered_Proxy_List_View):
 			if _maya_check:
 				item.contextMenuActions(menu)
 		menu.exec_(event.globalPos())
-		
-	#def dragMoveEvent(self, event):
-		#md =  event.mimeData()
-		#self.matte_overide_view.setAcceptDrops(True)
-		#self.part_sets_view.setAcceptDrops(True)
-		#self.beauty_overide_view.setAcceptDrops(True)
-		#self.invisible_overide_view.setAcceptDrops(True)
-		#self.asset_tree_view.setAcceptDrops(True)
-		#self.render_states_view.setAcceptDrops(True)
-		#if isinstance(md, QT.DataModels.MimeData.Drag_And_Drop_MimeData):
-			#if not isinstance(md.drag_source, (Beauty_Overide_View, Matte_Overide_View, Invisible_Overide_View)):
-				#self.setAcceptDrops(False)
-			#else:
-				#self.setAcceptDrops(True)
-		#return super(Part_Sets_List_View, self).dragMoveEvent(event)
+
 ########################################################################
 class Beauty_Overide_View(Filtered_Proxy_List_View):
 	""""""
@@ -2648,22 +2644,7 @@ class Beauty_Overide_View(Filtered_Proxy_List_View):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
 			self.set_Root_Item(item.Beauty)
-			
-	#def dragMoveEvent(self, event):
-		#self.matte_overide_view.setAcceptDrops(True)
-		#self.part_sets_view.setAcceptDrops(True)
-		#self.beauty_overide_view.setAcceptDrops(True)
-		#self.invisible_overide_view.setAcceptDrops(True)
-		#self.asset_tree_view.setAcceptDrops(True)
-		#self.render_states_view.setAcceptDrops(True)
-		#md =  event.mimeData()
-		#if isinstance(md, QT.DataModels.MimeData.Drag_And_Drop_MimeData):
-			#if not isinstance(md.drag_source, (Part_Sets_List_View, Matte_Overide_View, Invisible_Overide_View)):
-				#self.setAcceptDrops(False)
-			#else:
-				#self.setAcceptDrops(True)
-		#return super(Beauty_Overide_View, self).dragMoveEvent(event)
-	
+
 ########################################################################
 class Invisible_Overide_View(Filtered_Proxy_List_View):
 	""""""
@@ -2677,21 +2658,7 @@ class Invisible_Overide_View(Filtered_Proxy_List_View):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
 			self.set_Root_Item(item.Invisible)
-	#----------------------------------------------------------------------
-	#def dragMoveEvent(self, event):
-		#md =  event.mimeData()
-		#self.matte_overide_view.setAcceptDrops(True)
-		#self.part_sets_view.setAcceptDrops(True)
-		#self.beauty_overide_view.setAcceptDrops(True)
-		#self.invisible_overide_view.setAcceptDrops(True)
-		#self.asset_tree_view.setAcceptDrops(True)
-		#self.render_states_view.setAcceptDrops(True)
-		#if isinstance(md, QT.DataModels.MimeData.Drag_And_Drop_MimeData):
-			#if not isinstance(md.drag_source, (Part_Sets_List_View, Matte_Overide_View, Beauty_Overide_View)):
-				#self.setAcceptDrops(False)
-			#else:
-				#self.setAcceptDrops(True)
-		#return super(Invisible_Overide_View, self).dragMoveEvent(event)
+
 ########################################################################
 class Matte_Overide_View(Filtered_Proxy_List_View):
 	""""""
@@ -2705,21 +2672,6 @@ class Matte_Overide_View(Filtered_Proxy_List_View):
 		if item.Type == Render_State_Item.ITEM_TYPE:
 			isinstance(item, Render_State_Item)
 			self.set_Root_Item(item.Matte)
-	#----------------------------------------------------------------------
-	#def dragMoveEvent(self, event):
-		#md =  event.mimeData()
-		#self.matte_overide_view.setAcceptDrops(True)
-		#self.part_sets_view.setAcceptDrops(True)
-		#self.beauty_overide_view.setAcceptDrops(True)
-		#self.invisible_overide_view.setAcceptDrops(True)
-		#self.asset_tree_view.setAcceptDrops(True)
-		#self.render_states_view.setAcceptDrops(True)
-		#if isinstance(md, QT.DataModels.MimeData.Drag_And_Drop_MimeData):
-			#if not isinstance(md.drag_source, (Part_Sets_List_View, Invisible_Overide_View, Beauty_Overide_View)):
-				#self.setAcceptDrops(False)
-			#else:
-				#self.setAcceptDrops(True)
-		#return super(Matte_Overide_View, self).dragMoveEvent(event)
 #---------------------------------------------------------------------------------------------------
 #_______________________________________________________________________ Tree Model Views
 ########################################################################
@@ -3398,7 +3350,6 @@ class MPlug_Item(_Data_Item):
 	@property
 	def node_type(self):
 		return self.node.type
-
 ########################################################################
 class Enum_Plug_Item(MPlug_Item):
 	ITEM_TYPE  = QT.user_type_counter()
@@ -3914,8 +3865,9 @@ class File_Reference_Item(_Named_Data_Item):
 			asset_item = Asset_Item(asset, asset_parent=self)
 			asset_item.setColumnCount(2)
 			#self.appendRow(asset_item)
-			plug = Enum_Plug_Item(asset_item.enum_render_states_plug)
-			self.setChild(asset_item.row(), plug, column=1)
+			if asset_item._data.attributeExists("renderStates"):
+				plug = Enum_Plug_Item(asset_item.enum_render_states_plug)
+				self.setChild(asset_item.row(), plug, column=1)
 
 ########################################################################
 class Part_Sets_Item(_Named_Data_Item):
@@ -4218,7 +4170,7 @@ class Overides_Item(Reference_Container_Item):
 				elif self.ITEM_TYPE == Unassined_Overides_Item.ITEM_TYPE:
 					ref._data._data.set_Default_Override_Values()
 				
-				if Viewer_Version_check() == 2:
+				if Viewer_Version_check() >= 2:
 					if not ref._data.node_assined_display_layer == "defaultLayer":
 						dl = M_Nodes.DisplayLayer(ref._data.node_assined_display_layer)
 						dl.visibility.enable_Render_Layer_Overide()
@@ -4370,10 +4322,10 @@ class Asset_Item(Maya_Asset_Item):
 		else:
 			self.from_Yaml(asset)
 		if _maya_check:
-			if not self._data.attributeExists("renderStates"):
-				self.enum_render_states_plug = self._data.Add_Enum_Attribute("renderStates", ["Test"], remake=False)
-			else:
+			if self._data.attributeExists("renderStates"):
 				self.enum_render_states_plug = self._data.Make_Enum_Plug("renderStates")
+			# else:
+				# self.enum_render_states_plug = self._data.Make_Enum_Plug("renderStates")
 				
 			if not self._data.attributeExists("assignedState"):
 				self.assigned_State_plug = self._data.Add_Simple_Attribute("assignedState",'string',shortName="ast")
@@ -4443,17 +4395,18 @@ class Asset_Item(Maya_Asset_Item):
 	#----------------------------------------------------------------------
 	def Update_Enum_Render_States(self):
 		if _maya_check:
-			values = [child.data() for child in self.Render_States.Children]
-			if len(values):
-				self.enum_render_states_plug.set_Enums(values)
+			if self._data.attributeExists("renderStates"):
+				values = [child.data() for child in self.Render_States.Children]
+				if len(values):
+					self.enum_render_states_plug.set_Enums(values)
 	#----------------------------------------------------------------------
 	def set_Render_States_Plug_Overide(self, layer=None):
 		if layer == None:
 			layer = cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True )
 		if layer != "defaultRenderLayer":
-			self.enum_render_states_plug.enable_Render_Layer_Overide(layer)
+			if self._data.attributeExists("renderStates"):
+				self.enum_render_states_plug.enable_Render_Layer_Overide(layer)
 			self.assigned_State_plug.enable_Render_Layer_Overide(layer)
-
 	#----------------------------------------------------------------------
 	def clear_Children_From_Render_Layer(self, layer=None):
 		self._data.remove_All_Descendents_From_Render_Layer(layer)
@@ -4675,7 +4628,7 @@ class Vray_Scene_State_Viewer_Item_Model(QStandardItemModel):
 				plug = Enum_Plug_Item(asset.enum_render_states_plug)
 				self.Master_Assets.setChild(ref.row(), plug, column=1)
 				ref_items.extend([item for item in cmds.referenceQuery(ref._data._data.name,nodes=True,dagPath=True) if item in top_level_items])
-		if Viewer_Version_check() == 2:
+		if Viewer_Version_check() >= 2:
 			self.run_update()
 	#----------------------------------------------------------------------
 	def run_update(self, full=False):
