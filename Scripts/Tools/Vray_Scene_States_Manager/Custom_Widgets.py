@@ -870,39 +870,51 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 		data = self.asset.Render_States.child(self.currentIndex()).data(Data_Roles.ITEM_DATA)
 		uid_value = data.data(Data_Roles.UUID)
 		self.render_layer_overide.value = uid_value
-		
-		for part in data.Beauty_Parts:
-			part_node = part.data(Data_Roles.DATA_OBJECT)
-			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-			part_adjs_data.apply_Beauty_Values()
-			part_adjs_data.set_visibility(1)
+		isinstance(data,Render_State_Item)
+		#maxValue = len(data.get)
+		try:
+			count = len(data.find_child_item_types(Part_Set_Reference_Item.ITEM_TYPE, recurive=True))
+			cmds.progressWindow(title="Applying State To Layer",progress=0, maxValue = count, status="Doing Stuff", isInterruptable=False)
 			
-		for part in data.Matte_Parts:
-			part_node = part.data(Data_Roles.DATA_OBJECT)
-			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-			part_adjs_data.apply_Matte_Values()
-			part_adjs_data.set_visibility(1)
-			
-		for part in data.Invisible_Parts:
-			part_node = part.data(Data_Roles.DATA_OBJECT)
-			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-			part_adjs_data.apply_Invisible_Values()
-			part_adjs_data.set_visibility(1)
-			
-		for part in data.Unassined_Parts:
-			part_node = part.data(Data_Roles.DATA_OBJECT)
-			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-			part_adjs_data.apply_Beauty_Values()
-			part_adjs_data.set_visibility(0)
-			
+			for part in data.Beauty_Parts:
+				part_node = part.data(Data_Roles.DATA_OBJECT)
+				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				part_adjs_data.apply_Beauty_Values()
+				part_adjs_data.set_visibility(1)
+				cmds.progressWindow( edit=True, step=1)
+				
+			for part in data.Matte_Parts:
+				part_node = part.data(Data_Roles.DATA_OBJECT)
+				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				part_adjs_data.apply_Matte_Values()
+				part_adjs_data.set_visibility(1)
+				cmds.progressWindow( edit=True, step=1)
+				
+			for part in data.Invisible_Parts:
+				part_node = part.data(Data_Roles.DATA_OBJECT)
+				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				part_adjs_data.apply_Invisible_Values()
+				part_adjs_data.set_visibility(1)
+				cmds.progressWindow( edit=True, step=1)
+				
+			for part in data.Unassined_Parts:
+				part_node = part.data(Data_Roles.DATA_OBJECT)
+				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				part_adjs_data.apply_Beauty_Values()
+				part_adjs_data.set_visibility(0)
+				cmds.progressWindow( edit=True, step=1)
+		except Exception as e:
+			cmds.confirmDialog( title='Rebuild Error', message="Rebuild Faild With Error "+ str(e))
+		finally:
+			cmds.progressWindow(endProgress=1)
 	#----------------------------------------------------------------------
 	def find_assignedState_adjustment(self):
 		adjustments_plug = self.render_layer._data.Make_Plug("adjustments")	
@@ -943,19 +955,43 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 	def __init__(self,parent=None):
 		''''''
 		super(Render_Layer_State_Assignment,self).__init__(parent=parent)
+	#----------------------------------------------------------------------
+	def _get_Progress_Bar_Max(self):
+		""""""
+		count = 0
+		for ref in self._model.File_References.Children:
+			count +=1
+			for asset in ref.Children:
+				count += 1
+				for rl in self._model.Render_Layers.Children:
+					count += 1
+		return count
+	
 	def _runsetup(self,model):
 		isinstance(model,Vray_Scene_State_Viewer_Item_Model)
 		self._model = model
-		for x,ref in enumerate(self._model.File_References.Children):
-			for i,asset in enumerate(ref.Children):
-				wig = QT.ui_Loader.load(Render_Layer_State_Asset_GroupBox_File)
-				for rl in model.Render_Layers.Children:
-					if not rl._data.name == 'defaultRenderLayer':
-						RLSA_wig = QT.ui_Loader.load(Render_Layer_State_Assignment_File, parent_widget=wig)
-						RLSA_wig.Render_States_CBX._init(rl, asset)
-						RLSA_wig.Render_Layer_Label.setText(rl._data.name)
-						wig.verticalLayout.addWidget(RLSA_wig)
-				self.gridLayout.addWidget(wig, i, x, 1, 1)
+		count = self._get_Progress_Bar_Max()
+		
+		cmds.progressWindow(title="Building Window",progress=0, maxValue = count, status="Doing Stuff", isInterruptable=False)
+		try:
+			for x,ref in enumerate(self._model.File_References.Children):
+				cmds.progressWindow( edit=True, step=1)
+				for i,asset in enumerate(ref.Children):
+					wig = QT.ui_Loader.load(Render_Layer_State_Asset_GroupBox_File)
+					cmds.progressWindow( edit=True, step=1)
+					for rl in model.Render_Layers.Children:
+						if not rl._data.name == 'defaultRenderLayer':
+							RLSA_wig = QT.ui_Loader.load(Render_Layer_State_Assignment_File, parent_widget=wig)
+							RLSA_wig.Render_States_CBX._init(rl, asset)
+							RLSA_wig.Render_Layer_Label.setText(rl._data.name)
+							wig.verticalLayout.addWidget(RLSA_wig)
+						cmds.progressWindow( edit=True, step=1)
+						
+					self.gridLayout.addWidget(wig, i, x, 1, 1)
+		except Exception as e:
+			cmds.confirmDialog( title='=Window Could Not Be Built', message="Faild With Error "+ str(e))
+		finally:
+			cmds.progressWindow(endProgress=1)
 	
 ########################################################################
 class Asset_States_ComboBox(QComboBox):
