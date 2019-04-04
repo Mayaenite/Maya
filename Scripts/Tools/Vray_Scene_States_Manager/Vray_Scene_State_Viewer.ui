@@ -30,6 +30,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="multi_state_assignment_button">
+      <property name="text">
+       <string>Multi State Assignment</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QGroupBox" name="Asset_Grid_groupBox">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -75,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>504</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAuto_Assignments">

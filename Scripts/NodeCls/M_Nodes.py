@@ -104,21 +104,32 @@ def nameToNodePlug( attrName, node , index=-1):
 		node = nameToNode(node.name,True)
 
 	depNodeFn = OpenMaya.MFnDependencyNode( node )
+	
+	child_parts = ""
+	
+	if "." in attrName:
+		temp = attrName.split(".")
+		child_parts = ".".join(temp[1:])
+		attrName = temp[0]
+		
 	# CHECK IF THE INPUT Attribute NAME Is and Element From A Muli Attrube
-	if attrName.endswith("]"):
+	if "]" in attrName:
 		# Replace The Brackets Sarounding the index number
 		attrName = attrName.replace("[", " ").replace("]", "")
 		# Seperate The Attribute name and the index number
 		attrName, index = attrName.split(" ", 1)
 		# convert the index number into an int
 		index = int(index.strip())
-	# get the class version of the attribute
-	attrObject = depNodeFn.attribute( attrName )
 	# Convert it to and MPlug
-	plug = OpenMaya.MPlug( node, attrObject )
+	plug = depNodeFn.findPlug(attrName)
 	if index is not -1:
 		# get the plug for the index Element
 		plug = plug.elementByLogicalIndex(index)
+	
+	if len(child_parts):
+		for i in range(plug.numChildren()):
+			if plug.child(i).name().endswith(child_parts):
+				return plug.child(i)
 	return plug
 
 #----------------------------------------------------------------------
@@ -383,8 +394,15 @@ class MPLUG(object):
 	def __str__(self):
 		return self.name
 	#----------------------------------------------------------------------
+	def __eq__(self,other):
+		""""""
+		if isinstance(other,MPLUG):
+			return self.obj == other.obj
+		else:
+			return self.obj == other
+	#----------------------------------------------------------------------
 	def __repr__(self):
-		return self.name
+		return self.obj.name()
 	#----------------------------------------------------------------------
 	def getValue(self):
 		if self.type in MTypes.STS or self.type == "string":
@@ -400,9 +418,9 @@ class MPLUG(object):
 		return cmds.getAttr(self)
 	#----------------------------------------------------------------------
 	def setValue(self, value):
-		if self.type in MTypes.NTS or self.type == "string" or self.type == "enum":
-			if self.type == "string":
-				cmds.setAttr(self,value,type=self.type)
+		if self.type in MTypes.NTS or self.type == "string" or self.type == "enum" or self.type == 'typed':
+			if self.type == "string" or self.type == 'typed':
+				cmds.setAttr(self,value,type="string")
 			else:
 				cmds.setAttr(self,value)
 		elif self.type in MTypes.CTS:
@@ -411,28 +429,38 @@ class MPLUG(object):
 			elif self.type.endswith("3"):
 				cmds.setAttr(self,value[0],value[1],value[2],type=self.type)
 		else:
-			cmds.setAttr(self.name,value,type=self.type)
+			cmds.setAttr(self.name,value,type="string")
 	#----------------------------------------------------------------------
 	def get_Input_Plugs(self):
 		""""""
 		res = []
 		source = cmds.listConnections( self ,source=True,plugs=True,skipConversionNodes=True)
 		if source:
-			inputs = [s.split('.') for s in source]
 			for s in source:
-				n,a = s.split('.')
+				n,a = s.split('.',1)
 				plg = MPLUG(n,a)
 				res.append(plg)
 		return res
+	#----------------------------------------------------------------------
+	def get_Source_Plug(self):
+		""""""
+		if not self.isConnected:
+			return None
+		return MPLUG(self.obj.source())
+	#----------------------------------------------------------------------
+	def get_Source_Node(self):
+		""""""
+		if not self.isConnected:
+			return None
+		return MPLUG(self.obj.source()).node
 	#----------------------------------------------------------------------
 	def get_Output_Plugs(self):
 		""""""
 		res = []
 		source = cmds.listConnections( self ,source=False,destination=True,plugs=True,skipConversionNodes=True)
 		if source:
-			inputs = [s.split('.') for s in source]
 			for s in source:
-				n,a = s.split('.')
+				n,a = s.split('.',1)
 				plg = MPLUG(n,a)
 				res.append(plg)
 		return res
@@ -480,7 +508,7 @@ class MPLUG(object):
 	@property
 	def keyable(self):
 		"""Return the keyable status of the attribute """
-		return cmds.attributeQuery( self.partialName,node=self.node , keyable=True )
+		return cmds.attributeQuery( self.queryName,node=self.node , keyable=True )
 	#----------------------------------------------------------------------
 	def make_keyable(self,val):
 		"""Return the keyable status of the attribute """
@@ -489,7 +517,7 @@ class MPLUG(object):
 	@property
 	def exists(self):
 		"""Return true if the attribute exists"""
-		return cmds.attributeQuery( self.partialName,node=self.node, exists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node, exists=True )
 	#----------------------------------------------------------------------
 	def enable_Render_Layer_Overide(self,layer=None):
 		"""Return true if the attribute exists"""
@@ -513,47 +541,47 @@ class MPLUG(object):
 	@property
 	def connectable(self):
 		"""Return the connectable status of the attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  connectable=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  connectable=True )
 	#----------------------------------------------------------------------
 	@property
 	def message(self):
 		"""Return true if the attribute is a message attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  message=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  message=True )
 	#----------------------------------------------------------------------
 	@property
 	def enum(self):
 		"""Return true if the attribute is a enum attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  enum=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  enum=True )
 	#----------------------------------------------------------------------
 	@property
 	def hidden(self):
 		"""Return the hidden status of the attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  hidden=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  hidden=True )
 	#----------------------------------------------------------------------
 	@property
 	def indexMatters(self):
 		"""Return the indexMatters status of the attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  indexMatters=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  indexMatters=True )
 	#----------------------------------------------------------------------
 	@property
 	def readable(self):
 		"""Return the readable status of the attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  readable=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  readable=True )
 	#----------------------------------------------------------------------
 	@property
 	def storable(self):
 		"""Return true if the attribute is storable"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  storable=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  storable=True )
 	#----------------------------------------------------------------------
 	@property
 	def writable(self):
 		"""Return true if the attribute is a message attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  writable=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  writable=True )
 	#----------------------------------------------------------------------
 	@property
 	def multi(self):
 		"""Return true if the attribute is a multi-attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  multi=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  multi=True )
 	#----------------------------------------------------------------------
 	@property
 	def isArray(self):
@@ -561,13 +589,35 @@ class MPLUG(object):
 		return self.obj.isArray()
 	#----------------------------------------------------------------------
 	@property
+	def Array(self):
+		""""""
+		if not self.isElement:
+			return None
+		return MPLUG(self.obj.array())
+	#----------------------------------------------------------------------
+	@property
+	def isElement(self):
+		""""""
+		return self.obj.isElement()
+	#----------------------------------------------------------------------
+	@property
+	def isConnected(self):
+		""""""
+		return self.obj.isConnected()
+	#----------------------------------------------------------------------
+	@property
+	def isChild(self):
+		""""""
+		return self.obj.isChild()
+	#----------------------------------------------------------------------
+	@property
 	def usesMultiBuilder(self):
 		"""Return true if the attribute is a multi-attribute and it uses the multi-builder to handle its data"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  usesMultiBuilder=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  usesMultiBuilder=True )
 	#----------------------------------------------------------------------
 	@property
 	def minimum(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  minimum=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  minimum=True )
 	#----------------------------------------------------------------------
 	@property
 	def getSetAttrCmds(self):
@@ -593,32 +643,36 @@ class MPLUG(object):
 	#----------------------------------------------------------------------
 	@property
 	def maximum(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  maximum=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  maximum=True )
 	#----------------------------------------------------------------------
 	@property
 	def range(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  range=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  range=True )
 	#----------------------------------------------------------------------
 	@property
 	def usedAsColor(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  usedAsColor=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  usedAsColor=True )
 	#----------------------------------------------------------------------
 	@property
 	def softRange(self):
 		"""Return true if the attribute is a message attribute"""
-		return cmds.attributeQuery( self.partialName,node=self.node,  softRange=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softRange=True )
 	#----------------------------------------------------------------------
 	@property
 	def softMin(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  softMin=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softMin=True )
 	#----------------------------------------------------------------------
 	@property
 	def softMax(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  softMax=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softMax=True )
 	#----------------------------------------------------------------------
 	@property
 	def numberOfChildren(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  numberOfChildren=True )
+		res = cmds.attributeQuery( self.queryName,node=self.node,  numberOfChildren=True )
+		if len(res):
+			return res[0]
+		else:
+			return 0
 	#----------------------------------------------------------------------
 	@property
 	def numElements(self):
@@ -637,19 +691,31 @@ class MPLUG(object):
 	#----------------------------------------------------------------------
 	@property
 	def listSiblings(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  listSiblings=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  listSiblings=True )
 	#----------------------------------------------------------------------
 	@property
 	def listChildren(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  listChildren=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  listChildren=True )
 	#----------------------------------------------------------------------
 	@property
 	def listParent(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  listParent=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  listParent=True )
+	#----------------------------------------------------------------------
+	@property
+	def child_Plugs(self):
+		if self.numberOfChildren:
+			return [MPLUG(self.obj.child(i)) for i in range(self.numberOfChildren)]
+		return []
+	#----------------------------------------------------------------------
+	@property
+	def parent_Plug(self):
+		if not self.isChild:
+			return None
+		return MPLUG(self.obj.parent())
 	#----------------------------------------------------------------------
 	@property
 	def listEnum(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  listEnum=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  listEnum=True )
 	#----------------------------------------------------------------------
 	@property
 	def listEnumNames(self):
@@ -659,43 +725,51 @@ class MPLUG(object):
 	#----------------------------------------------------------------------
 	@property
 	def listDefault(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  listDefault=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  listDefault=True )
 	#----------------------------------------------------------------------
 	@property
 	def minExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  minExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  minExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def maxExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  maxExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  maxExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def rangeExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  rangeExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  rangeExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def softMinExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  softMinExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softMinExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def softMaxExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  softMaxExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softMaxExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def softRangeExists(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  softRangeExists=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  softRangeExists=True )
 	#----------------------------------------------------------------------
 	@property
 	def niceName(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  niceName=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  niceName=True )
 	#----------------------------------------------------------------------
 	@property
 	def longName(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  longName=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  longName=True )
 	#----------------------------------------------------------------------
 	@property
 	def shortName(self):
-		return cmds.attributeQuery( self.partialName,node=self.node,  shortName=True )
+		return cmds.attributeQuery( self.queryName,node=self.node,  shortName=True )
+	#----------------------------------------------------------------------
+	@property
+	def queryName(self):
+		""""""
+		name = self.name
+		while "[" in name:
+			name = name.replace(name[name.find("["):name.rfind("]")+1],"")
+		return name.split(".")[-1]
 	#----------------------------------------------------------------------
 	@property
 	def type(self):
@@ -703,7 +777,7 @@ class MPLUG(object):
 	#----------------------------------------------------------------------
 	@property
 	def multiIndices(self):
-		cmds.getAttr(layer.plug_access.displayLayerId, multiIndices=True)
+		cmds.getAttr(self.name, multiIndices=True)
 		
 	def iter_element_plugs(self):
 		for index in self.multiIndices:
@@ -1552,10 +1626,100 @@ class VRayObjectProperties(SelectionSet):
 		self._reflectionAmount_plug       = self.Make_Plug('reflectionAmount')
 		self._refractionAmount_plug       = self.Make_Plug('refractionAmount')
 
+
+
+
+########################################################################
+class VRay_Render_Layer_Render_State_Override_Adjustment(dict):
+	""""""
+	Override_Default_Values   = dict(matteSurface=0,affectAlpha=0,alphaContribution=1.0,primaryVisibility=1,reflectionAmount=0.0,refractionAmount=0.0)
+	Override_Matte_Values     = dict(matteSurface=1,affectAlpha=1,alphaContribution=-1.0,primaryVisibility=1,reflectionAmount=0.0,refractionAmount=0.0)
+	Override_Invisible_Values = dict(matteSurface=0,affectAlpha=0,alphaContribution=1.0,primaryVisibility=0,reflectionAmount=0.0,refractionAmount=0.0)
+	Override_Beauty_Values    = Override_Default_Values
+	
+	#----------------------------------------------------------------------
+	def get_matteSurface(self):
+		""""""
+		return self["matteSurface"].value
+	#----------------------------------------------------------------------
+	def set_matteSurface(self,value):
+		""""""
+		cmds.setAttr(self["matteSurface"].name,value)
+	#----------------------------------------------------------------------
+	def get_affectAlpha(self):
+		""""""
+		return self["affectAlpha"].value
+	#----------------------------------------------------------------------
+	def set_affectAlpha(self,value):
+		""""""
+		cmds.setAttr(self["affectAlpha"].name,value)
+	#----------------------------------------------------------------------
+	def get_alphaContribution(self):
+		""""""
+		return self["alphaContribution"].value
+	#----------------------------------------------------------------------
+	def set_alphaContribution(self,value):
+		""""""
+		cmds.setAttr(self["alphaContribution"].name,value)
+	#----------------------------------------------------------------------
+	def get_primaryVisibility(self):
+		""""""
+		return self["primaryVisibility"].value
+	#----------------------------------------------------------------------
+	def set_primaryVisibility(self,value):
+		""""""
+		cmds.setAttr(self["primaryVisibility"].name,value)
+	#----------------------------------------------------------------------
+	def get_reflectionAmount(self):
+		""""""
+		return self["reflectionAmount"].value
+	#----------------------------------------------------------------------
+	def set_reflectionAmount(self,value):
+		""""""
+		cmds.setAttr(self["reflectionAmount"].name,value)
+	#----------------------------------------------------------------------
+	def get_refractionAmount(self):
+		""""""
+		return self["refractionAmount"].value
+	#----------------------------------------------------------------------
+	def set_refractionAmount(self,value):
+		""""""
+		cmds.setAttr(self["refractionAmount"].name,value)
+	#----------------------------------------------------------------------
+	def get_visibility(self):
+		""""""
+		if self.has_key("visibility"):
+			return self["visibility"].value
+	#----------------------------------------------------------------------
+	def set_visibility(self,value):
+		""""""
+		if self.has_key("visibility"):
+			cmds.setAttr(self["visibility"].name,value)
+	#----------------------------------------------------------------------
+	def apply_Beauty_Values(self):
+		""""""
+		for key,value in self.Override_Beauty_Values.iteritems():
+			cmds.setAttr(self[key].name,value)
+	#----------------------------------------------------------------------
+	def apply_Invisible_Values(self):
+		""""""
+		for key,value in self.Override_Invisible_Values.iteritems():
+			cmds.setAttr(self[key].name,value)
+	#----------------------------------------------------------------------
+	def apply_Matte_Values(self):
+		""""""
+		for key,value in self.Override_Matte_Values.iteritems():
+			cmds.setAttr(self[key].name,value)
+	#----------------------------------------------------------------------
+	def apply_Unasigned_Values(self):
+		""""""
+		for key,value in self.Override_Matte_Values.iteritems():
+			cmds.setAttr(self[key].name,value)
+
 ########################################################################
 class VRayRenderState(VRayObjectProperties):
 	script_Job_pattern = re.compile("(?P<jobid>([1-9]+)): (?P<event>([a-zA-Z]+))=\['(?P<node>([a-zA-Z]['a-zA-Z1-9_]+)\.([a-zA-Z][a-zA-Z1-9_]+))'")
-
+	Override_Attr_Names       = "matteSurface affectAlpha alphaContribution primaryVisibility reflectionAmount refractionAmount".split()
 	UnAssined,Beauty,Matte,Invisable = range(4)
 	def __init__(self,name):
 		super(VRayRenderState,self).__init__(name)
@@ -1567,7 +1731,7 @@ class VRayRenderState(VRayObjectProperties):
 
 		#self.vrayRenderPassState.make_keyable(True)
 		#self.apply_vray_pass_state_overide_to_all_layers()
-
+	#----------------------------------------------------------------------
 	def Add_Members_To_Render_Layer(self,layer=None):
 		if layer == None:
 			layer = RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
@@ -1575,13 +1739,14 @@ class VRayRenderState(VRayObjectProperties):
 			layer = RenderLayer(layer)
 		layer.addMembers(self.members)
 
+	#----------------------------------------------------------------------
 	def Remove_Members_From_Render_Layer(self,layer=None):
 		if layer == None:
 			layer = RenderLayer(cmds.editRenderLayerGlobals( query=True, currentRenderLayer=True ))
 		else:
 			layer = RenderLayer(layer)
 		layer.removeMembers(self.members)
-
+	#----------------------------------------------------------------------
 	def clear_Scene_State_Overides(self,layer=None):
 		self._matteSurface_plug.disable_Render_Layer_Overide(layer=layer)
 		self._affectAlpha_plug.disable_Render_Layer_Overide(layer=layer)
@@ -1589,7 +1754,7 @@ class VRayRenderState(VRayObjectProperties):
 		self._primaryVisibility_plug.disable_Render_Layer_Overide(layer=layer)
 		self._reflectionAmount_plug.disable_Render_Layer_Overide(layer=layer)
 		self._refractionAmount_plug.disable_Render_Layer_Overide(layer=layer)
-		
+	#----------------------------------------------------------------------
 	def apply_Scene_State_Overides(self,layer=None):
 		self._matteSurface_plug.enable_Render_Layer_Overide(layer=layer)
 		self._affectAlpha_plug.enable_Render_Layer_Overide(layer=layer)
@@ -1597,7 +1762,7 @@ class VRayRenderState(VRayObjectProperties):
 		self._primaryVisibility_plug.enable_Render_Layer_Overide(layer=layer)
 		self._reflectionAmount_plug.enable_Render_Layer_Overide(layer=layer)
 		self._refractionAmount_plug.enable_Render_Layer_Overide(layer=layer)
-		
+	#----------------------------------------------------------------------	
 	def set_Default_Override_Values(self,layer=None):
 		self.apply_Scene_State_Overides()
 		self._matteSurface_plug.value      = 0
@@ -1606,7 +1771,7 @@ class VRayRenderState(VRayObjectProperties):
 		self._primaryVisibility_plug.value = 1
 		self._reflectionAmount_plug.value   = 0.0
 		self._refractionAmount_plug.value   = 0.0
-		
+	#----------------------------------------------------------------------
 	def set_Matte_Override_Values(self,layer=None):
 		self.set_Default_Override_Values(layer)
 		
@@ -1615,39 +1780,68 @@ class VRayRenderState(VRayObjectProperties):
 		self._alphaContribution_plug.value  = -1.0
 		self._reflectionAmount_plug.value   = 0.0
 		self._refractionAmount_plug.value   = 0.0
-		
+	#----------------------------------------------------------------------
 	def set_Invisible_Override_Values(self,layer=None):
 		self.set_Default_Override_Values(layer)
 		
 		self._primaryVisibility_plug.value = 0
-		
+	#----------------------------------------------------------------------
 	def apply_Matte_Layer_Override(self,layer=None):
 		self.set_Default_Override_Values(layer)
 		self.set_Matte_Override_Values(layer)
-
+	#----------------------------------------------------------------------
 	def apply_Invisible_Layer_Override(self,layer=None):
 		self.set_Default_Override_Values(layer)
 		self.set_Invisible_Override_Values(layer)
-
+	#----------------------------------------------------------------------
 	def apply_Beauty_Layer_Override(self,layer=None):
 		self.set_Default_Override_Values(layer)
-
-	def state_switch_action(self,layer=None):
-		stat = self.vrayRenderPassState.value
-		old_stat = self.old_state.value
-		if not old_stat == stat:
-			try:
-				if stat == self.UnAssined:
-					self.Remove_Members_From_Render_Layer(layer)
-				if stat == self.Beauty:
-					self.apply_Beauty_Layer_Override(layer)
-				if stat == self.Matte:
-					self.apply_Matte_Layer_Override(layer)
-				if stat == self.Invisable:
-					self.apply_Invisible_Layer_Override(layer)
-			except RuntimeError:
-				pass
-			self.old_state.value = stat
+	#----------------------------------------------------------------------
+	def get_Adjustment_For_Render_Layer(self,layer=None):
+		attr_dict = dict()
+		layer = MNODE(layer)
+		adjustments_plug = layer.Make_Plug("adjustments")
+	
+		for name in self.Override_Attr_Names:
+			plug = self.Make_Plug(name)
+			for in_plug in plug.get_Input_Plugs():
+				if in_plug.node == layer:
+					if in_plug.isChild:
+						if in_plug.parent_Plug.isElement:
+							if in_plug.parent_Plug.Array == adjustments_plug:
+								attr_dict[name] = in_plug.parent_Plug.child_Plugs[1]
+	
+		if self.attributeExists("displayLayerLink"):
+			displayLayerLink = self.plug_access.displayLayerLink
+			if displayLayerLink.has_source_connections:
+				dl = displayLayerLink.get_Source_Node()
+				for in_plug in dl.plug_access.visibility.get_Input_Plugs():
+					if in_plug.node == layer:
+						if in_plug.isChild:
+							if in_plug.parent_Plug.isElement:
+								if in_plug.parent_Plug.Array == adjustments_plug:
+									attr_dict["visibility"] = in_plug.parent_Plug.child_Plugs[1]
+		return VRay_Render_Layer_Render_State_Override_Adjustment(attr_dict)
+	#def state_switch_action(self,layer=None):
+		#stat = self.vrayRenderPassState.value
+		#old_stat = self.old_state.value
+		#if not old_stat == stat:
+			#try:
+				#if stat == self.UnAssined:
+					#self.Remove_Members_From_Render_Layer(layer)
+				#if stat == self.Beauty:
+					#self.apply_Beauty_Layer_Override(layer)
+				#if stat == self.Matte:
+					#self.apply_Matte_Layer_Override(layer)
+				#if stat == self.Invisable:
+					#self.apply_Invisible_Layer_Override(layer)
+			#except RuntimeError:
+				#pass
+			#self.old_state.value = stat
+		
+		
+    
+	
 ########################################################################
 class Container(MNODE):
 	def __init__(self,name, clear_current=True, dagContainer=False, force=False,addNode=False,current=False,includeShaders=False,publishConnections=False,nodeNamePrefix=False,includeHierarchyAbove=False,includeHierarchyBelow=False):

@@ -30,6 +30,11 @@ QListView             = QT.DataModels.QListView.QListView
 QTableView            = QT.DataModels.QTableView.QTableView
 QComboBox             = QT.DataModels.QComboBox.QComboBox
 
+Render_Layer_State_Assignment_File     = os.path.realpath(os.path.dirname(__file__)+"\UI\Render_Layer_State_Assignment.ui")
+Render_Layer_State_Asset_GroupBox_File = os.path.realpath(os.path.dirname(__file__)+"\UI\Render_Layer_State_Asset_GroupBox.ui")
+Render_Layer_States_File               = os.path.realpath(os.path.dirname(__file__)+"\UI\Render_Layer_States.ui")
+
+
 try:
 	_maya_check = True
 	import Scripts.NodeCls.M_Nodes
@@ -834,6 +839,125 @@ class Remove_Asset_Command(QT.QUndoCommand):
 #_______________________________________________________________________ Input Widgets
 ##======================================================================
 ########################################################################
+class Render_Layer_State_Combo_Box(QT.QComboBox):
+	""""""
+	#----------------------------------------------------------------------
+	def __init__(self,parent=None):
+		"""Constructor"""
+		super(Render_Layer_State_Combo_Box,self).__init__(parent=parent)
+	#----------------------------------------------------------------------
+	def _init(self,render_layer,asset):
+		""""""
+		isinstance(asset,Asset_Item)
+		isinstance(render_layer,Maya_Render_Layer_Item)
+		self.setModel(asset.Model)
+		self.setRootModelIndex(asset.Render_States.index())
+		self.asset                = asset
+		self.render_layer         = render_layer
+		self.render_layer_node    = self.render_layer.data(Data_Roles.DATA_OBJECT)
+		self.render_layer_overide = self.find_assignedState_adjustment()
+		lookups = self.asset.Render_States.find_Child_By_UUID(self.render_layer_overide.value)
+		if not len(lookups):
+			current_state = self.asset.Render_States.Children[0]
+		else:
+			current_state = lookups[0]
+		self.setCurrentIndex(current_state.Index.row())
+		self.currentIndexChanged.connect(self._on_currentIndexChanged)
+	#----------------------------------------------------------------------
+	@QT.Slot(int)
+	def _on_currentIndexChanged(self,index):
+		""""""
+		data = self.asset.Render_States.child(self.currentIndex()).data(Data_Roles.ITEM_DATA)
+		uid_value = data.data(Data_Roles.UUID)
+		self.render_layer_overide.value = uid_value
+		
+		for part in data.Beauty_Parts:
+			part_node = part.data(Data_Roles.DATA_OBJECT)
+			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+			part_adjs_data.apply_Beauty_Values()
+			part_adjs_data.set_visibility(1)
+			
+		for part in data.Matte_Parts:
+			part_node = part.data(Data_Roles.DATA_OBJECT)
+			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+			part_adjs_data.apply_Matte_Values()
+			part_adjs_data.set_visibility(1)
+			
+		for part in data.Invisible_Parts:
+			part_node = part.data(Data_Roles.DATA_OBJECT)
+			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+			part_adjs_data.apply_Invisible_Values()
+			part_adjs_data.set_visibility(1)
+			
+		for part in data.Unassined_Parts:
+			part_node = part.data(Data_Roles.DATA_OBJECT)
+			part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+			part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+			part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+			part_adjs_data.apply_Beauty_Values()
+			part_adjs_data.set_visibility(0)
+			
+	#----------------------------------------------------------------------
+	def find_assignedState_adjustment(self):
+		adjustments_plug = self.render_layer._data.Make_Plug("adjustments")	
+		plug = self.asset._data.Make_Plug("assignedState")
+		res = None
+		for in_plug in plug.get_Input_Plugs():
+			if in_plug.node == self.render_layer._data:
+				if in_plug.isChild:
+					if in_plug.parent_Plug.isElement:
+						if in_plug.parent_Plug.Array == adjustments_plug:
+							res = in_plug.parent_Plug.child_Plugs[1]
+							break
+		if not isinstance(res,M_Nodes.MPLUG):
+			plug.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+			res = self.find_assignedState_adjustment()
+		return res
+
+
+
+
+########################################################################
+class Render_Layer_State_Assignment_CODE_COMPLEATION_HELPER(QT.QDialog):
+	""""""
+	#----------------------------------------------------------------------
+	def __init__(self,parent=None):
+		''''''
+		super(Render_Layer_State_Assignment_CODE_COMPLEATION_HELPER,self).__init__(parent=parent)
+		if False:
+			self.Dialog = Render_Layer_State_Assignment()
+			self.Asset_Grid_groupBox = QT.QGroupBox()
+			self.gridLayout = QT.QGridLayout()
+			self.buttonBox = QT.QDialogButtonBox()
+
+########################################################################
+class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATION_HELPER):
+	""""""
+	#----------------------------------------------------------------------
+	def __init__(self,parent=None):
+		''''''
+		super(Render_Layer_State_Assignment,self).__init__(parent=parent)
+	def _runsetup(self,model):
+		isinstance(model,Vray_Scene_State_Viewer_Item_Model)
+		self._model = model
+		for x,ref in enumerate(self._model.File_References.Children):
+			for i,asset in enumerate(ref.Children):
+				wig = QT.ui_Loader.load(Render_Layer_State_Asset_GroupBox_File)
+				for rl in model.Render_Layers.Children:
+					if not rl._data.name == 'defaultRenderLayer':
+						RLSA_wig = QT.ui_Loader.load(Render_Layer_State_Assignment_File, parent_widget=wig)
+						RLSA_wig.Render_States_CBX._init(rl, asset)
+						RLSA_wig.Render_Layer_Label.setText(rl._data.name)
+						wig.verticalLayout.addWidget(RLSA_wig)
+				self.gridLayout.addWidget(wig, i, x, 1, 1)
+	
+########################################################################
 class Asset_States_ComboBox(QComboBox):
 	def __init__(self, asset, parent=None):
 		isinstance(asset, Asset_Item)
@@ -875,7 +999,6 @@ class Asset_States_ComboBox(QComboBox):
 		else:
 			self.setCurrentIndex(0)
 	
-##======================================================================
 ########################################################################
 class Asset_States_ListView(QListView):
 	def __init__(self, asset, parent=None):
@@ -1074,7 +1197,7 @@ class GroupBox(QT.QGroupBox):
 	# def current_reference_changed(self, index):
 		# item = self.model().item(index, 0)
 		# if not item is None:
-			# self.CURRENT_REFERENCE_CHANGED.emit(item)
+			# self. .emit(item)
 	
 # ########################################################################
 # class Asset_Line_Edit(QT.QLineEdit):
@@ -3172,11 +3295,9 @@ class MPlug_Item(_Data_Item):
 		""""""
 		self.node.Simple_Connect(plug)
 	#----------------------------------------------------------------------
-	@property
 	def node_lock(self):
 		self.node.lock
 	#----------------------------------------------------------------------
-	@property
 	def node_unlock(self):
 		self.node.unlock
 	#----------------------------------------------------------------------
@@ -3849,9 +3970,7 @@ class Assets_Item(_Named_Data_Item):
 		for asset in assets.items:
 			isinstance(asset,Yaml_Config_Data.Asset)
 			item = Asset_Item(asset, asset_parent=self)
-			#self.appendRow(item)
-			#plug = Enum_Plug_Item(item.enum_render_states_plug)
-			#self.setChild(item.row(), plug, column=1)
+
 ########################################################################
 class File_Reference_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
@@ -4625,8 +4744,9 @@ class Vray_Scene_State_Viewer_Item_Model(QStandardItemModel):
 				ref = Master_Asset_Reference_Item(asset)
 				ref.setColumnCount(2)
 				self.Master_Assets.appendRow(ref)
-				plug = Enum_Plug_Item(asset.enum_render_states_plug)
-				self.Master_Assets.setChild(ref.row(), plug, column=1)
+				if asset._data.attributeExists("renderStates"):
+					plug = Enum_Plug_Item(asset.enum_render_states_plug)
+					self.Master_Assets.setChild(ref.row(), plug, column=1)
 				ref_items.extend([item for item in cmds.referenceQuery(ref._data._data.name,nodes=True,dagPath=True) if item in top_level_items])
 		if Viewer_Version_check() >= 2:
 			self.run_update()
@@ -4736,3 +4856,6 @@ class Sorted_Item_Filter_ProxyModel(Base_ProxyModel):
 				else:
 					return False
 		return True
+
+QT.ui_Loader.registerCustomWidget(Render_Layer_State_Combo_Box)
+QT.ui_Loader.registerCustomWidget(Render_Layer_State_Assignment)
