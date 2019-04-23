@@ -54,6 +54,8 @@ if MAYA_GUI:
 	utils.executeDeferred ('import Scripts.Maya_Runtime_Commands')
 	utils.executeDeferred ('import Scripts.menu_item_addons')
 	utils.executeDeferred ('import Scripts.Tools.Tool_Loaders')
+	utils.executeDeferred ('mel.eval("scriptJob -ro 1 -event SelectionChanged AW_AddMenuPostCommand;")')
+	
 	if not System_Settings.NO_USER_TOOLS:
 		utils.executeDeferred ('import Maya_UserTools; Maya_UserTools.pythonScripts()')
 	try:

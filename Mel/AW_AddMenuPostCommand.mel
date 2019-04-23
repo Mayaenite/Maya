@@ -1,0 +1,85 @@
+global proc build_AW_AEAttributesMenu() {
+	global string $gAERootLayoutName;  // Maya internal var.
+	string $label = "AW";
+	
+	if (`layout -exists $gAERootLayoutName`) {
+		setParent $gAERootLayoutName;
+		setParent -menu addMenu;
+		string $ia[] = `menu -q -ia addMenu`;
+		int $exists = 0;
+		int $i;
+		// Look for AW menu item inside "Attributes" menu.
+		for ($i = size($ia) - 1; $i >= 0; $i--) {
+			if (!`menuItem -q -divider $ia[$i]` && `menuItem -q -label $ia[$i]` == $label) {
+				$exists = 1;
+				break;
+			}
+		}
+		
+		// Create the menu.
+		if (!$exists) {
+			menuItem -subMenu true -label $label -pmc "build_AW_AEAttributesSubMenu" awAEMenu;
+		}
+	}
+}
+
+global proc AW_AE_AEAttributes_Add_Framelist_Attribute(string $selected){
+	if (!`attributeQuery -node $selected -exists "frameList"`){
+		addAttr -longName "frameList" -shortName "flst" -dataType "string" -readable 1 $selected;
+	}else{
+		deleteAttr -at frameList $selected;
+	}
+}
+
+global proc build_AW_AEAttributesSubMenu() {
+	global string $gAERootLayoutName;  // Maya internal var.
+	if (`layout -exists $gAERootLayoutName`) {
+		menu -edit -deleteAllItems awAEMenu;
+		setParent $gAERootLayoutName;
+		setParent -menu awAEMenu;
+		string $selected;
+		$selected = `AW_getTabNodeName`;
+		if (size($selected)) {
+			
+			string $cmd = "AW_AE_AEAttributes_Add_Framelist_Attribute(" + "\"" + $selected + "\");";
+			
+			if (`objectType -isType "transform" $selected`){
+				if (size(`listRelatives -children -shapes -type "camera" $selected`)){
+					string $cmd = "AW_AE_AEAttributes_Add_Framelist_Attribute(" + "\"" + $selected + "\");";
+					menuItem -label "Submit Frame List" -c $cmd;
+				}
+			}
+			else if (`objectType -isType "renderLayer" $selected`){
+					menuItem -label "Submit Frame List" -c $cmd;
+			}
+		}
+	}
+}
+
+
+global proc AW_AddMenuPostCommand(){
+	string $command = "build_AW_AEAttributesMenu";
+	string $originalPostCommand = `menu -q -postMenuCommand addMenu`;
+	string $postCommand = "";
+
+	if (size($originalPostCommand)) {
+		string $originalCommands[];
+		tokenize($originalPostCommand, ";", $originalCommands);
+		if (!stringArrayContains($command, $originalCommands))
+			$postCommand = $originalPostCommand + ";" + $command + ";";
+		else
+			$postCommand = $originalPostCommand;
+	}
+	
+	menu -edit -postMenuCommand $postCommand addMenu;
+}
+
+
+global proc string AW_getTabNodeName() {
+	global string $gAECurrentTab;  // Maya internal var.
+	if (!`objExists $gAECurrentTab`) {
+		return "";
+	}
+	return $gAECurrentTab;
+}
+AW_AddMenuPostCommand()
