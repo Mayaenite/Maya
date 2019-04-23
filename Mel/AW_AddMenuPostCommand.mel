@@ -82,4 +82,4 @@ global proc string AW_getTabNodeName() {
 	}
 	return $gAECurrentTab;
 }
-AW_AddMenuPostCommand()
+AW_AddMenuPostCommand();

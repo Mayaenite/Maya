@@ -251,80 +251,78 @@ def Build_DataPrep_Tools(shelfName):
 	removeShelfTab(active_shelf)
 	addNewShelfTab(active_shelf)
 	# polyAutoProjection
-	cmds.shelfButton(parent=active_shelf
+	cmds.shelfButton( parent     = active_shelf
 	                 ,annotation = "poly Auto Projections"
 	                 ,label      = "polyAutoProjection"
-	                  ,image      = "polyLayoutUV.png"
-	                  ,image1     = "polyLayoutUV.png"
-	          ,style      = "iconOnly"
-	          ,command    = "aw_Box_Map_Selected_RTC" 
-	          ,sourceType = "mel")
+	                 ,image      = "polyLayoutUV.png"
+	                 ,image1     = "polyLayoutUV.png"
+	                 ,style      = "iconOnly"
+	                 ,command    = "aw_Box_Map_Selected_RTC"
+	                 ,sourceType = "mel")
 	# polyNormal
-	cmds.shelfButton(parent=active_shelf
+	cmds.shelfButton( parent     = active_shelf
 	                 ,annotation = "Reverses The Normals On All The Currently Selected PolyTransforms"
 	                 ,label      = "polyNormal"
-	                  ,image      = "polyNormal.png"
-	                  ,image1     = "polyNormal.png"
-	          ,style      = "iconOnly"
-	          ,command    = "{\n    int $history_check = `constructionHistory -q -tgl`;\n    \n    string $selList[] = `ls -transforms -sl`;\n    \n    string $item;\n    \n    constructionHistory -tgl off;\n    \n    for($item in $selList){\n        select -r $item;\n        string $itemShapes[] = `pickWalk -d down`;\n        \n        if(`objectType -isType \"mesh\" $itemShapes[0]`){\n            select -r $item;\n            polyNormal -constructionHistory off -normalMode 04;\n        };\n    };\n    \n    select -r $selList;\n    \n    if($history_check == 1){\n        constructionHistory -tgl on;\n    };\n}" 
-	          ,sourceType = "mel" )
+	                 ,image      = "polyNormal.png"
+	                 ,image1     = "polyNormal.png"
+	                 ,style      = "iconOnly"
+	                 ,command    = "{\n    int $history_check = `constructionHistory -q -tgl`;\n    \n    string $selList[] = `ls -transforms -sl`;\n    \n    string $item;\n    \n    constructionHistory -tgl off;\n    \n    for($item in $selList){\n        select -r $item;\n        string $itemShapes[] = `pickWalk -d down`;\n        \n        if(`objectType -isType \"mesh\" $itemShapes[0]`){\n            select -r $item;\n            polyNormal -constructionHistory off -normalMode 04;\n        };\n    };\n    \n    select -r $selList;\n    \n    if($history_check == 1){\n        constructionHistory -tgl on;\n    };\n}" 
+	                 ,sourceType = "mel" )
 	# ZB2MA
-	cmds.shelfButton(parent=active_shelf
-	                 ,annotation = "Transfer UV Cords From Zbrush To Maya" 
+	cmds.shelfButton( parent     = active_shelf
+	                 ,annotation = "Transfer UV Cords From Zbrush To Maya"
 	                 ,label      = "ZBrush To Maya"
-	                  ,image      = "ZBrush.png"
-	                  ,image1     = "ZBrush.png"
-	          ,style      = "iconOnly"
-	          ,command    = "Maya_UserTools.importAndRun ('Zbrush_To_Maya')"
-	          ,sourceType = "python" )
+	                 ,image      = "ZBrush.png"
+	                 ,image1     = "ZBrush.png"
+	                 ,style      = "iconOnly"
+	                 ,command    = "Maya_UserTools.importAndRun ('Zbrush_To_Maya')"
+	                 ,sourceType = "python" )
 	# Display_Layers_To_Selection_Sets
-	cmds.shelfButton(parent=active_shelf
+	cmds.shelfButton( parent     = active_shelf
 	                 ,annotation = "Display Layers To Selection Sets"
 	                 ,label      = "Display_Layers_To_Selection_Sets"
-	                  ,image      = "layerEditor.png"
-	                  ,image1     = "layerEditor.png"
-	          ,style      = "iconOnly"
-	          ,command    = "import Scripts.LayerFns.Layers_To_Sets\nScripts.LayerFns.Layers_To_Sets.Display_Layers_To_Selection_Sets()" 
-	          ,sourceType = "python" )
+	                 ,image      = "layerEditor.png"
+	                 ,image1     = "layerEditor.png"
+	                 ,style      = "iconOnly"
+	                 ,command    = "import Scripts.LayerFns.Layers_To_Sets\nScripts.LayerFns.Layers_To_Sets.Display_Layers_To_Selection_Sets()"
+	                 ,sourceType = "python" )
 	# Find_Innersecting_Display_Layers
-	cmds.shelfButton(parent=active_shelf
+	cmds.shelfButton(parent      = active_shelf
 	                 ,annotation = "Find All Innersecting Display layers"
 	                 ,label      = "Find_Innersecting_Display_Layers"
-	                  ,image      = "intersectCurves.png"
-	                  ,image1     = "intersectCurves.png"
-	          ,style      = "iconOnly"
-	          ,command    = "import Scripts.LayerFns.Layers_To_Sets\nScripts.LayerFns.Layers_To_Sets.Display_Layers_To_Selection_Sets()\nDisplay_Layers_To_Selection_Sets = Scripts.NodeCls.M_Nodes.SelectionSet(\"Display_Layers_To_Selection_Sets\")\nDisplay_Layers_To_Selection_Sets.Find_All_Sub_Set_Innersecting_Sets()" 
-	          ,sourceType = "python" )
+	                 ,image      = "intersectCurves.png"
+	                 ,image1     = "intersectCurves.png"
+	                 ,style      = "iconOnly"
+	                 ,command    = "import Scripts.LayerFns.Layers_To_Sets\nScripts.LayerFns.Layers_To_Sets.Display_Layers_To_Selection_Sets()\nDisplay_Layers_To_Selection_Sets = Scripts.NodeCls.M_Nodes.SelectionSet(\"Display_Layers_To_Selection_Sets\")\nDisplay_Layers_To_Selection_Sets.Find_All_Sub_Set_Innersecting_Sets()"
+	                 ,sourceType = "python")
 	# Assine_Tranforms_To_Closet_Group_Display_Layer
-	cmds.shelfButton(parent=active_shelf
-	                 ,annotation = "Assine Tranforms With Child Shape Nodes To The Closet Parent Group Display Layer"
-	                 ,label      = "Assine_Tranforms_To_Closet_Group_Display_Layer"
-	                  ,image      = "pythonFamily.png"
-	                  ,image1     = "pythonFamily.png"
-	          ,style      = "iconOnly"
-	          ,sourceType = "python"
-	          ,menuItem   = (("Tranforms To Closet Group DL" , "import Scripts.LayerFns.Display_layer_Reasinment\nScripts.LayerFns.Display_layer_Reasinment.Assine_Tranforms_To_Closet_Group_Display_Layer()"), ("Group Tranforms To Default Display Layer", "import Scripts.LayerFns.Display_layer_Reasinment\nScripts.LayerFns.Display_layer_Reasinment.Assine_Group_Tranforms_To_Default_Display_Layer()"))
-	          ,menuItemPython = (0, 1))
-	# Alembic_Asset_Extraction
-	#cmds.shelfButton(parent=active_shelf
-	                 #,annotation = "Alembic_Asset_Extraction"
-	                 #,label      = "Alembic_Asset_Extraction"
-	                  #,image      = "alembic_asset_extractor.png"
-	                  #,image1     = "alembic_asset_extractor.png"
-	          #,style      = "iconOnly"
-	          #,menuItem   = (("Export" , "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Alembic_Asset_Writer()"), ("Import", "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Alembic_Asset_reader()")), 
-	          ## ,command    = "import Scripts.Tools.Asset_Extraction\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction.Asset_Extractor()"
-	         #menuItemPython = (0, 1),
-	        #sourceType = "python" )
+	cmds.shelfButton( parent         = active_shelf
+	                 ,annotation     = "Assine Tranforms With Child Shape Nodes To The Closet Parent Group Display Layer"
+	                 ,label          = "Assine_Tranforms_To_Closet_Group_Display_Layer"
+	                 ,image          = "pythonFamily.png"
+	                 ,image1         = "pythonFamily.pnmg"
+	                 ,style          = "iconOnly"
+	                 ,sourceType     = "python"
+	                 ,menuItem       = (("Tranforms To Closet Group DL" , "import Scripts.LayerFns.Display_layer_Reasinment\nScripts.LayerFns.Display_layer_Reasinment.Assine_Tranforms_To_Closet_Group_Display_Layer()"), ("Group Tranforms To Default Display Layer", "import Scripts.LayerFns.Display_layer_Reasinment\nScripts.LayerFns.Display_layer_Reasinment.Assine_Group_Tranforms_To_Default_Display_Layer()"))
+	                 ,menuItemPython = (0, 1))
 	# Alembic Asset Extraction V2
-	cmds.shelfButton(parent=active_shelf
+	cmds.shelfButton( parent     = active_shelf
 	                 ,annotation = "Alembic Asset Extraction V2"
 	                 ,label      = "Alembic Asset Extraction V2"
-	                  ,image      = "ATB.jpg"
-	                  ,image1     = "ATB.jpg"
-	          ,style      = "iconOnly"
-	          ,command    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI.load_Gui()"
-	          ,sourceType = "python" )
+	                 ,image      = "ATB.jpg"
+	                 ,image1     = "ATB.jpg"
+	                 ,style      = "iconOnly"
+	                 ,command    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V2_GUI.load_Gui()"
+	                 ,sourceType = "python" )
+	# Alembic Asset Extraction V3
+	cmds.shelfButton( parent     = active_shelf
+	                  ,annotation = "Alembic Asset Extraction V3"
+	                  ,label      = "Alembic Asset Extraction V3"
+	                  ,image      = "mr_clean.png"
+	                  ,image1     = "mr_clean.png"
+	                  ,style      = "iconOnly"
+	                  ,commmand    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3.load_Gui()"
+	                  ,sourceType = "python" ).m
 	# Visibility_Connect_Maker
 	cmds.shelfButton(parent=active_shelf
 	                 ,annotation = "Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected"
@@ -392,14 +390,6 @@ def Build_Artist_Tools(shelfName):
 	                  ,style="iconOnly" 
 	          ,command="import Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Manager\nScripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Manager.make_ui()"
 	          ,sourceType="python")
-	# Vray Scene States Viewer
-	# cmds.shelfButton(parent=active_shelf
-		# ,annotation="Vray Scene States Viewer\nHOLD DOWN\nCTRL + ALT + SHIFT\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA\nYou Can Also Do This To Switch Between The Different Versions" 
-		# ,image="vray_scene_states_viewer.png" 
-		# ,image1="vray_scene_states_viewer.png" 
-		# ,style="iconOnly" 
-		# ,command="import Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer\nScripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Viewer.make_ui()"
-		# ,sourceType="python")
 	# Vray Scene States Viewer Beta
 	cmds.shelfButton(parent=active_shelf
 	                 ,annotation="Vray Scene States Viewer Beta Lists\nTo Use Double Click On Any Of The States In The List\nTo Assign That State To The Current Render Layer\nHOLD DOWN\nCTRL + ALT + SHIFT\nTO FORCE THE VIEWER TO REBUILD ITSELF AND REPARSE THE YAML DATA"
@@ -438,24 +428,8 @@ def Build_Artist_Tools(shelfName):
 	       ,command="import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader\nG_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()" 
 	      ,sourceType="python")
 
-#def Add_Custom_Menu_Items():
-	#if MAYA_VERSION == 2017 or MAYA_VERSION == 2016:
-		#maya.mel.eval('buildSelectMenu("MayaWindow|mainSelectMenu");')
-		#Select_All_By_Type_MenuItem = "MayaWindow|mainSelectMenu|selAllHierItem"
-	#else:
-		#maya.mel.eval('buildEditMenu("MayaWindow|mainEditMenu");')
-		#Select_All_By_Type_MenuItem = "MayaWindow|mainEditMenu|selAllHierItem"
-
-	#maya.mel.eval('ModObjectsMenu MayaWindow|mainModifyMenu;')
-
-	#Modify_Menu =  "MayaWindow|mainModifyMenu"
-
-	#aw_HOT_PIVOT_ACTION = cmds.menuItem( annotation="Reset The Selected Trasform Matrix", command='aw_HOT_PIVOT_ACTION;', image="menuIconModify.png", label="HOT PIVOT ACTION", version="2015", parent=Modify_Menu, sourceType="mel")
-	#SelLocatorItem      = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2015", parent=Select_All_By_Type_MenuItem, sourceType="python")
 
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")
-# removeShelfTab("Deadline")
 Build_DataPrep_Tools("AW_DP_Tools")
 Build_Artist_Tools("AW_CG_Tools")
-#Add_Custom_Menu_Items()

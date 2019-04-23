@@ -1684,6 +1684,7 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		self.wig_action_fix_Bad_Inherits_Transform_Plugs                  = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Force Inherits Transforms", Widget_Action_Fix_Inherits_Transform)
 		self.wig_action_Freeze_All_Transforms                             = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Freeze Transforms", Widget_Action_Freeze_All_Transforms)
 		
+		
 		#----------------------------------------------------------------------
 		self.action_group_optional_extraction_steps = self.Extraction_Action_Groups.add_Action_Group("Optional Extraction Steps")
 		self.wig_action_Remove_Non_Default_UV_Sets  = self.action_group_optional_extraction_steps.add_Widget_Action("Remove Non Default UV Sets", Widget_Action_Remove_Multiple_UV_Sets_From_Meshes, hidden=True)
@@ -1791,6 +1792,9 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		Global_Access.Export_Alembic()
 		Global_Access.Export_Shaders()
 		self.Export_Button.setEnabled(False)
+		if self.auto_import_CheckBox.isChecked():
+			self.tabWidget.setCurrentIndex(1)
+			self.on_Import_Button_Clicked()
 	#----------------------------------------------------------------------
 	def on_Import_Button_Clicked(self):
 		""""""
@@ -1804,7 +1808,7 @@ QT.ui_Loader.registerCustomWidget(Alembic_Asset_Extraction_GUI)
 #----------------------------------------------------------------------
 def load_Gui():
 	""""""
-	gui = QT.ui_Loader.load(os.path.join( os.path.dirname(__file__), "Alembic_Asset_Extraction_V2.ui") )
+	gui = QT.ui_Loader.load(os.path.join( os.path.dirname(__file__), "Alembic_Asset_Extraction_V3.ui") )
 	gui.show()
 	gui._run_setup()
 	return gui

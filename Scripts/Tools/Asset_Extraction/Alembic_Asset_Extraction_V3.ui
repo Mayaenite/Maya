@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1182</width>
-    <height>975</height>
+    <height>1085</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -349,10 +349,13 @@ The Master Layer Before Scan and Export</string>
          <item>
           <widget class="QScrollArea" name="Extraction_Action_Groups_scrollArea">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
            </property>
            <widget class="Alembic_Extraction_Widget_Action_Group_Builder" name="Extraction_Action_Groups">
             <property name="geometry">
@@ -360,11 +363,11 @@ The Master Layer Before Scan and Export</string>
               <x>0</x>
               <y>0</y>
               <width>866</width>
-              <height>580</height>
+              <height>300</height>
              </rect>
             </property>
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
