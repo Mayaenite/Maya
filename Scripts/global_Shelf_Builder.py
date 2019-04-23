@@ -321,8 +321,8 @@ def Build_DataPrep_Tools(shelfName):
 	                  ,image      = "mr_clean.png"
 	                  ,image1     = "mr_clean.png"
 	                  ,style      = "iconOnly"
-	                  ,commmand    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3.load_Gui()"
-	                  ,sourceType = "python" ).m
+	                  ,command    = "import Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3\nreload(Scripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3)\nScripts.Tools.Asset_Extraction.Alembic_Asset_Extraction_V3.load_Gui()"
+	                  ,sourceType = "python" )
 	# Visibility_Connect_Maker
 	cmds.shelfButton(parent=active_shelf
 	                 ,annotation = "Connect The Visibility Of The Currently Selected Nodes To The Last Node Selected"
