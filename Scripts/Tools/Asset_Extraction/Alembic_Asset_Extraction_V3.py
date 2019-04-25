@@ -77,9 +77,11 @@ class Global_Access(object):
 
 ######################################################################## UTILTY LAMBDA FUNCTIONS
 uuids_to_names                                    = lambda idlist:cmds.ls(idlist)
+names_to_uuids                                    = lambda names:cmds.ls(names,uuid=True)
 get_Node_Name                                     = lambda node:cmds.ls(cmds.ls(node))[0].split("|")[-1]
 get_Node_Path                                     = lambda node:cmds.ls(node,l=True)[0]
 get_Node_UUid                                     = lambda node:cmds.ls(node, uuid=True)[0]
+get_Parent                                        = lambda node:none_To_List(cmds.listRelatives(node, parent=True, fullPath=True))
 none_To_List                                      = lambda val:val if val is not None else []
 get_All_Shader_Engines                            = lambda :cmds.ls(type="shadingEngine")
 get_All_Non_Default_Shader_Engines                = lambda :[item for item in get_All_Shader_Engines() if not "initial" in item]
@@ -270,6 +272,10 @@ class Extraction_Action_Widget(QT.QWidget):
 		self.setLayout(Zero_Content_Margines_HBoxLayout())
 		self.setSizePolicy(QT.QSizePolicy(QT.QSizePolicy.Policy.Minimum,QT.QSizePolicy.Policy.Maximum))
 		self._depends_on = None
+	#----------------------------------------------------------------------
+	def get_Items_Of_Interset(self):
+		""""""
+		return []
 	#----------------------------------------------------------------------
 	def is_Scan_Needed(self):
 		""""""
@@ -678,11 +684,15 @@ class Widget_Action_Remove_NameSpaces(Fixed_Items_Progress_Action_Widget):
 		
 		self.progressBar.set_Progress_Message("Scanning Items",len(items_to_scan),True)
 		items_to_scan.reverse()
-		for item in items_to_scan:
-			if cmds.namespace( exists=item):
-				cmds.namespace(removeNamespace=item,mergeNamespaceWithRoot=True)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			self.progressBar.add_Tick()
+		if not len(items_to_scan):
+			for item in items_to_scan:
+				if cmds.namespace( exists=item):
+					cmds.namespace(removeNamespace=item,mergeNamespaceWithRoot=True)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.setMaximum(1)
+			self.progressBar.setValue(1)
 ########################################################################
 class Widget_Action_Remove_Unknown_Plugins(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -722,12 +732,105 @@ class Widget_Action_Remove_Unknown_Nodes(Fixed_Items_Progress_Action_Widget):
 		
 		for item in items_to_scan:
 			try:
-				cmds.delete(node)
+				cmds.delete(item)
+				self.spinbox.setValue(self.spinbox.value()+1)
+			except:
+				pass
+			self.progressBar.add_Tick()
+########################################################################
+class Widget_Action_Delete_Constraint(Fixed_Items_Progress_Action_Widget):
+	""""""
+	#----------------------------------------------------------------------
+	def is_Scan_Needed(self):
+		""""""
+		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+	#----------------------------------------------------------------------
+	def run_Action(self):
+		""""""
+		self.progressBar.set_Calculating()
+		items_to_scan = none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))
+		self.progressBar.set_Progress_Message("Deleting Constraints", max_value=len(items_to_scan), resetValue=True)
+		
+		for item in items_to_scan:
+			try:
+				cmds.delete(item)
+				self.spinbox.setValue(self.spinbox.value()+1)
+			except:
+				pass
+			self.progressBar.add_Tick()
+########################################################################
+class Widget_Action_Delete_Animation_Curves(Fixed_Items_Progress_Action_Widget):
+	""""""
+	#----------------------------------------------------------------------
+	def is_Scan_Needed(self):
+		""""""
+		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+	#----------------------------------------------------------------------
+	def get_Items_Of_Interset(self):
+		""""""
+		iterDepend = om.MItDependencyNodes(om.MFn.kAnimCurve)
+		fn = om.MFnDependencyNode()
+		curves = []
+		while not iterDepend.isDone():
+			fn.setObject(iterDepend.thisNode())
+			curves.append(fn.name())
+			iterDepend.next()
+		return curves
+	#----------------------------------------------------------------------
+	def run_Action(self):
+		""""""
+		self.progressBar.set_Calculating()
+		items_to_scan = self.get_Items_Of_Interset()
+		self.progressBar.set_Progress_Message("Deleting Animation Curves", max_value=len(items_to_scan), resetValue=True)
+		
+		for item in items_to_scan:
+			try:
+				cmds.delete(item)
 				self.spinbox.setValue(self.spinbox.value()+1)
 			except:
 				pass
 			self.progressBar.add_Tick()
 
+########################################################################
+class Widget_Action_Disassembling_Joint_Hierarchy(Fixed_Items_Progress_Action_Widget):
+	""""""
+	#----------------------------------------------------------------------
+	def is_Scan_Needed(self):
+		""""""
+		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+	#----------------------------------------------------------------------
+	def get_Cloest_Partent_Tranform(self,item):
+		parent_item = get_Parent(item)
+		while len(parent_item) and not cmds.objectType(parent_item[0],isType="transform"):
+			parent_item = get_Parent(parent_item)
+		if not len(parent_item):
+			return None
+		return parent_item[0]
+	#----------------------------------------------------------------------
+	def set_Parent_To_Nerest_Tranform(self,current_parent,items):
+		current_parent = cmds.ls(get_Node_Path(current_parent),l=True)[0]
+		cloest_tranform_parent = self.get_Cloest_Partent_Tranform(current_parent)
+		if not current_parent == cloest_tranform_parent:
+			cmds.parent(uuids_to_names(items),cloest_tranform_parent)
+	#----------------------------------------------------------------------
+	def get_Items_Of_Interset(self):
+		""""""
+		res = names_to_uuids( list(reversed(none_To_List(cmds.ls(type="joint",l=True)))))
+		return res
+	#----------------------------------------------------------------------
+	def run_Action(self):
+		""""""
+		self.progressBar.set_Calculating()
+		items_to_scan = self.get_Items_Of_Interset()
+		self.progressBar.set_Progress_Message("Disassembling Joint Hierarchy", max_value=len(items_to_scan), resetValue=True)
+		
+		for item in items_to_scan:
+			child_Transforms = none_To_List(cmds.listRelatives(get_Node_Path(item),type="transform",fullPath=True))
+			if len(child_Transforms):
+				child_Transforms_uuids = names_to_uuids(child_Transforms)
+				self.set_Parent_To_Nerest_Tranform(item,child_Transforms_uuids)
+				self.spinbox.setValue(self.spinbox.value()+1)
+			self.progressBar.add_Tick()
 ########################################################################################################## FIXES
 ########################################################################
 class Widget_Action_Fix_Shape_Nodes_With_No_Geo(Fixed_Items_Progress_Action_Widget):
@@ -741,12 +844,18 @@ class Widget_Action_Fix_Shape_Nodes_With_No_Geo(Fixed_Items_Progress_Action_Widg
 			items_to_scan = get_All_Geometry_Descendents(Global_Access.Top_Level_Node)
 		else:
 			items_to_scan = get_All_Geometry_Descendents(get_Transform_Assemblies())
+			
 		
 		self.progressBar.set_Progress_Message("Scanning Items",len(items_to_scan),True)
 
 		for item in items_to_scan[::]:
 			try:
 				item_node = MNODE(item)
+				if cmds.objectType(item,isType="mesh"):
+					data = cmds.polyEvaluate(item, edge=True, face=True, triangle=True, vertex=True)
+					if not any(data.values()):
+						cmds.delete(item)
+						self.spinbox.setValue(self.spinbox.value()+1)
 			except StandardError:
 				cmds.delete(item)
 				self.spinbox.setValue(self.spinbox.value()+1)
@@ -1160,6 +1269,7 @@ class Widget_Action_Remove_Multiple_UV_Sets_From_Meshes(Fixed_Items_Progress_Act
 			if len(uv_sets) > 1:
 				try:
 					default_uv_set = cmds.getAttr(item+".uvSet[0].uvSetName")
+					print "trying"
 
 					if not default_uv_set == "map1":
 						cmds.polyUVSet(item, rename=True, newUVSet='map1', uvSet=default_uv_set)
@@ -1172,6 +1282,7 @@ class Widget_Action_Remove_Multiple_UV_Sets_From_Meshes(Fixed_Items_Progress_Act
 							cmds.polyUVSet(item, delete=True, uvSet=uv_set)
 					self.spinbox.setValue(self.spinbox.value()+1)
 				except:
+					print "Failed"
 					pass
 			self.progressBar.add_Tick()
 
@@ -1673,12 +1784,15 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		self.wig_action_Remove_Unknown_Nodes                              = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Unknown Nodes", Widget_Action_Remove_Unknown_Nodes)
 		self.wig_action_Remove_Unknown_Plugins                            = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Unknown Plugins", Widget_Action_Remove_Unknown_Plugins)
 		self.wig_action_Fix_Shape_Nodes_With_No_Geo                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Shapes With No Geo", Widget_Action_Fix_Shape_Nodes_With_No_Geo)
+		self.wig_action_Action_Delete_Constraint                          = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Constraints", Widget_Action_Delete_Constraint)
+		self.wig_action_Action_Delete_Animation_Curves                    = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Animation Curves", Widget_Action_Delete_Animation_Curves)
 		self.wig_action_Fix_Bad_Unicode_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix Bad Unicode Names", Widget_Action_Fix_Illegal_Unicode_Names)
 		self.wig_action_Fix_PolySurface_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix PolySurface Names", Widget_Action_Fix_PolySurface_Node_Names)
 		self.wig_action_Unlock_Dag_Objects                                = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Dag Objects", Widget_Action_Unlock_Dag_Objects)
 		self.wig_action_Unlock_Transform_Attributes                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Transform Attributes", Widget_Action_Unlock_Transform_Attributes)
 		self.wig_action_Break_Attribute_Connections                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Break Connections", Widget_Action_Break_Attribute_Connections)
 		self.wig_action_Fix_Bad_Intermediate_Objects                      = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Intermediate Objects", Widget_Action_Remove_Intermediate_Objects)
+		self.wig_action_Fix_Disassembling_Joint_Hierarchy                 = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Disassembling Joint Hierarchy", Widget_Action_Disassembling_Joint_Hierarchy)
 		self.wig_action_Fix_Bad_Default_Uv_Sets                           = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Standerdize Default Uv Set", Widget_Action_Fix_Default_Uv_Set_Name)
 		self.wig_action_Fix_Fix_Bad_Visible_In_Reflection_And_Refractions = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Force Reflection & Refractions", Widget_Action_Fix_Visible_In_Reflection_And_Refractions)
 		self.wig_action_fix_Bad_Inherits_Transform_Plugs                  = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Force Inherits Transforms", Widget_Action_Fix_Inherits_Transform)
