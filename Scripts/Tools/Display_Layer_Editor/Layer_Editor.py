@@ -1010,7 +1010,7 @@ class AW_Display_Layer_Editor_List_View(DATA_VIEWS.List_Views.DATA_VIEWS.List_Vi
 			if index.isValid():
 				internal_data = index.data(Maya_Item_Data_Roles.INTERNAL_DATA)
 				layer         = internal_data.get_internal_Data()
-				print "Middle Mouse Pressed on {}".format(layer.nodeName())
+				#print "Middle Mouse Pressed on {}".format(layer.nodeName())
 				if event.modifiers() == PYQT.Qt.Modifier.CTRL:
 					layer.select_Members()
 				elif event.modifiers() == PYQT.Qt.Modifier.CTRL | PYQT.Qt.Modifier.SHIFT:
