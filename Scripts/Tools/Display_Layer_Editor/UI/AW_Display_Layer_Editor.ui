@@ -54,20 +54,41 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="Display_Option_Tool_Button" name="toolButton">
+        <property name="toolTip">
+         <string/>
+        </property>
         <property name="text">
          <string>...</string>
+        </property>
+        <property name="popupMode">
+         <enum>QToolButton::InstantPopup</enum>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///U:/dloveridge/Stuff/AW_Layer_Editor_Help.avi&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;help&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <widget class="OptionVariable_Layers_Tab_Position_ComboBox" name="layers_Tab_Position_comboBox">
+        <property name="toolTip">
+         <string>Tab Position</string>
         </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
+        <property name="statusTip">
+         <string>Tab Position</string>
         </property>
+        <item>
+         <property name="text">
+          <string>north</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>east</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>west</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item>
@@ -82,6 +103,16 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;file:///U:/dloveridge/Stuff/AW_Layer_Editor_Help.avi&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;help&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -723,11 +754,8 @@ That Contains The Currently Selected Objects</string>
     </layout>
    </item>
   </layout>
-  <zorder>Display_Types</zorder>
-  <zorder>Layer_Controls_Frame</zorder>
   <zorder>Filter_Options_Frame</zorder>
   <zorder>Layer_Editor_Main_Tool_Bar</zorder>
-  <zorder>Layer_Editing_Frame</zorder>
  </widget>
  <customwidgets>
   <customwidget>
@@ -765,6 +793,16 @@ That Contains The Currently Selected Objects</string>
    <class>AW_Display_Layer_Editor_Item_Selection_Style_ComboBox</class>
    <extends>QComboBox</extends>
    <header>aw_display_layer_editor_item_selection_style_combobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>Display_Option_Tool_Button</class>
+   <extends>QToolButton</extends>
+   <header>display_option_tool_button.h</header>
+  </customwidget>
+  <customwidget>
+   <class>OptionVariable_Layers_Tab_Position_ComboBox</class>
+   <extends>QComboBox</extends>
+   <header>optionvariable_layers_tab_position_combobox.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -391,11 +391,13 @@ virtualClasses.register(DML_Display_Layer_Virtual_Class,False)
 
 ########################################################################
 class _Global_Options(object):
-	display_show_name_spaces  = General_Util.OptionVar("aw_display_layer_editor_tools_namespaces", True)
-	selection_set_outliner_option_Filter_Syntax = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_syntax", 1)
+	display_show_name_spaces                              = General_Util.OptionVar("aw_display_layer_editor_tools_namespaces", True)
+	make_first_tab                                        = General_Util.OptionVar("aw_display_layer_editor_tools_make_first_tab", True)
+	layers_tab_position                                   = General_Util.OptionVar("aw_display_layer_editor_tools_layers_tab_position", 0)
+	selection_set_outliner_option_Filter_Syntax           = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_syntax", 1)
 	selection_set_outliner_option_Filter_Case_Sensitivity = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_case_sensitivity", False)
-	selection_set_outliner_option_Filter_Scan_Type = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_scan_type", 0)
-	display_layer_editor_selection_style = General_Util.OptionVar("aw_display_layer_editor_selection_style", 0)
+	selection_set_outliner_option_Filter_Scan_Type        = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_scan_type", 0)
+	display_layer_editor_selection_style                  = General_Util.OptionVar("aw_display_layer_editor_selection_style", 0)
 ########################################################################
 class ActiveSelectionRestore(object):
 	''''''
@@ -432,7 +434,7 @@ class OptionVariable_Bool_Action(PYQT.QAction):
 		else:
 			self._variable = General_Util.OptionVar(var_name, var_val)
 		self.setCheckable(True)
-		self.setChecked(Qt.Checked if self.variable_value else Qt.Unchecked)
+		self.setChecked(PYQT.Qt.Checked if self.variable_value else PYQT.Qt.Unchecked)
 		self.changed.connect(self.update_variable)
 	#----------------------------------------------------------------------
 	@PYQT.QtSlot()
@@ -450,15 +452,38 @@ class OptionVariable_Bool_Action(PYQT.QAction):
 		""""""
 		self._variable.value = val
 ########################################################################
+class Make_First_Tab_OptionVariable_Action(OptionVariable_Bool_Action):
+	def __init__(self, parent=None):
+		super(Make_First_Tab_OptionVariable_Action, self).__init__("Make First Tab", _Global_Options.make_first_tab, var_val=True, parent=parent)
+		self.changed.connect(self.on_Changed_Set_Tab_Position)
+	#----------------------------------------------------------------------
+	@PYQT.QtSlot()
+	def on_Changed_Set_Tab_Position(self):
+		""""""
+		tab_layout = Scripts.menu_item_addons.find_UI_By_Name("DisplayLayerTab").getParent()
+		tabs       = tab_layout.getTabLabelIndex()
+		
+		aw_display_position  = tabs.index('AW Diplay')+1
+		last_tab_position = len(tabs)
+		
+		if self.isChecked() and not aw_display_position == 1:
+			tab_layout.moveTab([aw_display_position,1])
+			maya_display_position = tab_layout.getTabLabelIndex().index('Display')+1
+			tab_layout.moveTab([maya_display_position, last_tab_position])
+			tab_layout.setSelectTab("aw_display_layer_editor_tab")
+			
+		elif not self.isChecked() and aw_display_position == 1:
+			tab_layout.moveTab([aw_display_position,last_tab_position])
+			maya_display_position = tab_layout.getTabLabelIndex().index('Display')+1
+			tab_layout.moveTab([maya_display_position, 1])
+			tab_layout.setSelectTab("aw_display_layer_editor_tab")
+########################################################################
 class Display_Option_Tool_Button(PYQT.QToolButton):
-	def run_setup(self):
+	def _run_setup(self):
 		self.setText("Display Options")
-		self.option_Tools      = OptionVariable_Bool_Action("Tools", _Global_Options.display_option_Tools, parent=self)
-		self.option_Creation   = OptionVariable_Bool_Action("Creation", _Global_Options.display_option_Creation, parent=self)
-		self.option_Assinments = OptionVariable_Bool_Action("Assinments", _Global_Options.display_option_Assinments, parent=self)
-		self.option_Selection  = OptionVariable_Bool_Action("Selection", _Global_Options.display_option_Selection, parent=self)
-		self.option_Viewport   = OptionVariable_Bool_Action("Viewport", _Global_Options.display_option_Viewport, parent=self)
-		self.addActions([self.option_Tools, self.option_Creation, self.option_Assinments, self.option_Selection, self.option_Viewport])
+		self.option_make_first_tab   = Make_First_Tab_OptionVariable_Action()
+		self.addActions([self.option_make_first_tab])
+		
 ########################################################################
 class OptionVariable_ComboBox(PYQT.QComboBox):
 	#----------------------------------------------------------------------
@@ -478,6 +503,27 @@ class OptionVariable_ComboBox(PYQT.QComboBox):
 	def update_variable(self, index):
 		""""""
 		self._variable.value =  index
+		
+########################################################################
+class OptionVariable_Layers_Tab_Position_ComboBox(OptionVariable_ComboBox):
+	#----------------------------------------------------------------------
+	def __init__(self, parent=None, var_name=None, var_val=0):
+		super(OptionVariable_Layers_Tab_Position_ComboBox, self).__init__(parent,_Global_Options.layers_tab_position,0)
+	#----------------------------------------------------------------------
+	def _inishalize(self):
+		""""""
+		super(OptionVariable_Layers_Tab_Position_ComboBox, self)._inishalize()
+		self.currentIndexChanged.connect(self.on_Current_Index_Changed_Set_Tab_Position)
+		self.on_Current_Index_Changed_Set_Tab_Position(self._variable.value)
+	#----------------------------------------------------------------------
+	@PYQT.QtSlot(str)
+	def on_Current_Index_Changed_Set_Tab_Position(self,val):
+		""""""
+		if isinstance(val,int):
+			val =["north", "east","west"][val] 
+		tab_layout = Scripts.menu_item_addons.find_UI_By_Name("DisplayLayerTab").getParent()
+		tab_layout.setTabPosition(val)
+		
 ########################################################################
 class OptionVariable_CheckBox(PYQT.QCheckBox):
 	#----------------------------------------------------------------------
@@ -1150,37 +1196,50 @@ class _CODE_COMPLEATION_HELPER(PYQT.QWidget):
 		''''''
 		super(_CODE_COMPLEATION_HELPER,self).__init__(parent=parent)
 		if False:
-			self.AWDisplay_Layer_Editor             = AW_Display_Layer_Editor()
-			self.Filter_Options_Frame               = PYQT.QFrame()
-			self.Filter_Options_label               = PYQT.QLabel()
-			self.Filter_Style_comboBox              = AW_Display_Layer_Editor_Filter_Style_ComboBox()
-			self.Filter_Case_checkBox               = AW_Display_Layer_Editor_Filter_Case_Sensitivity_CheckBox()
-			self.Filter_Options_Text                = Maya_LineEdit()
-			self.Layer_Controls_Frame               = PYQT.QFrame()
-			self.Layer_Visibility_All_Off_Button    = Maya_PushButton()
-			self.Layer_Visibility_All_On_Button     = Maya_PushButton()
-			self.Layer_Visibility_Toggle_Button     = Maya_PushButton()
-			self.line                               = Line()
-			self.Layer_Visibility_Off_Button        = Maya_PushButton()
-			self.Layer_Visibility_On_Button         = Maya_PushButton()
-			self.Layer_Editing_Frame                = PYQT.QFrame()
-			self.Select_Layer_Members_Button        = Maya_PushButton()
-			self.Add_Layers_Members_Button          = Maya_PushButton()
-			self.Remove_Layer_Members_Button        = Maya_PushButton()
-			self.Create_New_Empty_Layer_Button      = Maya_PushButton()
-			self.Create_New_Selected_Layer_Button   = Maya_PushButton()
-			self.Delete_Layer_Button                = Maya_PushButton()
-			self.Display_Types                      = PYQT.QStackedWidget()
-			self.List_View_Page                     = PYQT.QWidget()
-			self.listView                           = AW_Display_Layer_Editor_List_View()
-			self.Table_View_Page                    = PYQT.QWidget()
-			self.tableView                          = PYQT.QTableView()
-			self.Tree_View_Page                     = PYQT.QWidget()
-			self.treeView                           = PYQT.QTreeView()
-			self.Layer_Editor_Main_Tool_Bar         = PYQT.QFrame()
-			self.Hilight_Selection_Tools_Button     = PYQT.QToolButton()
-			self.label                              = PYQT.QLabel()
-			self.View_Selection_Mode_comboBox       = AW_Display_Layer_Editor_Item_Selection_Style_ComboBox()
+			self.AWDisplay_Layer_Editor           = AW_Display_Layer_Editor()
+			self.Layer_Editor_Main_Tool_Bar       = PYQT.QFrame()
+			self.toolButton                       = Display_Option_Tool_Button()
+			self.label_2                          = PYQT.QLabel()
+			self.Filter_Options_Frame             = PYQT.QFrame()
+			self.Filter_Options_label             = PYQT.QLabel()
+			self.Filter_Style_comboBox            = AW_Display_Layer_Editor_Filter_Style_ComboBox()
+			self.Filter_Case_checkBox             = AW_Display_Layer_Editor_Filter_Case_Sensitivity_CheckBox()
+			self.Filter_Options_Text              = Maya_LineEdit()
+			self.Layer_Controls_Frame             = PYQT.QFrame()
+			self.Layer_Visibility_Toggle_Button   = Maya_PushButton()
+			self.Layer_Visibility_On_Button       = Maya_PushButton()
+			self.Layer_Visibility_Off_Button      = Maya_PushButton()
+			self.Layer_Visibility_All_Off_Button  = Maya_PushButton()
+			self.Layer_Visibility_All_On_Button   = Maya_PushButton()
+			self.Display_Types                    = PYQT.QStackedWidget()
+			self.List_View_Page                   = PYQT.QWidget()
+			self.listView                         = AW_Display_Layer_Editor_List_View()
+			self.Table_View_Page                  = PYQT.QWidget()
+			self.tableView                        = PYQT.QTableView()
+			self.Tree_View_Page                   = PYQT.QWidget()
+			self.treeView                         = PYQT.QTreeView()
+			self.Hilight_Selection_Tools_Button   = PYQT.QToolButton()
+			self.Layer_Editing_Frame              = PYQT.QFrame()
+			self.Select_Layer_Members_Button      = Maya_PushButton()
+			self.Add_Layers_Members_Button        = Maya_PushButton()
+			self.Remove_Layer_Members_Button      = Maya_PushButton()
+			self.Create_New_Empty_Layer_Button    = Maya_PushButton()
+			self.Create_New_Selected_Layer_Button = Maya_PushButton()
+			self.Delete_Layer_Button              = Maya_PushButton()
+			self.label                            = PYQT.QLabel()
+			self.View_Selection_Mode_comboBox     = AW_Display_Layer_Editor_Item_Selection_Style_ComboBox()
+			self.verticalLayout_4                 = PYQT.QVBoxLayout()
+			self.horizontalLayout                 = PYQT.QHBoxLayout()
+			self.verticalLayout_3                 = PYQT.QVBoxLayout()
+			self.Filter_Options_Layout            = PYQT.QHBoxLayout()
+			self.gridLayout                       = PYQT.QGridLayout()
+			self.verticalLayout_2                 = PYQT.QVBoxLayout()
+			self.verticalLayout                   = PYQT.QVBoxLayout()
+			self.verticalLayout_5                 = PYQT.QVBoxLayout()
+			self.verticalLayout_7                 = PYQT.QVBoxLayout()
+			self.horizontalLayout_5               = PYQT.QHBoxLayout()
+			self.horizontalLayout_2               = PYQT.QHBoxLayout()
+			self.layers_Tab_Position_comboBox     = OptionVariable_Layers_Tab_Position_ComboBox()
 
 ########################################################################
 class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER):
@@ -1191,9 +1250,13 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 		self._data_proxy_model = Display_Layer_Manager_Proxy_Model(parent=self)
 		self._data_proxy_model.setSourceModel(self._data_model)
 		self._data_proxy_model.setDynamicSortFilter(True)
+		self._display_layer_tab = None
+		if False:
+			isinstance(self._display_layer_tab,pm.uitypes.TabLayout)
 	#----------------------------------------------------------------------
 	def _run_setup(self):
 		""""""
+		self._display_layer_tab = Scripts.menu_item_addons.find_UI_By_Name("DisplayLayerTab").getParent()
 		self._data_proxy_model.assign_Line_Input(self.Filter_Options_Text)
 		self._data_model.layer_container.repopulate()
 		self._data_proxy_model.setSourceModel(self._data_model)
@@ -1220,6 +1283,8 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 		action.setStatusTip("Hilight The Display Layers That Have Nothing In Them")
 		action.triggered.connect(self.Hilight_Tool_Action_Hilight_Empty_Display_Layers)
 		self.Hilight_Selection_Tools_Button.addAction(action)
+		self.toolButton._run_setup()
+		self.layers_Tab_Position_comboBox._inishalize()
 	#----------------------------------------------------------------------
 	def _Disable_Add_Button_On_Multi_Selection(self):
 		""""""
@@ -1380,6 +1445,7 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 
 #______________________________________________________________________________________________
 ui_Loader.registerCustomWidget(Display_Option_Tool_Button)
+ui_Loader.registerCustomWidget(OptionVariable_Layers_Tab_Position_ComboBox)
 ui_Loader.registerCustomWidget(AW_Display_Layer_Editor_Filter_Case_Sensitivity_CheckBox)
 ui_Loader.registerCustomWidget(AW_Display_Layer_Editor_Filter_Style_ComboBox)
 ui_Loader.registerCustomWidget(Filter_Scan_Options_ComboBox)
@@ -1433,12 +1499,18 @@ def add_Layer_Editor():
 		wig = ui_Loader.load_file(file_path)
 		PYQT.QMetaObject.connectSlotsByName(wig)
 		wig._run_setup()
+		if False:
+			isinstance(wig,AW_Display_Layer_Editor)
+		
 		Display_Layer_Tab                     = Scripts.menu_item_addons.find_UI_By_Name("DisplayLayerTab").getParent()
 		aw_display_layer_editor_tab           = pm.menuBarLayout("aw_display_layer_editor_tab",parent=Display_Layer_Tab)
 		Qt_aw_display_layer_editor_tab        = aw_display_layer_editor_tab.asQtObject()
 		Qt_aw_display_layer_editor_tab_layout = Qt_aw_display_layer_editor_tab.layout()
 		Qt_aw_display_layer_editor_tab_layout.addWidget(wig)
 		Display_Layer_Tab.setTabLabel(["aw_display_layer_editor_tab","AW Diplay"])
+		wig.toolButton.option_make_first_tab.on_Changed_Set_Tab_Position()
+		if wig.toolButton.option_make_first_tab.isChecked():
+			Display_Layer_Tab.setSelectTab("aw_display_layer_editor_tab")
 		_Add_Scene_CallBacks(wig)
 		return wig
 	else:
