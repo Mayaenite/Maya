@@ -84,7 +84,7 @@ get_Node_UUid                                     = lambda node:cmds.ls(node, uu
 get_Parent                                        = lambda node:none_To_List(cmds.listRelatives(node, parent=True, fullPath=True))
 none_To_List                                      = lambda val:val if val is not None else []
 get_All_Shader_Engines                            = lambda :cmds.ls(type="shadingEngine")
-get_All_Non_Default_Shader_Engines                = lambda :[item for item in get_All_Shader_Engines() if not "initial" in item]
+get_All_Non_Default_Shader_Engines                = lambda :[item for item in get_All_Shader_Engines() if not item.startswith("initial")]
 get_Shader_Engine_Members                         = lambda shader_engine:[item for item in cmds.ls(cmds.listConnections(shader_engine+".dagSetMembers",shapes=True,destination=False,source=True),objectsOnly=True) if not cmds.objectType(item) in ["renderLayer","displayLayer"]]
 add_Shader_Engine_Members                         = lambda items,shader_engine:cmds.sets(items,edit=True,forceElement=shader_engine)
 shader_Engine_Has_Material                        = lambda shader_engine: True if len( none_To_List(cmds.listConnections( shader_engine+".surfaceShader",source=True,plugs=False,skipConversionNodes=True))) else False
@@ -680,19 +680,17 @@ class Widget_Action_Remove_NameSpaces(Fixed_Items_Progress_Action_Widget):
 		self.progressBar.set_Calculating()
 		
 		items_to_scan = [item for item in cmds.namespaceInfo( listOnlyNamespaces=True, recurse=True) if not item in ['UI','shared']]
-		
-		
-		self.progressBar.set_Progress_Message("Scanning Items",len(items_to_scan),True)
 		items_to_scan.reverse()
-		if not len(items_to_scan):
+		if len(items_to_scan):
+			self.progressBar.set_Progress_Message("Removing Name Spaces",len(items_to_scan),True)
 			for item in items_to_scan:
 				if cmds.namespace( exists=item):
 					cmds.namespace(removeNamespace=item,mergeNamespaceWithRoot=True)
 					self.spinbox.setValue(self.spinbox.value()+1)
 				self.progressBar.add_Tick()
 		else:
-			self.progressBar.setMaximum(1)
-			self.progressBar.setValue(1)
+			self.progressBar.set_Progress_Message("No Name Spaces To Remove",100,True)
+			self.progressBar.setValue(100)
 ########################################################################
 class Widget_Action_Remove_Unknown_Plugins(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -707,15 +705,20 @@ class Widget_Action_Remove_Unknown_Plugins(Fixed_Items_Progress_Action_Widget):
 		
 		items_to_scan = none_To_List(cmds.unknownPlugin(q=True, list=True))
 		
-		self.progressBar.set_Progress_Message("Removing Plugins", max_value=len(items_to_scan), resetValue=True)
-		
-		for item in items_to_scan:
-			try:
-				cmds.unknownPlugin(item, remove=True)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			except:
-				pass
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			
+			self.progressBar.set_Progress_Message("Removing Plugins", max_value=len(items_to_scan), resetValue=True)
+			
+			for item in items_to_scan:
+				try:
+					cmds.unknownPlugin(item, remove=True)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				except:
+					pass
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Unknown Plugins To Remove", max_value=100, resetValue=True)
+			self.progressBar.setValue(100)
 ########################################################################
 class Widget_Action_Remove_Unknown_Nodes(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -728,15 +731,21 @@ class Widget_Action_Remove_Unknown_Nodes(Fixed_Items_Progress_Action_Widget):
 		""""""
 		self.progressBar.set_Calculating()
 		items_to_scan = none_To_List(cmds.ls(type="unknown"))
-		self.progressBar.set_Progress_Message("Removing Unknown Nodes", max_value=len(items_to_scan), resetValue=True)
 		
-		for item in items_to_scan:
-			try:
-				cmds.delete(item)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			except:
-				pass
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			
+			self.progressBar.set_Progress_Message("Removing Unknown Nodes", max_value=len(items_to_scan), resetValue=True)
+			
+			for item in items_to_scan:
+				try:
+					cmds.delete(item)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				except:
+					pass
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Unknown Nodes To Remove", max_value=100, resetValue=True)
+			self.progressBar.setValue(100)
 ########################################################################
 class Widget_Action_Delete_Constraint(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -744,27 +753,38 @@ class Widget_Action_Delete_Constraint(Fixed_Items_Progress_Action_Widget):
 	def is_Scan_Needed(self):
 		""""""
 		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+	
+	#----------------------------------------------------------------------
+	def get_Items_Of_Interset(self):
+		""""""
+		return none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))
 	#----------------------------------------------------------------------
 	def run_Action(self):
 		""""""
 		self.progressBar.set_Calculating()
-		items_to_scan = none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))
-		self.progressBar.set_Progress_Message("Deleting Constraints", max_value=len(items_to_scan), resetValue=True)
+		items_to_scan = self.get_Items_Of_Interset()
 		
-		for item in items_to_scan:
-			try:
-				cmds.delete(item)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			except:
-				pass
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			self.progressBar.set_Progress_Message("Deleting Constraints", max_value=len(items_to_scan), resetValue=True)
+			
+			for item in items_to_scan:
+				try:
+					cmds.delete(item)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				except:
+					pass
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Constraints To Delete", max_value=100, resetValue=True)
+			self.progressBar.setValue(100)
 ########################################################################
 class Widget_Action_Delete_Animation_Curves(Fixed_Items_Progress_Action_Widget):
 	""""""
 	#----------------------------------------------------------------------
 	def is_Scan_Needed(self):
 		""""""
-		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+		iterDepend = om.MItDependencyNodes(om.MFn.kAnimCurve)
+		return not iterDepend.isDone()
 	#----------------------------------------------------------------------
 	def get_Items_Of_Interset(self):
 		""""""
@@ -781,15 +801,20 @@ class Widget_Action_Delete_Animation_Curves(Fixed_Items_Progress_Action_Widget):
 		""""""
 		self.progressBar.set_Calculating()
 		items_to_scan = self.get_Items_Of_Interset()
-		self.progressBar.set_Progress_Message("Deleting Animation Curves", max_value=len(items_to_scan), resetValue=True)
-		
-		for item in items_to_scan:
-			try:
-				cmds.delete(item)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			except:
-				pass
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			
+			self.progressBar.set_Progress_Message("Deleting Animation Curves", max_value=len(items_to_scan), resetValue=True)
+			
+			for item in items_to_scan:
+				try:
+					cmds.delete(item)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				except:
+					pass
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Animation Curves Found", max_value=100, resetValue=True)
+			self.progressBar.setValue(100)
 
 ########################################################################
 class Widget_Action_Disassembling_Joint_Hierarchy(Fixed_Items_Progress_Action_Widget):
@@ -797,7 +822,7 @@ class Widget_Action_Disassembling_Joint_Hierarchy(Fixed_Items_Progress_Action_Wi
 	#----------------------------------------------------------------------
 	def is_Scan_Needed(self):
 		""""""
-		return len(none_To_List(cmds.ls(type="pointConstraint parentConstraint orientConstraint scaleConstraint aimConstraint".split()))) >= 1
+		return len(none_To_List(cmds.ls(type="joint",l=True))) >= 1
 	#----------------------------------------------------------------------
 	def get_Cloest_Partent_Tranform(self,item):
 		parent_item = get_Parent(item)
@@ -823,14 +848,18 @@ class Widget_Action_Disassembling_Joint_Hierarchy(Fixed_Items_Progress_Action_Wi
 		self.progressBar.set_Calculating()
 		items_to_scan = self.get_Items_Of_Interset()
 		self.progressBar.set_Progress_Message("Disassembling Joint Hierarchy", max_value=len(items_to_scan), resetValue=True)
-		
-		for item in items_to_scan:
-			child_Transforms = none_To_List(cmds.listRelatives(get_Node_Path(item),type="transform",fullPath=True))
-			if len(child_Transforms):
-				child_Transforms_uuids = names_to_uuids(child_Transforms)
-				self.set_Parent_To_Nerest_Tranform(item,child_Transforms_uuids)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			self.progressBar.set_Progress_Message("Disassembling Joint Hierarchy", max_value=len(items_to_scan), resetValue=True)	
+			for item in items_to_scan:
+				child_Transforms = none_To_List(cmds.listRelatives(get_Node_Path(item),type="transform",fullPath=True))
+				if len(child_Transforms):
+					child_Transforms_uuids = names_to_uuids(child_Transforms)
+					self.set_Parent_To_Nerest_Tranform(item,child_Transforms_uuids)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Joints Found", max_value=100, resetValue=True)
+			self.progressBar.setValue(100)
 ########################################################################################################## FIXES
 ########################################################################
 class Widget_Action_Fix_Shape_Nodes_With_No_Geo(Fixed_Items_Progress_Action_Widget):
@@ -900,15 +929,68 @@ class Widget_Action_Fix_PolySurface_Node_Names(Fixed_Items_Progress_Action_Widge
 		""""""
 		self.progressBar.set_Calculating()
 		items_to_scan = cmds.ls("*polySurface*")
-		self.progressBar.set_Progress_Message("Scanning Items",len(items_to_scan),True)
-
-		for i, item in enumerate(items_to_scan):
-			try:
-				cmds.rename(item, "geo_poly_Surface_%i" % i)
-				self.spinbox.setValue(self.spinbox.value()+1)
-			except:
-				pass
-			self.progressBar.add_Tick()
+		if len(items_to_scan):
+			
+			self.progressBar.set_Progress_Message("Fixing PolySurface Names",len(items_to_scan),True)
+	
+			for i, item in enumerate(items_to_scan):
+				try:
+					cmds.rename(item, "geo_poly_Surface_%i" % i)
+					self.spinbox.setValue(self.spinbox.value()+1)
+				except:
+					pass
+				self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("No Items To Fix",100,True)
+			self.progressBar.setValue(100)
+########################################################################
+class Widget_Action_Fix_Non_Unique_Transform_Names(Fixed_Items_Progress_Action_Widget):
+	""""""
+	#----------------------------------------------------------------------
+	def is_Scan_Needed(self):
+		return True
+	#----------------------------------------------------------------------
+	def get_Items_Of_Interset(self):
+		""""""
+		self.progressBar.set_Calculating()
+		names_dict = {}
+		iterDag = om.MItDag(om.MItDag.kBreadthFirst,om.MFn.kTransform)
+		dagFn = om.MFnDagNode()
+		
+		while not iterDag.isDone():
+			dagFn.setObject(iterDag.currentItem())
+			if not dagFn.hasUniqueName():
+				name     = dagFn.name()
+				uid      = str(dagFn.uuid())
+				if not name in names_dict.keys():
+					names_dict[name]=[]
+				names_dict[name].append(uid)
+			iterDag.next()
+		
+		return names_dict
+	#----------------------------------------------------------------------
+	def run_Action(self):
+		""""""
+		base_sufix = "_AWID_"
+		
+		items_to_scan = self.get_Items_Of_Interset()
+		if len(items_to_scan.keys()):
+			total_count = 0
+			for name,uids in items_to_scan.iteritems():
+				total_count += len(uids)
+			
+			self.progressBar.set_Progress_Message("Making Names Unique",total_count,True)
+			
+			for name,uids in items_to_scan.iteritems():
+				new_base_name = name + base_sufix
+				for idnum,uid in enumerate(uids):
+					new_name       = new_base_name + str(idnum).zfill(4)
+					cmds.rename(get_Node_Path(uid),new_name,ignoreShape=True)
+					self.spinbox.setValue(self.spinbox.value()+1)
+					self.progressBar.add_Tick()
+		else:
+			self.progressBar.set_Progress_Message("Making Names Unique",100,True)
+			self.progressBar.setValue(100)
 ########################################################################
 class Widget_Action_Fix_Inherits_Transform(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -1053,14 +1135,6 @@ class Widget_Action_Freeze_All_Transforms(Scan_Progress_Action_Widget):
 class Widget_Action_Break_Attribute_Connections(Fixed_Items_Progress_Action_Widget):
 	""""""
 	#----------------------------------------------------------------------
-	def is_Scan_Needed(self):
-		""""""
-		for item in get_All_Transform_Descendents(Global_Access.Top_Level_Node):
-			for att in [".translateX",".translateY",".translateZ",".rotateX",".rotateY",".rotateZ",".scaleX",".scaleY",".scaleZ"]:
-				if len( none_To_List(cmds.listConnections(item+att,d=True,plugs=True))):
-					return True
-		return False
-	#----------------------------------------------------------------------
 	def run_Action(self):
 		""""""
 		self.progressBar.set_Calculating()
@@ -1084,13 +1158,6 @@ class Widget_Action_Break_Attribute_Connections(Fixed_Items_Progress_Action_Widg
 class Widget_Action_Unlock_Dag_Objects(Fixed_Items_Progress_Action_Widget):
 	""""""
 	#----------------------------------------------------------------------
-	def is_Scan_Needed(self):
-		""""""
-		for item in get_All_Descendents(Global_Access.Top_Level_Node):
-			if is_Node_Locked(item):
-				return True
-		return False
-	#----------------------------------------------------------------------
 	def run_Action(self):
 		""""""
 		self.progressBar.set_Calculating()
@@ -1105,13 +1172,6 @@ class Widget_Action_Unlock_Dag_Objects(Fixed_Items_Progress_Action_Widget):
 ########################################################################
 class Widget_Action_Unlock_Transform_Attributes(Fixed_Items_Progress_Action_Widget):
 	""""""
-	#----------------------------------------------------------------------
-	def is_Scan_Needed(self):
-		""""""
-		for item in cmds.ls(["*.translateX","*.translateY","*.translateZ","*.rotateX","*.rotateY","*.rotateZ","*.scaleX","*.scaleY","*.scaleZ"]):
-			if cmds.getAttr(item,lock=True):
-				return True
-		return False
 	#----------------------------------------------------------------------
 	def run_Action(self):
 		""""""
@@ -1507,12 +1567,6 @@ class Widget_Actions_Form(QT.QFormLayout):
 		""""""
 		return [self.itemAt(index,self.ItemRole.FieldRole).widget() for index in range(self.rowCount())]
 	#----------------------------------------------------------------------
-	def widgetsAt(self,index):
-		""""""
-		field  = self.itemAt(index,layout.ItemRole.FieldRole).widget().setVisible(False)
-		label  = self.itemAt(index,layout.ItemRole.LabelRole).widget().setVisible(False)
-		return [label,field]
-	#----------------------------------------------------------------------
 	action_Widgets = property(get_Action_Widgets)
 	#----------------------------------------------------------------------
 	def run_Optimize_Check(self):
@@ -1520,6 +1574,7 @@ class Widget_Actions_Form(QT.QFormLayout):
 		for wig in self.action_Widgets:
 			if not wig.is_Scan_Needed():
 				self.hide_Action(wig)
+				
 	#----------------------------------------------------------------------
 	def run_Actions(self):
 		""""""
@@ -1581,10 +1636,6 @@ class Widget_Actions_Group(QT.QGroupBox):
 	def get_Action_Widgets(self):
 		""""""
 		return self.action_items_form_layout.get_Action_Widgets()
-	#----------------------------------------------------------------------
-	def widgetsAt(self,index):
-		""""""
-		return self.action_items_form_layout.widgetsAt(index)
 	#----------------------------------------------------------------------
 	def run_Optimize_Check(self):
 		""""""
@@ -1787,6 +1838,7 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		self.wig_action_Action_Delete_Constraint                          = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Constraints", Widget_Action_Delete_Constraint)
 		self.wig_action_Action_Delete_Animation_Curves                    = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Animation Curves", Widget_Action_Delete_Animation_Curves)
 		self.wig_action_Fix_Bad_Unicode_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix Bad Unicode Names", Widget_Action_Fix_Illegal_Unicode_Names)
+		self.wig_action_Fix_Non_Unique_Transform_Names                    = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix Non Unique Transform Names", Widget_Action_Fix_Non_Unique_Transform_Names)
 		self.wig_action_Fix_PolySurface_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix PolySurface Names", Widget_Action_Fix_PolySurface_Node_Names)
 		self.wig_action_Unlock_Dag_Objects                                = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Dag Objects", Widget_Action_Unlock_Dag_Objects)
 		self.wig_action_Unlock_Transform_Attributes                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Transform Attributes", Widget_Action_Unlock_Transform_Attributes)
@@ -1798,19 +1850,18 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		self.wig_action_fix_Bad_Inherits_Transform_Plugs                  = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Force Inherits Transforms", Widget_Action_Fix_Inherits_Transform)
 		self.wig_action_Freeze_All_Transforms                             = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Freeze Transforms", Widget_Action_Freeze_All_Transforms)
 		
-		
-		#----------------------------------------------------------------------
+		#---------------------------------------------------------------------- optional_extraction_steps
 		self.action_group_optional_extraction_steps = self.Extraction_Action_Groups.add_Action_Group("Optional Extraction Steps")
 		self.wig_action_Remove_Non_Default_UV_Sets  = self.action_group_optional_extraction_steps.add_Widget_Action("Remove Non Default UV Sets", Widget_Action_Remove_Multiple_UV_Sets_From_Meshes, hidden=True)
 		
-		#----------------------------------------------------------------------
+		#---------------------------------------------------------------------- extraction_data
 		self.action_group_extraction_data = self.Extraction_Data_Collection_Groups.add_Action_Group("Extraction Data")
 		
 		self.wig_action_Add_Extractor_Id_Tags   = self.action_group_extraction_data.add_Widget_Action("Add Extractor Ids", Widget_Action_Add_Extractor_Id_Tags)
 		self.wig_action_Get_Display_Layers_Data = self.action_group_extraction_data.add_Widget_Action("Building Display Layers Data", Widget_Action_Get_Display_Layers_Data)
 		self.wig_action_Get_Shader_Engine_Data  = self.action_group_extraction_data.add_Widget_Action("Building Material Data", Widget_Action_Get_Shader_Engine_Data)
 		
-		#----------------------------------------------------------------------
+		#---------------------------------------------------------------------- rebuild_data
 		self.action_group_rebuild_data         = self.Rebuild_Collection_Groups_widget.add_Action_Group("Rebuild")
 		
 		self.wig_action_Import_Extracted_Data         = self.action_group_rebuild_data.add_Widget_Action("Importing Extracted Files", Widget_Action_Import_Extracted_Data)
@@ -1888,6 +1939,7 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 			kill_hyperShadePanel()
 		except:
 			pass
+		#self.action_group_Extraction_Fixing_And_Standedize.run_Optimize_Check()
 		timer = QT.QTimer(self)
 		timer.singleShot(1000, self.do_export)
 	#----------------------------------------------------------------------
