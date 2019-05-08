@@ -35,9 +35,10 @@ class Global_Access(object):
 		with file(cls.Json_File_Path,'w') as f:
 			json.dump(cls.Json_Data, f, indent=4, sort_keys=True)
 	#----------------------------------------------------------------------
+	@classmethod
 	def set_Top_Level_Node(cls,node):
 		""""""
-		cls.Top_Level_Node = node
+		cls.Top_Level_Node = Uuid_Named_Node(node)
 	#----------------------------------------------------------------------
 	@classmethod
 	def Export_Shaders(cls):
@@ -111,19 +112,22 @@ is_Node_Locked                                    = lambda node:all(cmds.lockNod
 unlock_Node                                       = lambda node:cmds.lockNode( node,lock=False, lockName=False, lockUnpublished=False)
 get_Display_Layer_Members                         = lambda node:cmds.editDisplayLayerMembers(node,q=True,fullNames=True)
 
-class Uuid_Named_Node(str):
+class Uuid_Named_Node(object):
 	"""This Class Is A Base Class That Holds The A Memeory Pointer to a node
 	it can be sent to maya.cmds as itself and acts like a string useing uuid pointer to repesent itself
 	"""
 	#----------------------------------------------------------------------
 	def __init__(self,name):
-		self.__uuid = get_Node_UUid(name)
+		self._uuid = get_Node_UUid(name)
 	#----------------------------------------------------------------------
 	def __str__(self):
-		return get_Node_Path(self.__uuid)
+		return get_Node_Path(self._uuid)
+	#----------------------------------------------------------------------
+	def __str__(self):
+		return get_Node_Path(self._uuid)
 	#----------------------------------------------------------------------
 	def __get_name(self):
-		return unicode(get_Node_Name(self.__uuid))
+		return unicode(get_Node_Name(self._uuid))
 	#----------------------------------------------------------------------
 	name          = property(fget=__get_name)
 
@@ -1922,13 +1926,13 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		active_selection = none_To_List(cmds.selectedNodes( dagObjects=True))
 		if len(active_selection):
 			self.Top_Level_Node_Input.setText(active_selection[0])
-			Global_Access.Top_Level_Node = active_selection[0]
+			Global_Access.set_Top_Level_Node(active_selection[0])
 	#----------------------------------------------------------------------
 	def on_Top_Level_Input_Changed(self):
 		""""""
 		text_value = self.Top_Level_Node_Input.text()
 		if len(text_value) and cmds.objExists(text_value):
-			Global_Access.Top_Level_Node = text_value
+			Global_Access.set_Top_Level_Node(text_value)
 			self.Export_Button.setEnabled(True)
 		else:
 			self.Export_Button.setEnabled(False)
