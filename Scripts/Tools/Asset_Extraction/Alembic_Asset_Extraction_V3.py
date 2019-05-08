@@ -123,7 +123,7 @@ class Uuid_Named_Node(object):
 	def __str__(self):
 		return get_Node_Path(self._uuid)
 	#----------------------------------------------------------------------
-	def __str__(self):
+	def __repr___(self):
 		return get_Node_Path(self._uuid)
 	#----------------------------------------------------------------------
 	def __get_name(self):
