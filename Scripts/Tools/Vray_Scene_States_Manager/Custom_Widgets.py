@@ -841,6 +841,7 @@ class Remove_Asset_Command(QT.QUndoCommand):
 ########################################################################
 class Render_Layer_State_Combo_Box(QT.QComboBox):
 	""""""
+	Beauty_State,Matte_State,Invisible_State,Unassined_State = range(4)
 	#----------------------------------------------------------------------
 	def __init__(self,parent=None):
 		"""Constructor"""
@@ -867,6 +868,35 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 	@QT.Slot(int)
 	def _on_currentIndexChanged(self,index):
 		""""""
+		bad_parts = []
+		#----------------------------------------------------------------------
+		def apply_layer_ajustments(part,state):
+			part_node = part.data(Data_Roles.DATA_OBJECT)
+			linked_display_layer = part_node.plug_access.displayLayerLink.get_Source_Node()
+			
+			if linked_display_layer is None:
+				bad_parts.append(part_node.name)
+			else:
+				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				linked_display_layer.plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				
+				if state == self.Beauty_State:
+					part_adjs_data.apply_Beauty_Values()
+					part_adjs_data.set_visibility(1)
+					
+				elif state == self.Matte_State:
+					part_adjs_data.apply_Matte_Values()
+					part_adjs_data.set_visibility(1)
+					
+				elif state == self.Invisible_State:
+					part_adjs_data.apply_Invisible_Values()
+					part_adjs_data.set_visibility(1)
+
+				elif state == self.Unassined_State:
+					part_adjs_data.apply_Beauty_Values()
+					part_adjs_data.set_visibility(0)
+					
 		data = self.asset.Render_States.child(self.currentIndex()).data(Data_Roles.ITEM_DATA)
 		uid_value = data.data(Data_Roles.UUID)
 		self.render_layer_overide.value = uid_value
@@ -877,43 +907,49 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 			cmds.progressWindow(title="Applying State To Layer",progress=0, maxValue = count, status="Doing Stuff", isInterruptable=False)
 			
 			for part in data.Beauty_Parts:
-				part_node = part.data(Data_Roles.DATA_OBJECT)
-				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				part_adjs_data.apply_Beauty_Values()
-				part_adjs_data.set_visibility(1)
+				apply_layer_ajustments(part,self.Beauty_State)
+				#part_node = part.data(Data_Roles.DATA_OBJECT)
+				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				#part_adjs_data.apply_Beauty_Values()
+				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Matte_Parts:
-				part_node = part.data(Data_Roles.DATA_OBJECT)
-				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				part_adjs_data.apply_Matte_Values()
-				part_adjs_data.set_visibility(1)
+				apply_layer_ajustments(part,self.Matte_State)
+				#part_node = part.data(Data_Roles.DATA_OBJECT)
+				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				#part_adjs_data.apply_Matte_Values()
+				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Invisible_Parts:
-				part_node = part.data(Data_Roles.DATA_OBJECT)
-				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				part_adjs_data.apply_Invisible_Values()
-				part_adjs_data.set_visibility(1)
+				apply_layer_ajustments(part,self.Invisible_State)
+				#part_node = part.data(Data_Roles.DATA_OBJECT)
+				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				#part_adjs_data.apply_Invisible_Values()
+				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Unassined_Parts:
-				part_node = part.data(Data_Roles.DATA_OBJECT)
-				part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				part_adjs_data.apply_Beauty_Values()
-				part_adjs_data.set_visibility(0)
+				apply_layer_ajustments(part,self.Unassined_State)
+				#part_node = part.data(Data_Roles.DATA_OBJECT)
+				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
+				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
+				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
+				#part_adjs_data.apply_Beauty_Values()
+				#part_adjs_data.set_visibility(0)
 				cmds.progressWindow( edit=True, step=1)
 		except Exception as e:
 			cmds.confirmDialog( title='Rebuild Error', message="Rebuild Faild With Error "+ str(e))
 		finally:
+			if len(bad_parts):
+				cmds.confirmDialog( title='Rebuild Warning', message="The Fallowing Part Sets Has No Linked Display Layer So They Were Skiped\n{}\nFix This By Removing The Part Sets From The Master File Using The States Manager".format(",".join(bad_parts)))
 			cmds.progressWindow(endProgress=1)
 	#----------------------------------------------------------------------
 	def find_assignedState_adjustment(self):
