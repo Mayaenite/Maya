@@ -242,6 +242,7 @@ def perform_CleanUp():
 	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
 	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
 		maya.mel.eval(cmd)
+	cmds.delete(all=True,constructionHistory=True)
 
 #----------------------------------------------------------------------
 def names_To_MSelectionList(names):		
@@ -1428,7 +1429,10 @@ class Widget_Action_Assign_Shader_Engine_Members(Scan_Progress_Action_Widget):
 		members = []
 		for id_num in shader_data["assignment_ids"]:
 			members.append(Global_Access.Node_ID_Dict.get(id_num))
-		cmds.sets(members, edit=True, forceElement=shader)
+		try:
+			cmds.sets(members, edit=True, forceElement=shader)
+		except Exception as e:
+			om.MGlobal.displayWarning("There Was And Problem Assigning {} With an error message of {}".format(str(shader),e.message))
 
 	#----------------------------------------------------------------------
 	def run_Action(self):
