@@ -13,7 +13,7 @@ if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
 	except:
-		os.sys.path.append(r"C:\Program Files (x86)\Wing IDE 6.1")
+		os.sys.path.append(r"C:\Program Files (x86)\Wing IDE 7.0")
 		try:
 			import wingdbstub
 		except:
@@ -24,7 +24,7 @@ MAYA_BATCH             = cmds.about(b=True)
 MAYA_GUI               = False if MAYA_BATCH else True
 
 os.environ["MAYA_GUI"] = "1" if MAYA_GUI else "0"
-
+os.environ["MAYA_PLUG_IN_PATH"] = ";".join(os.environ.get("MAYA_PLUG_IN_PATH","").split(";")+[utilities.path_Builder(System_Paths._CODE_MAYA_PLUGINS,str(MAYA_VERSION)).replace("\\","/")])
 if MAYA_VERSION >= 2017:
 	os.environ["QT_PACKAGE"] = "PySide2"
 elif MAYA_VERSION >= 2013:

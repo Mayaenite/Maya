@@ -459,7 +459,52 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 		""""""
 		import Vg_EMI_Data_Extractor
 		Vg_EMI_Data_Extractor.dump_EIM_Data()
+	
+	#----------------------------------------------------------------------
+	@QT.QtSlot()
+	def Construst_Honda_Rebuild_Data(self):
+		""""""
+		if len(cmds.ls("*.hondaRebuildData")):
+			import Honda_Data_Parser
+		data = Honda_Data_Parser.build_Honda_MetaData()
+		for layer in data.trims.nodes:
+			if not cmds.objExists(layer.display_layer_name):
+				possable_options = [check for check in cmds.ls(typ="displayLayer") if layer.lower() in check.lower()]
+				cmds.inViewMessage( statusMessage='<hl>Can Not Reconstruct From Pickle Data\nBecause The Following Display Layer\nWas Not Found In The Scene\n"%s".' % (layer), fadeInTime=200, fadeOutTime=1000, fadeStayTime=3000,fontSize=20, pos='midCenter', fade=True )
+				cmds.error('Can Not Reconstruct From Pickle Data Because The Following Display Layer "%s" Was Not Found In The Scene\n possable options %s".' % (layer, ",".join(possable_options)) )
+				return
 		
+		self.Construct_From_Display_Layers()
+		self.sync_Display_Layers()
+		if len(self.asset_tree_view.selected_Items()):
+			asset_item = self.asset_tree_view.selected_Items()[0]
+		else:
+			asset_item = self.model.Assets.Children[0]
+		isinstance(asset_item, Custom_Widgets.Assets_Item)
+		for item in data.trims.collections:
+			isinstance(item, Honda_Data_Parser.Honda_Metadata_Trim_Collection)
+			if not item.eim_name.startswith("_RESET_ON"):
+				self.add_Render_State(name=item.eim_name)
+				# for rs in asset_item.Render_States.Children:
+				render_state = asset_item.Render_States.Children[-1]
+				isinstance(render_state, Custom_Widgets.Render_State_Item)
+				found_items = []
+				for name in item.get_Assigned_Display_Layers():
+					for ref in render_state.Unassined.Children:
+						try:
+							if ref._data.node.assinedDisplayLayer == name:
+								found_items.append(ref)
+								break
+						except:
+							pass
+			cmd = Custom_Widgets.Reparent_Items_Command(render_state.Beauty, found_items)
+			self.undo_stack.push(cmd)
+		# for rs in asset_item.Render_States.Children:
+			# for i, bp in enumerate(rs.Beauty.Children):
+				# if bp is not None:
+					# if bp.type() == 0:
+						# rs.Beauty.removeRow(bp.row())
+		self.sorted_proxy_model.sort()
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def Construst_From_Pickle_Data(self):

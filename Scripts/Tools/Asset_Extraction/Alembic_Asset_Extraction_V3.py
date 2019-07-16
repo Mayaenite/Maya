@@ -58,10 +58,13 @@ class Global_Access(object):
 	@classmethod
 	def Export_Alembic(cls):
 		""""""
+		if len(cmds.ls("*.BodyStyleTrim")) and len(cmds.ls("*.VVP_CATEGORY")):
+			import Scripts.Tools.Vray_Scene_States_Manager.Honda_Data_Parser
+			Scripts.Tools.Vray_Scene_States_Manager.Honda_Data_Parser.Store_Honda_MetaData(str(cls.Top_Level_Node))
 		if not cmds.pluginInfo( "AbcExport", query=True, loaded=True):
 			cmds.loadPlugin("AbcExport")
 		cmds.select(cls.Top_Level_Node)
-		cmds.AbcExport(jobArg='-frameRange 1 1 -attr AW_Extractor_ID -attr assined_display_layer -uvWrite -dataFormat HDF -eulerFilter -stripNamespaces -root %s -file %s' % (cls.Top_Level_Node,cls.Alembic_File_Path))
+		cmds.AbcExport(jobArg='-frameRange 1 1 -attr AW_Extractor_ID -attr hondaAssetId -attr hondaRebuildData -attr assined_display_layer -uvWrite -dataFormat HDF -eulerFilter -stripNamespaces -root %s -file %s' % (cls.Top_Level_Node,cls.Alembic_File_Path))
 	#----------------------------------------------------------------------
 	@classmethod
 	def Import_Alembic(cls):
@@ -1977,6 +1980,13 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		except:
 			pass
 		self.action_group_rebuild_data.run_Actions()
+		if len(cmds.ls("*.hondaRebuildData")):
+			import Scripts.Tools.Vray_Scene_States_Manager.Honda_Data_Parser
+			data = Scripts.Tools.Vray_Scene_States_Manager.Honda_Data_Parser.build_Honda_MetaData()
+			data.trims.create_Display_Layers()
+			import Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Manager
+			ui = Scripts.Tools.Vray_Scene_States_Manager.Vray_Scene_States_Manager.make_ui()
+			ui.Construst_Honda_Rebuild_Data()
 QT.ui_Loader.registerCustomWidget(Alembic_Asset_Extraction_GUI)
 
 #----------------------------------------------------------------------
