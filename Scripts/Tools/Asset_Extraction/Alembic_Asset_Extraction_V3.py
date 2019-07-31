@@ -1340,7 +1340,7 @@ class Widget_Action_Remove_Multiple_UV_Sets_From_Meshes(Fixed_Items_Progress_Act
 			if len(uv_sets) > 1:
 				try:
 					default_uv_set = cmds.getAttr(item+".uvSet[0].uvSetName")
-					print "trying"
+					#print "trying"
 
 					if not default_uv_set == "map1":
 						cmds.polyUVSet(item, rename=True, newUVSet='map1', uvSet=default_uv_set)
@@ -1353,7 +1353,7 @@ class Widget_Action_Remove_Multiple_UV_Sets_From_Meshes(Fixed_Items_Progress_Act
 							cmds.polyUVSet(item, delete=True, uvSet=uv_set)
 					self.spinbox.setValue(self.spinbox.value()+1)
 				except:
-					print "Failed"
+					#print "Failed"
 					pass
 			self.progressBar.add_Tick()
 
