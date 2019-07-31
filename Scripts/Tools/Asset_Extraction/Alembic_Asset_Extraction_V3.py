@@ -993,9 +993,12 @@ class Widget_Action_Fix_Non_Unique_Transform_Names(Fixed_Items_Progress_Action_W
 				new_base_name = name + base_sufix
 				for idnum,uid in enumerate(uids):
 					new_name       = new_base_name + str(idnum).zfill(4)
-					cmds.rename(get_Node_Path(uid),new_name,ignoreShape=True)
-					self.spinbox.setValue(self.spinbox.value()+1)
-					self.progressBar.add_Tick()
+					try:
+						cmds.rename(get_Node_Path(uid),new_name,ignoreShape=True)
+						self.spinbox.setValue(self.spinbox.value()+1)
+						self.progressBar.add_Tick()
+					except:
+						om.MGlobal.displayWarning("Could Not Unlock {}".format(get_Node_Path(uid)))
 		else:
 			self.progressBar.set_Progress_Message("Making Names Unique",100,True)
 			self.progressBar.setValue(100)
@@ -1845,14 +1848,14 @@ class Alembic_Asset_Extraction_GUI(MayaQWidgetBaseMixin,_CODE_COMPLEATION_HELPER
 		self.wig_action_Remove_NameSpaces                                 = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove NameSpaces", Widget_Action_Remove_NameSpaces)
 		self.wig_action_Remove_Unknown_Nodes                              = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Unknown Nodes", Widget_Action_Remove_Unknown_Nodes)
 		self.wig_action_Remove_Unknown_Plugins                            = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Unknown Plugins", Widget_Action_Remove_Unknown_Plugins)
+		self.wig_action_Unlock_Dag_Objects                                = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Dag Objects", Widget_Action_Unlock_Dag_Objects)
+		self.wig_action_Unlock_Transform_Attributes                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Transform Attributes", Widget_Action_Unlock_Transform_Attributes)
 		self.wig_action_Fix_Shape_Nodes_With_No_Geo                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Shapes With No Geo", Widget_Action_Fix_Shape_Nodes_With_No_Geo)
 		self.wig_action_Action_Delete_Constraint                          = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Constraints", Widget_Action_Delete_Constraint)
 		self.wig_action_Action_Delete_Animation_Curves                    = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Delete Animation Curves", Widget_Action_Delete_Animation_Curves)
 		self.wig_action_Fix_Bad_Unicode_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix Bad Unicode Names", Widget_Action_Fix_Illegal_Unicode_Names)
 		self.wig_action_Fix_Non_Unique_Transform_Names                    = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix Non Unique Transform Names", Widget_Action_Fix_Non_Unique_Transform_Names)
 		self.wig_action_Fix_PolySurface_Node_Names                        = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Fix PolySurface Names", Widget_Action_Fix_PolySurface_Node_Names)
-		self.wig_action_Unlock_Dag_Objects                                = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Dag Objects", Widget_Action_Unlock_Dag_Objects)
-		self.wig_action_Unlock_Transform_Attributes                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Unlock Transform Attributes", Widget_Action_Unlock_Transform_Attributes)
 		self.wig_action_Break_Attribute_Connections                       = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Break Connections", Widget_Action_Break_Attribute_Connections)
 		self.wig_action_Fix_Bad_Intermediate_Objects                      = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Remove Intermediate Objects", Widget_Action_Remove_Intermediate_Objects)
 		self.wig_action_Fix_Disassembling_Joint_Hierarchy                 = self.action_group_Extraction_Fixing_And_Standedize.add_Widget_Action("Disassembling Joint Hierarchy", Widget_Action_Disassembling_Joint_Hierarchy)
