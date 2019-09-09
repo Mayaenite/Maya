@@ -183,7 +183,7 @@ class Overides_Container(yaml.YAMLObject):
 		isinstance(self.parent, Render_State)
 	#----------------------------------------------------------------------
 	def __repr__(self):
-		return "%s(links=%r,parent=%r))" % (self.__class__.__name__, self.links, self.parent)
+		return "%s(links=%r,parent=%r))" % (self.__class__.__name__, self.links, self.parent.name)
 
 ########################################################################
 class Beauty_Overides(Overides_Container):
@@ -304,7 +304,184 @@ class Config_Data(yaml.YAMLObject):
 			
 					for link in render_state_item.Unassined.links:
 						cmds.setAttr(link.maya_node.assinedDisplayLayer+".visibility",0)
-	
+
+########################################################################
+class Yaml_Differences_Data(object):
+	"""Used To Compare And Store Data From 2 Different State Manager Yaml Data Files"""
+
+	def __init__(self,old_yaml,new_yaml):
+		"""Constructor"""
+		self.old_yaml         = old_yaml
+		self.new_yaml         = new_yaml
+		self.added_render_states   = []
+		self.added_part_sets       = []
+		self.changed_render_states = []
+
+		self.old_render_states     = dict()
+		self.old_part_sets         = dict()
+		self.new_render_states     = dict()
+		self.new_part_sets         = dict()
+		self.render_state_Changes  = dict()
+
+		self._Run_Data_Collection()
+
+		for changed_state in self.changed_render_states:
+			self.render_state_Changes[changed_state[0].name] = self.get_Render_State_Changes(changed_state[0], changed_state[1])
+
+	#----------------------------------------------------------------------
+	def _Run_Data_Collection(self):
+		""""""
+
+		# The Fallowing Code Is For Collection Of Data
+
+		# Scan Over The Assets Of The Old Yaml Data
+		for old_asset in self.old_yaml.Assets.items:
+
+			# Scan Over The Render States Of The Old Yaml Data
+			for old_render_state in old_asset.Render_States.states:
+				# Collect The Render State as its name
+				self.old_render_states[old_render_state.name] = old_render_state
+
+			# Scan Over The Part Sets Of The Old Yaml Data
+			for old_part_set in old_asset.Part_Sets.parts:
+				# Collect The Part Set as its name
+				self.old_part_sets[old_part_set.name] = old_part_set
+
+		# Scan Over The Assets Of The New Yaml Data
+		for new_asset in self.new_yaml.Assets.items:
+
+			# Scan Over The Render States Of The New Yaml Data
+			for new_render_state in new_asset.Render_States.states:
+				# Collect The Render State as its name
+				self.new_render_states[new_render_state.name] = new_render_state
+
+			# Scan Over The Part Sets Of The Old Yaml Data
+			for new_part_set in new_asset.Part_Sets.parts:
+				# Collect The Part Set as its name
+				self.new_part_sets[new_part_set.name] = new_part_set
+
+
+		# The Fallowing Code Is For Collection Of Added Data
+
+		# Scan Over The New Yaml Render State And Check If
+		# It Does Not Exist in the old Yaml Render States
+		for new_render_state in self.new_render_states:
+			# Get The Data For The interation key
+			new_render_state = self.new_render_states[new_render_state]
+			# Check If The Old Render States Contains A Item 
+			# With The Same Name As This New Render State 
+			if not new_render_state.name in self.old_render_states:
+				# If It Does Not Then A New State Was Found
+				self.added_render_states.append(new_render_state)
+
+		# Scan Over The New Yaml Part Sets And Check If
+		# It Does Not Exist in the old Yaml Part Sets
+		for new_part_set in self.new_part_sets:
+			# Get The Data For The interation key
+			new_part_set = self.new_part_sets[new_part_set]
+			# Check If The Old Part Sets Contains A Item 
+			# With The Same Name As This New Part Set 
+			if not new_part_set.name in self.old_part_sets:
+				# If It Does Not Then A Part Set Was Found
+				self.added_part_sets.append(new_part_set)
+
+
+		# The Fallowing Code Is For Collection Of Changed Data
+
+		# Scan Over The Old Render States
+		for old_render_state in self.old_render_states:
+			# Get The Data For The interation key
+			old_render_state = self.old_render_states[old_render_state]
+			# Check new render state with the same name as the old render state
+			if old_render_state.name in self.new_render_states:
+				# Get The Data For The interation key
+				new_render_state = self.new_render_states[old_render_state.name]
+
+				# This Will Store The Names Of All The Parts Sets That Have Been Linked To Old Render State
+				old_render_state_assignments = []
+				new_render_state_assignments = []
+
+				# Iterate Over Off The Different Assinment Containes Of The Old Render State
+				for container in [old_render_state.Beauty,old_render_state.Invisible,old_render_state.Matte]:
+					# Iterate Over The Part Sets Linked To The Container
+					for link in container.links:
+						# Collect Its Name For Layer use
+						old_render_state_assignments.append(link.name)
+
+				# Iterate Over Off The Different Assinment Containes Of The Old Render State
+				for container in [new_render_state.Beauty,new_render_state.Invisible,new_render_state.Matte]:
+					# Iterate Over The Part Sets Linked To The Container
+					for link in container.links:
+						# Collect Its Name For Layer use
+						new_render_state_assignments.append(link.name)
+
+				# The Scan To Deeper Then 1 A Single Break will not work so this will be used to break for full loop
+				do_brake = False
+				# Iterate Over Off The Different Assinment Containes Of The New Render State
+				for container in [new_render_state.Beauty,new_render_state.Invisible,new_render_state.Matte]:
+					# Iterate Over The Part Sets Linked To The Container
+					for link in container.links:
+						# Check If This Part Set Name Is In The list Collected From The Old Render State
+						if not link.name in old_render_state_assignments:
+							# If Not Then There Is Some Kind Of Differencs BeTween The 2 
+							self.changed_render_states.append([old_render_state,new_render_state])
+							# Set This So loop before this also knows To Stop
+							do_brake = True
+							break
+					if do_brake:
+						break
+
+				# The Scan To Deeper Then 1 A Single Break will not work so this will be used to break for full loop
+				do_brake = False
+				# Iterate Over Off The Different Assinment Containes Of The New Render State
+				for container in [old_render_state.Beauty,old_render_state.Invisible,old_render_state.Matte]:
+					# Iterate Over The Part Sets Linked To The Container
+					for link in container.links:
+						# Check If This Part Set Name Is In The list Collected From The Old Render State
+						if not link.name in new_render_state_assignments:
+							# If Not Then There Is Some Kind Of Differencs BeTween The 2
+							if not link.name in [old_render_state,new_render_state]  in self.changed_render_states:
+								self.changed_render_states.append([old_render_state,new_render_state])
+							# Set This So loop before this also knows To Stop
+							do_brake = True
+							break
+					if do_brake:
+						break
+
+	#----------------------------------------------------------------------
+	def get_Render_State_Changes(self,old,new):
+		isinstance(old,Scripts.Tools.Vray_Scene_States_Manager.Yaml_Config_Data.Render_State)
+		isinstance(new,Scripts.Tools.Vray_Scene_States_Manager.Yaml_Config_Data.Render_State)
+
+		Beauty_Res    = dict(Added=[],Removed=[])
+		Invisible_Res = dict(Added=[],Removed=[])
+		Matte_Res     = dict(Added=[],Removed=[])
+		data_keys     = ["Beauty","Invisible","Matte"]
+		res           = dict(Beauty=Beauty_Res,Invisible=Invisible_Res,Matte=Matte_Res)
+
+		# Make A list of containes for each of the states
+		old_containers = [old.Beauty,old.Invisible,old.Matte]
+		new_containers = [new.Beauty,new.Invisible,new.Matte]
+		# scan over a new and the equal old container
+		for old_container,new_container,data_key in zip(old_containers, new_containers, data_keys):
+
+			# This Will Store The Names Of All The Parts Sets That Have Been Linked To Old Render State
+			old_container_assignments = [link.name for link in old_container.links]
+			new_container_assignments = [link.name for link in new_container.links]
+
+			# Get The dict that we will be adding the changes to 
+			key_data = res[data_key]
+			# Iterate Over The Part Sets Linked To The New Container
+			for link in new_container.links:
+				if not link.name in old_container_assignments:
+					key_data["Added"].append(link)
+
+			# Iterate Over The Part Sets Linked To The New Container
+			for link in old_container.links:
+				if not link.name in new_container_assignments:
+					key_data["Removed"].append(link)
+		return res
+
 #----------------------------------------------------------------------
 def save_config_data_to_file(data, file_path):
 	""""""

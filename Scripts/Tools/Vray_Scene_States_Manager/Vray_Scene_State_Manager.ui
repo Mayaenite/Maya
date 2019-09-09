@@ -761,7 +761,7 @@ To Invisible</string>
      <x>0</x>
      <y>0</y>
      <width>929</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuItems">
@@ -795,8 +795,20 @@ To Invisible</string>
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuYaml_Data">
+     <property name="title">
+      <string>Yaml Data</string>
+     </property>
+     <addaction name="actionExport_To_Temp"/>
+     <addaction name="separator"/>
+     <addaction name="actionUpdate_From_Temp"/>
+     <addaction name="separator"/>
+     <addaction name="actionOveride_From_Temp"/>
+    </widget>
     <addaction name="actionSave"/>
     <addaction name="actionLoad"/>
+    <addaction name="separator"/>
+    <addaction name="menuYaml_Data"/>
    </widget>
    <widget class="QMenu" name="menuViewport_Settings">
     <property name="enabled">
@@ -924,6 +936,24 @@ To Invisible</string>
   <action name="actionRemove_Empty_Part_Sets">
    <property name="text">
     <string>Remove Empty Part Sets</string>
+   </property>
+  </action>
+  <action name="actionExport_To_Temp">
+   <property name="text">
+    <string>Export To Temp</string>
+   </property>
+  </action>
+  <action name="actionUpdate_From_Temp">
+   <property name="text">
+    <string>Update From Temp</string>
+   </property>
+  </action>
+  <action name="actionOveride_From_Temp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Overide From Temp</string>
    </property>
   </action>
  </widget>

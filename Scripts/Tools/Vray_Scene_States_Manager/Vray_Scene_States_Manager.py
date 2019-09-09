@@ -171,6 +171,8 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 		self.Assign_Selected_To_Invisible_Parts_Button.clicked.connect(self.Multi_State_Invisible_Assinment)
 		self.Assign_Selected_To_Beauty_Parts_Button.clicked.connect(self.Multi_State_Beauty_Assinment)
 		self.Unassign_Selected_Parts_Button.clicked.connect(self.Multi_State_Unassined_Assinment)
+		self.actionExport_To_Temp.triggered.connect(self.save_Yaml_Data_To_File)
+		self.actionUpdate_From_Temp.triggered.connect(self.update_States_From_File)
 		isinstance(self, Compiled_Vray_Scene_State_Manager.Ui_Vray_Scene_State_Manager)
 		self.asset_tree_view.selected_Items
 		if cmds.objExists("VG_Model_BuilderScriptNode"):
@@ -355,7 +357,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 		return self.asset_tree_view.add_New_Render_State(name=name)
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
-	def open_File(self):
+	def open_File(self,filePath=None):
 		""""""
 		if _maya_check:
 			self.Load_Temp_yaml()
@@ -363,17 +365,118 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 			#self.Update_On_Render_State_Selection_Changed(self.model.Render_States.child(0).index())
 			#self.undo_stack.clear()
 	#----------------------------------------------------------------------
-	@QT.QtSlot()
-	def save_File_As(self):
+	def save_Yaml_Data_To_File(self,filePath=None):
 		""""""
 		if _maya_check:
-			value = self.model.to_Yaml()
+			if filePath is None:
+				filePath = os.path.join(os.environ["Temp"],"Temp_State_Manager_Data.yaml")
+			data = self.model.to_Yaml_Object()
+			Custom_Widgets.Yaml_Config_Data.save_config_data_to_file(data, filePath)
+	#----------------------------------------------------------------------
+	def open_Yaml_Data_From_File(self,filePath=None):
+		""""""
+		if _maya_check:
+			if filePath is None:
+				filePath = os.path.join(os.environ["Temp"],"Temp_State_Manager_Data.yaml")
+			data = Custom_Widgets.Yaml_Config_Data.load_config_data_from_file(filePath)
+			return data
+	#----------------------------------------------------------------------
+	def update_States_From_File(self,filePath=None):
+		""""""
+		new_yaml_data     = self.open_Yaml_Data_From_File(filePath)
+		current_yaml_data = self.model.to_Yaml_Object()
+		differences_data = Custom_Widgets.Yaml_Config_Data.Yaml_Differences_Data(current_yaml_data, new_yaml_data)
+		output_Log = ""
+		
+		output_Log += "New Render States \n"
+		
+		for added_state in differences_data.added_render_states:
+			
+			output_Log += "\t{}\n".format(added_state.name)
+			
+			found_states = self.model.Assets.find_Render_States_By_Name(added_state.name)
+			
+			if not len(found_states):
+				new_state = self.add_Render_State(added_state.name)
+			else:
+				new_state = found_states[0]
+			
+			added_state_containers = [added_state.Beauty,added_state.Matte,added_state.Invisible]
+			new_state_containers   = [new_state.Beauty,new_state.Matte,new_state.Invisible]
+			
+			for added_state_container,new_state_container in zip(added_state_containers,new_state_containers):
+				refs = []
+				for link in added_state_container.links:
+					child_search = new_state.Unassined.find_child_items(link.name)
+					if len(child_search):
+						child = child_search[0]
+						refs.append(child)
+				if len(refs):
+					cmd = Custom_Widgets.Reparent_Items_Command(new_state_container, refs)
+					self.undo_stack.push(cmd)
+		
+		output_Log += "\n"
+		output_Log += "Render State Changes\n"
+		output_Log += "\n"
+		for changed_state in differences_data.render_state_Changes:
+			
+			found_states = self.model.Assets.find_Render_States_By_Name(changed_state)
+		
+			if len(found_states):
+				
+				output_Log += "\t{}\n".format(changed_state)
+				
+				render_state       = found_states[0]
+				changed_state_data = differences_data.render_state_Changes[changed_state]
+				Beauty_changes     = changed_state_data["Beauty"]
+				Matte_changes      = changed_state_data["Matte"]
+				Invisible_changes  = changed_state_data["Invisible"]
+				container_names    = ["Beauty","Matte","Invisible"]
+				change_containers  = [Beauty_changes,Matte_changes,Invisible_changes]
+				state_containers   = [render_state.Beauty,render_state.Matte,render_state.Invisible]
+		
+			for change_container,state_container,container_name in zip(change_containers,state_containers,container_names):
+				added_parts   = change_container['Added']
+				removed_parts = change_container['Removed']
+		
+				added_ref   = []
+				removed_ref = []
+		
+				for part in added_parts:
+					child_search = render_state.Unassined.find_child_items(part.name)
+					if len(child_search):
+						child = child_search[0]
+						added_ref.append(child)
+		
+				for part in removed_parts:
+					child_search = state_container.find_child_items(part.name)
+					if len(child_search):
+						child = child_search[0]
+						removed_ref.append(child)
+		
+				if len(added_ref):
+					
+					output_Log += "\t\tAdded Part Sets To {} State\n".format(container_name)
+					for part in added_ref:
+						output_Log += "\t\t\t{}\n".format(part.Text)
+						
+					cmd = Custom_Widgets.Reparent_Items_Command(state_container, added_ref)
+					self.undo_stack.push(cmd)
+		
+				if len(removed_ref):
+					output_Log += "\t\tRemoved Part Sets From {} State\n".format(container_name)
+					for part in removed_ref:
+						output_Log += "\t\t\t{}\n".format(part.Text)
+						
+					cmd = Custom_Widgets.Reparent_Items_Command(render_state.Unassined, removed_ref)
+					self.undo_stack.push(cmd)
+				output_Log += "\n"
+		print(output_Log)
 	#----------------------------------------------------------------------
 	def show(self):
 		super(Vray_Scene_States_Manager_MainWindow, self).show()
 		if self._Enable_Model_Editor:
 			self.Model_Editor.m_editor.widget.show()
-	
 	#----------------------------------------------------------------------
 	@QT.QtSlot()
 	def Save(self):

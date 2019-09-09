@@ -4774,7 +4774,8 @@ class Vray_Scene_State_Manager_Item_Model(QStandardItemModel):
 		if data != None:
 			self.setRowCount(0)
 			self.Assets = Assets_Item(yaml=data.Assets)
-			self.appendRow(self.Assets)
+			parentItem           = self.invisibleRootItem()
+			parentItem.appendRow(self.Assets)
 		self.scan_for_Master_Render_States()
 	#----------------------------------------------------------------------
 	def make_yaml_Data(self):
@@ -4782,7 +4783,7 @@ class Vray_Scene_State_Manager_Item_Model(QStandardItemModel):
 	
 	#----------------------------------------------------------------------
 	def load_temp_yaml_Data(self):
-		data = Yaml_Config_Data.load_config_data("C:\yaml_temp\Temp.yaml")
+		data = Yaml_Config_Data.load_config_data_from_file("C:\yaml_temp\Temp.yaml")
 		self.from_Yaml_Object(data)
 		
 	#----------------------------------------------------------------------
