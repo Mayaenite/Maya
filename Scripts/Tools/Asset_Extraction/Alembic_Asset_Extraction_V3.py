@@ -21,6 +21,8 @@ class Global_Access(object):
 	Json_Data         = {}
 	Node_ID_Dict    = {}
 	Top_Level_Node    = None
+	if not cmds.pluginInfo("AbcExport", q=True,loaded=True,):
+		cmds.loadPlugin("AbcExport")
 	#----------------------------------------------------------------------
 	@classmethod
 	def load_Json_Data(cls):
@@ -139,6 +141,7 @@ class Uuid_Named_Node(object):
 def start_Recording_History_File():
 	""""""
 	if os.path.exists(Global_Access.Mesh_Cleanup_Log):
+		stop_Recording_History_File()
 		os.remove(Global_Access.Mesh_Cleanup_Log)
 	cmds.scriptEditorInfo(writeHistory=True,historyFilename=Global_Access.Mesh_Cleanup_Log)
 	Global_Access.Mesh_Cleanup_Log = cmds.scriptEditorInfo(q=True,historyFilename=True)
