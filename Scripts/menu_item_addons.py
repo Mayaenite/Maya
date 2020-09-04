@@ -22,7 +22,7 @@ def Add_Custom_Menu_Items():
 	
 	aw_HOT_PIVOT_ACTION  = cmds.menuItem( annotation="Reset The Selected Trasform Matrix", command='aw_HOT_PIVOT_ACTION;', image="menuIconModify.png", label="HOT PIVOT ACTION", version="2018", parent=Modify_Menu, sourceType="mel")
 	SelLocatorItem       = cmds.menuItem( annotation="Select All Locator Transforms", command='cmds.select(cmds.listRelatives(cmds.ls(typ="locator"),parent=True,typ="transform",fullPath=True))', image="locator.png", label="Locators", version="2018", parent=Select_All_By_Type_MenuItem, sourceType="python")
-	open_asset_views_gui = cmds.menuItem( annotation="Asset Views UI", command='try:\n\tDML_Tools.Maya.Maya_Tools.Asset_Views.build_GUI()\nexcept:\n\timport DML_Tools.Maya.Maya_Tools.Asset_Views\n\tDML_Tools.Maya.Maya_Tools.Asset_Views.build_GUI()', label="DML Asset Views", version="2018", parent=main_Window_Menu, sourceType="python")
+	#open_asset_views_gui = cmds.menuItem( annotation="Asset Views UI", command='try:\n\tDML_Tools.Maya.Maya_Tools.Asset_Views.build_GUI()\nexcept:\n\timport DML_Tools.Maya.Maya_Tools.Asset_Views\n\tDML_Tools.Maya.Maya_Tools.Asset_Views.build_GUI()', label="DML Asset Views", version="2018", parent=main_Window_Menu, sourceType="python")
 	
 #----------------------------------------------------------------------
 def find_UI_By_Name(name):
