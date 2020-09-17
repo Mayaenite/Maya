@@ -128,8 +128,13 @@ def nameToNodePlug( attrName, node , index=-1):
 	
 	if len(child_parts):
 		for i in range(plug.numChildren()):
-			if plug.child(i).name().endswith(child_parts):
-				return plug.child(i)
+			# try added because even though it says there is childern the childern might not exist yet
+			try:
+				if plug.child(i).name().endswith(child_parts):
+					return plug.child(i)
+			except RuntimeError:
+				break
+				
 	return plug
 
 #----------------------------------------------------------------------
