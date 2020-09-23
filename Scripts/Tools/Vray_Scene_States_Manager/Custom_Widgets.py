@@ -880,7 +880,7 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 			self.setStyleSheet("color: rgb(255, 0, 0);")
 		else:
 			self.setStyleSheet("")
-	
+		self.parentWidget().parentWidget().parentWidget().parentWidget().do_states_scan()
 	#----------------------------------------------------------------------
 	def do_layer_ajustments(self):
 		bad_parts = []
@@ -1020,7 +1020,14 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 			cmds.confirmDialog( title='=Window Could Not Be Built', message="Faild With Error "+ str(e))
 		finally:
 			cmds.progressWindow(endProgress=1)
-			
+	#----------------------------------------------------------------------
+	def do_states_scan(self):
+		""""""
+		for wig in self.RLSA_wigs:
+			if not wig.Render_States_CBX.styleSheet() == "":
+				self.buttonBox.button(self.buttonBox.StandardButton.Close).setEnabled(False)
+				return
+		self.buttonBox.button(self.buttonBox.StandardButton.Close).setEnabled(True)
 	#----------------------------------------------------------------------
 	def _run_apply_button(self):
 		""""""
@@ -1028,6 +1035,7 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 			if not wig.Render_States_CBX.styleSheet() == "":
 				wig.Render_States_CBX.do_layer_ajustments()
 		button = self.buttonBox.button(self.buttonBox.StandardButton.Close)
+		button.setEnabled(True)
 		button.click()
 ########################################################################
 class Asset_States_ComboBox(QComboBox):
