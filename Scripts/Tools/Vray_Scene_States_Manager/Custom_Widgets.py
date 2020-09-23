@@ -846,6 +846,7 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 	def __init__(self,parent=None):
 		"""Constructor"""
 		super(Render_Layer_State_Combo_Box,self).__init__(parent=parent)
+		self._orignal_state = None
 	#----------------------------------------------------------------------
 	def _init(self,render_layer,asset):
 		""""""
@@ -858,16 +859,30 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 		self.render_layer_node    = self.render_layer.data(Data_Roles.DATA_OBJECT)
 		self.render_layer_overide = self.find_assignedState_adjustment()
 		lookups = self.asset.Render_States.find_Child_By_UUID(self.render_layer_overide.value)
+		self.render_layer_overide.value
 		if not len(lookups):
 			current_state = self.asset.Render_States.Children[0]
 		else:
 			current_state = lookups[0]
+		
+		self._orignal_state = current_state
 		self.setCurrentIndex(current_state.Index.row())
 		self.currentIndexChanged.connect(self._on_currentIndexChanged)
 	#----------------------------------------------------------------------
 	@QT.Slot(int)
 	def _on_currentIndexChanged(self,index):
 		""""""
+		data = self.asset.Render_States.child(self.currentIndex()).data(Data_Roles.ITEM_DATA)
+		uid_value = data.data(Data_Roles.UUID)
+		self.render_layer_overide.value = uid_value
+		lookups = self.asset.Render_States.find_Child_By_UUID(self.render_layer_overide.value)
+		if len(lookups) and not lookups[0].uid == self._orignal_state.uid:
+			self.setStyleSheet("color: rgb(255, 0, 0);")
+		else:
+			self.setStyleSheet("")
+	
+	#----------------------------------------------------------------------
+	def do_layer_ajustments(self):
 		bad_parts = []
 		#----------------------------------------------------------------------
 		def apply_layer_ajustments(part,state):
@@ -892,14 +907,11 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 				elif state == self.Invisible_State:
 					part_adjs_data.apply_Invisible_Values()
 					part_adjs_data.set_visibility(1)
-
+	
 				elif state == self.Unassined_State:
 					part_adjs_data.apply_Beauty_Values()
 					part_adjs_data.set_visibility(0)
-					
 		data = self.asset.Render_States.child(self.currentIndex()).data(Data_Roles.ITEM_DATA)
-		uid_value = data.data(Data_Roles.UUID)
-		self.render_layer_overide.value = uid_value
 		isinstance(data,Render_State_Item)
 		#maxValue = len(data.get)
 		try:
@@ -908,43 +920,20 @@ class Render_Layer_State_Combo_Box(QT.QComboBox):
 			
 			for part in data.Beauty_Parts:
 				apply_layer_ajustments(part,self.Beauty_State)
-				#part_node = part.data(Data_Roles.DATA_OBJECT)
-				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				#part_adjs_data.apply_Beauty_Values()
-				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Matte_Parts:
 				apply_layer_ajustments(part,self.Matte_State)
-				#part_node = part.data(Data_Roles.DATA_OBJECT)
-				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				#part_adjs_data.apply_Matte_Values()
-				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Invisible_Parts:
 				apply_layer_ajustments(part,self.Invisible_State)
-				#part_node = part.data(Data_Roles.DATA_OBJECT)
-				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				#part_adjs_data.apply_Invisible_Values()
-				#part_adjs_data.set_visibility(1)
 				cmds.progressWindow( edit=True, step=1)
 				
 			for part in data.Unassined_Parts:
 				apply_layer_ajustments(part,self.Unassined_State)
-				#part_node = part.data(Data_Roles.DATA_OBJECT)
-				#part_node.apply_Scene_State_Overides(layer=self.render_layer_node.name)
-				#part_node.plug_access.displayLayerLink.get_Source_Node().plug_access.visibility.enable_Render_Layer_Overide(layer=self.render_layer_node.name)
-				#part_adjs_data = part_node.get_Adjustment_For_Render_Layer(self.render_layer_node.name)
-				#part_adjs_data.apply_Beauty_Values()
-				#part_adjs_data.set_visibility(0)
 				cmds.progressWindow( edit=True, step=1)
+				
 		except Exception as e:
 			cmds.confirmDialog( title='Rebuild Error', message="Rebuild Faild With Error "+ str(e))
 		finally:
@@ -1006,8 +995,10 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 	def _runsetup(self,model):
 		isinstance(model,Vray_Scene_State_Viewer_Item_Model)
 		self._model = model
+		self.RLSA_wigs = []
 		count = self._get_Progress_Bar_Max()
-		
+		self.apply_button = self.buttonBox.button(self.buttonBox.StandardButton.Apply)
+		self.apply_button.clicked.connect(self._run_apply_button)
 		cmds.progressWindow(title="Building Window",progress=0, maxValue = count, status="Doing Stuff", isInterruptable=False)
 		try:
 			for x,ref in enumerate(self._model.File_References.Children):
@@ -1021,6 +1012,7 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 							RLSA_wig.Render_States_CBX._init(rl, asset)
 							RLSA_wig.Render_Layer_Label.setText(rl._data.name)
 							wig.verticalLayout.addWidget(RLSA_wig)
+							self.RLSA_wigs.append(RLSA_wig)
 						cmds.progressWindow( edit=True, step=1)
 						
 					self.gridLayout.addWidget(wig, i, x, 1, 1)
@@ -1028,7 +1020,15 @@ class Render_Layer_State_Assignment(Render_Layer_State_Assignment_CODE_COMPLEATI
 			cmds.confirmDialog( title='=Window Could Not Be Built', message="Faild With Error "+ str(e))
 		finally:
 			cmds.progressWindow(endProgress=1)
-	
+			
+	#----------------------------------------------------------------------
+	def _run_apply_button(self):
+		""""""
+		for wig in self.RLSA_wigs:
+			if not wig.Render_States_CBX.styleSheet() == "":
+				wig.Render_States_CBX.do_layer_ajustments()
+		button = self.buttonBox.button(self.buttonBox.StandardButton.Close)
+		button.click()
 ########################################################################
 class Asset_States_ComboBox(QComboBox):
 	def __init__(self, asset, parent=None):
