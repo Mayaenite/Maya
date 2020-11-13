@@ -6,7 +6,11 @@ import Scripts
 if os.environ.has_key("AW_GLOBAL_SYSTEMS"):
 	if not os.environ["AW_GLOBAL_SYSTEMS"] in os.sys.path:
 		os.sys.path.append(os.environ["AW_GLOBAL_SYSTEMS"])
-
+else:
+	this_dir = os.path.dirname(__file__)
+	global_systems_directory = os.path.realpath(this_dir+"/../../Global_Systems")
+	if os.path.exists(global_systems_directory) and not global_systems_directory in os.sys.path:
+		os.sys.path.append(global_systems_directory)
 from Environment_Access import System_Paths, System_Settings, utilities
 
 if System_Settings.USE_WING_DEBUG:
