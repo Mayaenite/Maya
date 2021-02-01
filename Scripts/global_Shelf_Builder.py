@@ -360,6 +360,17 @@ def Build_DataPrep_Tools(shelfName):
 	          ,style      = "iconOnly"
 	          ,command    = "aw_Poly_Unite_RTC"
 	          ,sourceType = "mel" )	
+	# AW Shader Switch Builder
+	cmds.shelfButton(parent=active_shelf
+	                 ,annotation = ""
+					 ,imageOverlayLabel = "SSB"
+	                 ,label      = "Shader Switch Builder"
+	                  ,image      = "pythonFamily.png"
+	                  ,image1     = "pythonFamily.png"
+	          ,style      = "iconOnly"
+	          ,command    = "aw_make_switch_builder_window"
+	          ,sourceType = "mel" )
+
 def Build_Artist_Tools(shelfName):
 	active_shelf = shelfName
 	removeShelfTab(active_shelf)

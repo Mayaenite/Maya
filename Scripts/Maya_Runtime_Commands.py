@@ -376,7 +376,25 @@ def Show_Layer_By_Expression_Name():
 	""""""
 	Show_Layer_By_Expression_Class()
 
+def Make_Switch_Builder_Window():
+	def Shader_Switch_Builder_Data_Apply(*args):
+		import DML_Tools.DML_Maya.Maya_Tools.Render_Layer_Shading_Assignments.Build_Assignment_Data
+		DML_Tools.DML_Maya.Maya_Tools.Render_Layer_Shading_Assignments.Build_Assignment_Data.Apply_Switch_Data()
+	
+	def Shader_Switch_Data_Builder_Collect(*args):
+		import DML_Tools.DML_Maya.Maya_Tools.Render_Layer_Shading_Assignments.Build_Assignment_Data
+		DML_Tools.DML_Maya.Maya_Tools.Render_Layer_Shading_Assignments.Build_Assignment_Data.collect_Render_Layers_Geo_Switch_Data()
+		
+	cmds.window( width=150 )
+	cmds.columnLayout( adjustableColumn=True )
+	cmds.button( label='Collect Shader Data', command=Shader_Switch_Data_Builder_Collect )
+	cmds.button( label='Apply Shader Data', command=Shader_Switch_Builder_Data_Apply )
+	cmds.showWindow()
+
 aw_hub_check_Ctr1_Hotkey()
+
+cmds.runTimeCommand("aw_make_switch_builder_window", annotation="", command=__name__+".Make_Switch_Builder_Window()", category="User", commandLanguage="python", default=True)
+
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("5", annotation="Sets The Color Of All The Display Layers Randomly", command=__name__+".randomize_Display_Layer_Colors()", category="User", commandLanguage="python", default=True)
