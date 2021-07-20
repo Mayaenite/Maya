@@ -13,11 +13,13 @@ else:
 		os.sys.path.append(global_systems_directory)
 from Environment_Access import System_Paths, System_Settings, utilities
 
+
+os.environ["XBMLANGPATH"] = os.path.realpath(this_dir+"/icons")
 if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
 	except:
-		os.sys.path.append(r"C:\Program Files (x86)\Wing IDE 7.0")
+		os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 7.2")
 		try:
 			import wingdbstub
 		except:
