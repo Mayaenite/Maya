@@ -13,8 +13,11 @@ else:
 		os.sys.path.append(global_systems_directory)
 from Environment_Access import System_Paths, System_Settings, utilities
 
-
-os.environ["XBMLANGPATH"] = os.path.realpath(this_dir+"/icons")
+if "XBMLANGPATH" in os.environ:
+	os.environ["XBMLANGPATH"] = os.environ["XBMLANGPATH"] + ";" + os.path.realpath(this_dir+"/icons")
+else:
+	os.environ["XBMLANGPATH"] = os.path.realpath(this_dir+"/icons")
+	
 if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
