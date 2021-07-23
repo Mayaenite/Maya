@@ -390,10 +390,21 @@ def Make_Switch_Builder_Window():
 	cmds.button( label='Collect Shader Data', command=Shader_Switch_Data_Builder_Collect )
 	cmds.button( label='Apply Shader Data', command=Shader_Switch_Builder_Data_Apply )
 	cmds.showWindow()
+	
+#----------------------------------------------------------------------
+def Make_Auto_Shader_Assignment_Window():
+	""""""
+	for ui_name in sorted(cmds.lsUI( dumpWidgets=True, )):
+		if ui_name == ("Main_Window"):
+			cmds.deleteUI(ui_name,window=True)
+	
+	import DML_Tools.DML_Applications.Auto_Shader_Assignment.Loader
+	DML_Tools.DML_Applications.Auto_Shader_Assignment.Loader.show_Main_Window()
 
 aw_hub_check_Ctr1_Hotkey()
 
 cmds.runTimeCommand("aw_make_switch_builder_window", annotation="", command=__name__+".Make_Switch_Builder_Window()", category="User", commandLanguage="python", default=True)
+cmds.runTimeCommand("aw_make_auto_shader_assignment_window", annotation="Shows The Auto Shader Assignment Window", command=__name__+".Make_Auto_Shader_Assignment_Window()", category="User", commandLanguage="python", default=True)
 
 cmds.runTimeCommand("aw_Reverse_Selected_Poly_Normals", annotation="Reverses The Normals On All The Currently Selected PolyTransforms", command=__name__+".aw_Reverse_Selected_Poly_Normals()", category="User", commandLanguage="python", default=True)
 cmds.runTimeCommand("Planar_Proj_Unforld_RTC", annotation="Does Some Cool Stuff Now Fuck Off", command=__name__+".Planar_Proj_Unforld()", category="User", commandLanguage="python", default=True)

@@ -370,6 +370,15 @@ def Build_DataPrep_Tools(shelfName):
 	          ,style      = "iconOnly"
 	          ,command    = "aw_make_switch_builder_window"
 	          ,sourceType = "mel" )
+	# AW Shader Switch Builder
+	cmds.shelfButton(parent=active_shelf
+	                 ,annotation = ""
+	                 ,label      = "Auto Shader Assignment"
+	                  ,image      = "Auto_Shader_Assinment_tool.png"
+	                  ,image1     = "Auto_Shader_Assinment_tool.png"
+	          ,style      = "iconOnly"
+	          ,command    = "aw_make_auto_shader_assignment_window"
+	          ,sourceType = "mel" )
 
 def Build_Artist_Tools(shelfName):
 	active_shelf = shelfName
