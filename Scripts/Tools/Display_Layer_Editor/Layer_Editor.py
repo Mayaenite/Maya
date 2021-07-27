@@ -31,6 +31,11 @@ S_Msg_B_Flags            = Maya_API_Callback_Builders.Scene_Message_Before_Flags
 S_Msg_Flags              = Maya_API_Callback_Builders.Scene_Message_Flags
 Node_Msg_Flags           = Maya_API_Callback_Builders.Node_Message_Flages
 
+_vis_off_color_OptionVar = General_Util.OptionVar("aw_display_layer_editor_tools_hidden_display_layer_color",val="")
+if _vis_off_color_OptionVar.value == '':
+	_vis_off_color   = PYQT.Constants.Colors.LIGHT_GRAY
+else:
+	_vis_off_color   = eval(_vis_off_color_OptionVar.value.replace("PySide2.QtGui","PYQT"))
 from pymel.internal.factories import virtualClasses
 
 #----------------------------------------------------------------------
@@ -38,7 +43,7 @@ def name_Depend_Node(node_name):
 	""""""
 	sel_list = OM.MSelectionList()
 	sel_list.add(node_name)
-	Mobject = sel_list.getDependNode(0)	
+	Mobject = sel_list.getDependNode(0)
 	isinstance(Mobject,OM.MObject)
 	return Mobject
 #----------------------------------------------------------------------
@@ -398,6 +403,7 @@ class _Global_Options(object):
 	selection_set_outliner_option_Filter_Case_Sensitivity = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_case_sensitivity", False)
 	selection_set_outliner_option_Filter_Scan_Type        = General_Util.OptionVar("aw_display_layer_editor_outlineer_filter_scan_type", 0)
 	display_layer_editor_selection_style                  = General_Util.OptionVar("aw_display_layer_editor_selection_style", 0)
+	display_layer_editor_selection_style                  = General_Util.OptionVar("aw_display_layer_editor_selection_style", 0)
 ########################################################################
 class ActiveSelectionRestore(object):
 	''''''
@@ -723,7 +729,7 @@ class Display_Layer_Container_Tree_Item(BASE_CLASS_DEFINITIONS.DATA_TYPES.Model_
 ########################################################################
 class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data):
 	""""""
-	_vis_off_color   = PYQT.QBrush(PYQT.Constants.Colors.MAGENTA)
+	#_vis_off_color   = PYQT.QBrush(PYQT.Constants.Colors.MAGENTA)
 	_vis_empty_color = PYQT.QBrush(PYQT.Constants.Colors.CYAN)
 	_vis_insel_color = PYQT.QBrush(PYQT.Constants.Colors.GREEN)
 	#----------------------------------------------------------------------
@@ -734,7 +740,7 @@ class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data
 		if node.visibility.get():
 			kwargs["foreground_color"]=PYQT.Constants.Colors.WHITE
 		else:
-			kwargs["foreground_color"]=PYQT.Constants.Colors.MAGENTA
+			kwargs["foreground_color"]=_vis_off_color
 		super(Display_Layer_Tree_Item_Data,self).__init__(node,**kwargs)
 		## WING IDE CODE COMPLEASHION ##
 		if False:
@@ -824,7 +830,7 @@ class Display_Layer_Tree_Item(DATA_TYPES.Model_Items.Base_Maya_Node_Item):
 		elif self.get_internal_Data().visibility.get():
 			self._column_items.set_foreground_color(PYQT.Constants.Colors.WHITE)
 		else:
-			self._column_items.set_foreground_color(PYQT.Constants.Colors.MAGENTA)
+			self._column_items.set_foreground_color(_vis_off_color)
 		self._check_in_progress = False
 		self._column_items.items[0]._update_Changed_Data(Maya_Item_Data_Roles.FOREGROUND)
 	#----------------------------------------------------------------------
@@ -840,7 +846,7 @@ class Display_Layer_Tree_Item(DATA_TYPES.Model_Items.Base_Maya_Node_Item):
 				if plug.asBool():
 					self._column_items.set_foreground_color(PYQT.Constants.Colors.WHITE)
 				else:
-					self._column_items.set_foreground_color(PYQT.Constants.Colors.MAGENTA)
+					self._column_items.set_foreground_color(_vis_off_color)
 				self._column_items.items[0]._update_Changed_Data(Maya_Item_Data_Roles.FOREGROUND)
 
 		#if Maya_API_Callback_Builders.Node_Message_Flages.Was_Connection_Broken(msg):
@@ -1226,6 +1232,7 @@ class _CODE_COMPLEATION_HELPER(PYQT.QWidget):
 			self.Create_New_Empty_Layer_Button    = Maya_PushButton()
 			self.Create_New_Selected_Layer_Button = Maya_PushButton()
 			self.Delete_Layer_Button              = Maya_PushButton()
+			self.Hidden_Display_Color_Button      = Maya_PushButton()
 			self.label                            = PYQT.QLabel()
 			self.View_Selection_Mode_comboBox     = AW_Display_Layer_Editor_Item_Selection_Style_ComboBox()
 			self.verticalLayout_4                 = PYQT.QVBoxLayout()
@@ -1266,6 +1273,7 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 		self.on_Filter_Style_comboBox_currentIndexChanged()
 		self.on_Filter_Case_checkBox_stateChanged()
 		
+		
 		action = PYQT.QAction("Hilight From Active",self.Hilight_Selection_Tools_Button)
 		action.setToolTip("Hilight The Display Layers Invalved With The Acive Selection")
 		action.setStatusTip("Hilight The Display Layers Invalved With The Acive Selection")
@@ -1292,6 +1300,16 @@ class AW_Display_Layer_Editor(mayaMixin.MayaQWidgetBaseMixin,_CODE_COMPLEATION_H
 			self.Add_Layers_Members_Button.setEnabled(False)
 		else:
 			self.Add_Layers_Members_Button.setEnabled(True)
+	#----------------------------------------------------------------------
+	@PYQT.Slot()
+	def on_Hidden_Display_Color_Button_clicked(self):
+		""""""
+		global _vis_off_color
+		color = PYQT.QColorDialog.getColor()
+		string_color = str(color.toRgb())
+		_vis_off_color_OptionVar.set_value(string_color.replace("PySide2.QtGui","PYQT"))
+		if color.isValid():
+			_vis_off_color = color
 	#----------------------------------------------------------------------
 	@PYQT.Slot()
 	def Hilight_Tool_Action_Hilight_From_Active_Selection_And_Parents(self):

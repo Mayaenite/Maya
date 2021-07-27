@@ -92,6 +92,22 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="Hidden_Display_Color_Button">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Set the color for the hidden display layers</string>
+        </property>
+        <property name="text">
+         <string>HDC</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
