@@ -723,7 +723,7 @@ class Display_Layer_Container_Tree_Item(BASE_CLASS_DEFINITIONS.DATA_TYPES.Model_
 ########################################################################
 class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data):
 	""""""
-	_vis_off_color   = PYQT.QBrush(PYQT.Constants.Colors.RED)
+	_vis_off_color   = PYQT.QBrush(PYQT.Constants.Colors.MAGENTA)
 	_vis_empty_color = PYQT.QBrush(PYQT.Constants.Colors.CYAN)
 	_vis_insel_color = PYQT.QBrush(PYQT.Constants.Colors.GREEN)
 	#----------------------------------------------------------------------
@@ -734,7 +734,7 @@ class Display_Layer_Tree_Item_Data(DATA_TYPES.Node_Item_Data.Base_Maya_Node_Data
 		if node.visibility.get():
 			kwargs["foreground_color"]=PYQT.Constants.Colors.WHITE
 		else:
-			kwargs["foreground_color"]=PYQT.Constants.Colors.RED
+			kwargs["foreground_color"]=PYQT.Constants.Colors.MAGENTA
 		super(Display_Layer_Tree_Item_Data,self).__init__(node,**kwargs)
 		## WING IDE CODE COMPLEASHION ##
 		if False:
@@ -824,7 +824,7 @@ class Display_Layer_Tree_Item(DATA_TYPES.Model_Items.Base_Maya_Node_Item):
 		elif self.get_internal_Data().visibility.get():
 			self._column_items.set_foreground_color(PYQT.Constants.Colors.WHITE)
 		else:
-			self._column_items.set_foreground_color(PYQT.Constants.Colors.RED)
+			self._column_items.set_foreground_color(PYQT.Constants.Colors.MAGENTA)
 		self._check_in_progress = False
 		self._column_items.items[0]._update_Changed_Data(Maya_Item_Data_Roles.FOREGROUND)
 	#----------------------------------------------------------------------
@@ -840,7 +840,7 @@ class Display_Layer_Tree_Item(DATA_TYPES.Model_Items.Base_Maya_Node_Item):
 				if plug.asBool():
 					self._column_items.set_foreground_color(PYQT.Constants.Colors.WHITE)
 				else:
-					self._column_items.set_foreground_color(PYQT.Constants.Colors.RED)
+					self._column_items.set_foreground_color(PYQT.Constants.Colors.MAGENTA)
 				self._column_items.items[0]._update_Changed_Data(Maya_Item_Data_Roles.FOREGROUND)
 
 		#if Maya_API_Callback_Builders.Node_Message_Flages.Was_Connection_Broken(msg):
