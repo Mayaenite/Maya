@@ -18,6 +18,11 @@ if "XBMLANGPATH" in os.environ:
 else:
 	os.environ["XBMLANGPATH"] = os.path.realpath(this_dir+"/icons")
 	
+if "MAYA_SCRIPT_PATH" in os.environ:
+	os.environ["MAYA_SCRIPT_PATH"] = os.environ["MAYA_SCRIPT_PATH"] + ";" + System_Paths._CODE_MAYA_SCRIPT_PATH
+else:
+	os.environ["MAYA_SCRIPT_PATH"] = System_Paths._CODE_MAYA_SCRIPT_PATH
+	
 if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
