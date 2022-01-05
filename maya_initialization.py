@@ -1,3 +1,4 @@
+# This is a test
 import os
 import maya.cmds  as cmds
 import maya.utils as utils
