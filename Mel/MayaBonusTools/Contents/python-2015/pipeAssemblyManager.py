@@ -24,7 +24,8 @@ import maya.cmds as cmds
 import maya.mel as mel
 import maya.OpenMaya as OpenMaya
 import pipe
-reload(pipe)
+import importlib
+importlib.reload(pipe)
 import os
 import re
 import sys
@@ -531,7 +532,7 @@ def PAMAssemblify(newAssetName,makeGeo,makeGPU,makeBBox,makeGPULo):
             cmds.assembly(asset, e=1, active="")
         cmds.select(tempNewAssets)
         repPath = tempPipeDir + tempNewAssemblyRepBase + "geo/maya/" + newAssetName + ".initial.geo.ma"
-        print repPath
+        print(repPath)
         cmds.file(repPath,force=True, options="v=0;", typ="mayaAscii",pr=True, es=True, constraints=False, constructionHistory=False, expressions=False, channels=False, shader=False)
         repPathLocal = "lib/assets/" +  newAssetName + "/data/variations/initial/geo/maya/" + newAssetName + ".initial.geo.ma"
         tmpType = "Scene"
@@ -605,7 +606,7 @@ def PAMAssemblify(newAssetName,makeGeo,makeGPU,makeBBox,makeGPULo):
         cmds.move(relX,relY,relZ, feedback, a=True, ws=True)
         cmds.assembly(feedback,e=1, active="gpu")
         PAMAssetEditInitialize()
-        print 'Asset "' + newAssetName + '" Assemblified.'
+        print(('Asset "' + newAssetName + '" Assemblified.'))
 # Turn On and set back old GPU Preference values
     if cmds.pluginInfo("gpuCache", query = 1, loaded = 1):
         for optVar in gpuBackgroupCacheOptions:
@@ -718,7 +719,7 @@ def PAMAssetBuildAssetUI():
                    assemblyFn.createRepresentation(tempRepFullPath, tempRealRepType, tempRep)
                    assemblyFn.setRepLabel(tempRep, tempRep)
                else:
-                   print 'PipeAM:  Skipping representation "' + tempRep + '" of asset "' + asset + '"'
+                   print(('PipeAM:  Skipping representation "' + tempRep + '" of asset "' + asset + '"'))
         defSaveFileDir = tempPath + "/data/definition/initial/"
         defSaveFileName = asset +".ma"
         defSavePath = defSaveFileDir + defSaveFileName
@@ -829,7 +830,7 @@ def PAMAssetSaveRepUI():
         selectedObj = ""
         selectedObjects = []
         selectedObjects = cmds.ls(sl=1)
-        print selectedObjects
+        print(selectedObjects)
         if len(selectedObjects)==0:
         	cmds.confirmDialog(message= 'No object selected.   Select a single Top-Level object and try again.\n', button=["OK"])
         	return
@@ -844,14 +845,14 @@ def PAMAssetSaveRepUI():
                 return
         else:
 # save Temporary Scene
-            print "$$Selected Object" + selectedObj
+            print(("$$Selected Object" + selectedObj))
             tempTempFilePath = tempPipePath + tempPipeShow + '/temp/'
             tempTempFullFilePath = tempTempFilePath + "/temp.ma"
             if os.path.exists(tempTempFilePath)!=True:
-                os.makedirs(tempTempFilePath, 0777)
+                os.makedirs(tempTempFilePath, 0o777)
             cmds.file(rename=tempTempFullFilePath)
             cmds.file(save=True, type='mayaAscii')
-            print "$$Saved File" + tempTempFullFilePath
+            print(("$$Saved File" + tempTempFullFilePath))
             tempPipeAssVarList=pipe.pipeListAssetVarReps(asset,'initial')
 ###            tempID = pipe.pipeGetAssetInfoName(asset,"Id")
             tempAssetBasePath = tempPipePath + tempPipeShow + "/lib/assets/" + asset + "/data/"
@@ -859,7 +860,7 @@ def PAMAssetSaveRepUI():
             tempAssetRelativeCopyPath = "lib/assets/" + asset + "/data/textures/"
 # loop through representations of Pipe Asset
             assetRepTypes = pipe.pipeListAssetVarReps(asset,"initial")
-            print "$$Loop through reps"
+            print("$$Loop through reps")
 
 # Turn off background loading of the GPU cache 
             gpuBackgroupCacheOptions = {'gpuCacheAllAuto': 0, 'gpuCacheBackgroundReadingAuto': 1, 'gpuCacheBackgroundReading': 1}
@@ -872,7 +873,7 @@ def PAMAssetSaveRepUI():
             for tempRep in assetRepTypes:
                 if cmds.checkBox("CB_"+tempRep,q=1, value=True)!= True:
                     continue
-                print "$$Rep to be made: " + tempRep
+                print(("$$Rep to be made: " + tempRep))
 # get Pipe asset info
                 result=""
                 cmds.file(tempTempFullFilePath, force=True, o=True )
@@ -891,36 +892,36 @@ def PAMAssetSaveRepUI():
                 tempRepFullPath = tempAssetBasePath + 'variations/initial/' + tempRep + '/' + tempSubdir + '/' + tempFileNameExt
                 if os.path.exists(tempRepFullPath)==True:
                     if cmds.checkBox(tmpOverCB, q=1, v=1)==False:
-                         print "$$DO NOT Over write Rep file"
+                         print("$$DO NOT Over write Rep file")
                          continue
-                    print "$$Over write Rep file"
+                    print("$$Over write Rep file")
                 prepareValue = cmds.optionMenuGrp("Opt_Prep_"+tempRep,q=1,sl=1)
                 actionValue = cmds.optionMenuGrp("Opt_Act_"+tempRep,q=1,sl=1)
-                print "$$ Prep = " +  str(prepareValue)
-                print "$$ Action = " + str(actionValue)
+                print(("$$ Prep = " +  str(prepareValue)))
+                print(("$$ Action = " + str(actionValue)))
 # Preparation Steps
                 result=""
                 if prepareValue<10 and prepareValue>1:
 # Convert to BBox     2-6               
                     if prepareValue<7 and prepareValue>1:
                         if prepareValue == 2:
-                            print "$$ Performing Prep " + str(prepareValue)
+                            print(("$$ Performing Prep " + str(prepareValue)))
                             result = cmds.geomToBBox(selectedObj,single=True,shaderColor=[0.5,0.5,0.7],keepOriginal=False, bakeAnimation=True, sampleBy=1)
 #                            print "$$ Result = " + result
                         if prepareValue == 3:
-                            print "$$ Performing Prep " + str(prepareValue)
+                            print(("$$ Performing Prep " + str(prepareValue)))
                             result = cmds.geomToBBox(selectedObj,shaderColor=[0.5,0.5,0.7],keepOriginal=False, bakeAnimation=True, sampleBy=1)
 #                            print "$$ Result = " + result
                         if prepareValue == 4:
-                            print "$$ Performing Prep " + str(prepareValue)
+                            print(("$$ Performing Prep " + str(prepareValue)))
                             result = cmds.geomToBBox(selectedObj,single=True,shaderColor=[0.5,0.5,0.7],keepOriginal=False, bakeAnimation=False)
 #                            print "$$ Result = " + result
                         if prepareValue == 5:
-                            print "$$ Performing Prep " + str(prepareValue)
+                            print(("$$ Performing Prep " + str(prepareValue)))
                             result = cmds.geomToBBox(selectedObj,shaderColor=[0.5,0.5,0.7],keepOriginal=False, bakeAnimation=False)
 #                            print "$$ Result = " + result
                         if prepareValue == 6:
-                            print "$$ Performing Prep " + str(prepareValue)
+                            print(("$$ Performing Prep " + str(prepareValue)))
                             results = cmds.geomToBBox(selectedObj,shaderColor=[0.5,0.5,0.7],keepOriginal=False, bakeAnimation=False, combineMesh=True)
 #                            if type(results)==list:
 #                            
@@ -943,9 +944,9 @@ def PAMAssetSaveRepUI():
                         cmds.select(hi=True)
                         selections = cmds.ls(sl=True)
                         for selection in selections:
-                            print selection
+                            print(selection)
                             if cmds.nodeType(selection) == "mesh":
-                                print "   MESH"
+                                print("   MESH")
                                 cmds.polyReduce(selection, ver=1, trm=0, p=factor, vct=0, tct=0, shp=0, kb=1, kmb=1, kcb=1, kfb=1, khe=1, kce=1, kbw=0.5, kmw=0.5, kcw=0.5, kfw=0.5, khw=0.5, cew=0.5, uvs=0, stl=0.01, sx=0, sy=1,sz=0, sw=0, top=1, kqw=1, vmp="", rpo=1, cr=1, ch=0)
 # Prep for Action Steps
                     cmds.select(selectedObj)
@@ -1049,15 +1050,15 @@ def PAMAssetSaveRepUI():
                     if actionValue==3:
                         cmds.AbcExport(j= "-frameRange " + str(currentFrame) + " " +  str(currentFrame) + " -root " + selectedObj + " -file " + tempRepFullPath)
 # Save GPU Cache representation
-                    print actionValue
+                    print(actionValue)
                     if actionValue==4:
-                        print tempFileName, tempRepPathAbs
+                        print((tempFileName, tempRepPathAbs))
                         cmds.gpuCache(selectedObj,st=currentFrame,et=currentFrame,o=True,ot=40000, omb=False, wm=True, dir=tempRepPathAbs, fileName = tempFileName)
                     if actionValue==5:
-                        print tempFileName, tempRepPathAbs
+                        print((tempFileName, tempRepPathAbs))
                         cmds.gpuCache(selectedObj,st=tempStartFrame,et=tempEndFrame,o=True,ot=40000, omb=False, wm=True, dir=tempRepPathAbs, fileName = tempFileName)
                     if actionValue==6:
-                        print tempFileName,tempRepPathAbs
+                        print((tempFileName,tempRepPathAbs))
                         cmds.gpuCache(selectedObj,st=tempStartFrame,et=tempEndFrame,o=True,ot=40000, omb=True, wm=True, dir=tempRepPathAbs, fileName = tempFileName)
 # Turn On and set back old GPU Preference values
             if cmds.pluginInfo("gpuCache", query = 1, loaded = 1):
@@ -1079,7 +1080,7 @@ def PAMAssetSaveRepUI():
 
 
 def HSMCPRepath(file, tempAssetCopyPath, currentNode, tempAssetRelativeCopyPath,tempAttr,overTexts):
-    print file, tempAssetCopyPath, currentNode, tempAssetRelativeCopyPath,tempAttr
+    print((file, tempAssetCopyPath, currentNode, tempAssetRelativeCopyPath,tempAttr))
     file=str(file)
     parts = file.split("/")
     fileName = parts[(len(parts))-1]
@@ -1369,9 +1370,9 @@ def PAMRedirectRepo():
                     if response != "Continue":
                         return
                 else:
-                    os.makedirs(repositoryPath + "/pipe", 0777)
+                    os.makedirs(repositoryPath + "/pipe", 0o777)
                 if os.path.exists(os.environ['HOME']+"/pipe/")!=True:
-                     os.makedirs(os.environ['HOME']+"/pipe/", 0777)
+                     os.makedirs(os.environ['HOME']+"/pipe/", 0o777)
                 file = open(os.environ['HOME']+"/pipe/pipe.cfg","w")
                 file.write(repositoryPath+"/pipe/\n")
                 file.write("@NULLSET\n")
@@ -1405,9 +1406,9 @@ def PAMAssetEditInitialize():
                     if response != "Continue":
                         return
                 else:
-                    os.makedirs(repositoryPath + "/pipe", 0777)
+                    os.makedirs(repositoryPath + "/pipe", 0o777)
                 if os.path.exists(os.environ['HOME']+"/pipe/")!=True:
-                     os.makedirs(os.environ['HOME']+"/pipe/", 0777)
+                     os.makedirs(os.environ['HOME']+"/pipe/", 0o777)
                 file = open(os.environ['HOME']+"/pipe/pipe.cfg","w")
                 file.write(repositoryPath+"/pipe/\n")
                 file.write("@NULLSET\n")

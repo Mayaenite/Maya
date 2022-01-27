@@ -3,7 +3,7 @@ import maya.api.OpenMaya as newOM
 import maya.OpenMaya as oldOM
 import maya.cmds as cmds
 from functools import wraps
-import Class_Comands
+from . import Class_Comands
 import sys
 import logging
 logging.basicConfig()
@@ -178,17 +178,17 @@ def nodeLockManager(func):
 			if plglocked:
 				cmds.setAttr(plg,lock=False)
 			res=func(*args, **kws)
-		except StandardError, error:
+		except Exception as error:
 			err=error
 		finally:
 			if isinstance(plg, MPLUG):
-				if plglocked and not func.func_name == "unlock":
+				if plglocked and not func.__name__ == "unlock":
 					cmds.setAttr(plg,lock=True)
 			if locked and cmds.objExists(mNode.name):
 				cmds.lockNode(mNode.name, lock=True)
 			if err:
 				traceback = sys.exc_info()[2]  # get the full traceback
-				raise StandardError(StandardError(err), traceback)
+				raise Exception(Exception(err), traceback)
 			return res
 	return wrapper
 # MOBJECT Utilty Functions ---
@@ -304,7 +304,7 @@ def to_New_MObject(nodeName):
 	if _isValidMObject(nodeName):
 		obj = nodeName
 	# CHECK THE INPUT TO SEE IF IT IS THE OBJECT NAME
-	elif isinstance(nodeName, (str, unicode)):
+	elif isinstance(nodeName, str):
 		sel = newOM.MSelectionList()
 		# ADD IT TO STORAGE CONTAINER
 		sel.add( nodeName )
@@ -326,7 +326,7 @@ def to_Old_MObject(nodeName):
 	if _isValidMObject(nodeName):
 		obj = nodeName
 	# CHECK THE INPUT TO SEE IF IT IS THE OBJECT NAME
-	elif isinstance(nodeName, (str, unicode)):
+	elif isinstance(nodeName, str):
 		# CREATE A MOBJECT AND A DAGPATH MEMORY OBJECT VARIBLE
 		obj = oldOM.MObject()
 		# MAKE A SELECTIONLIST STORAGE CONTAINER
@@ -360,7 +360,7 @@ def to_New_MPlug(plugName):
 	if _isValidMPlug(plugName):
 		plug = plugName
 	# CHECK THE INPUT TO SEE IF IT IS THE OBJECT NAME
-	elif isinstance(plugName, (str, unicode)):
+	elif isinstance(plugName, str):
 		# MAKE A SELECTIONLIST STORAGE CONTAINER
 		sel = newOM.MSelectionList()
 		# ADD IT TO STORAGE CONTAINER
@@ -379,7 +379,7 @@ def to_Old_MPlug(plugName):
 	if _isValidMPlug(plugName):
 		plug = plugName
 	# CHECK THE INPUT TO SEE IF IT IS THE OBJECT NAME
-	elif isinstance(plugName, (str, unicode)):
+	elif isinstance(plugName, str):
 		# CREATE A MOBJECT AND A DAGPATH MEMORY OBJECT VARIBLE
 		plug = oldOM.MPlug()
 		# MAKE A SELECTIONLIST STORAGE CONTAINER
@@ -497,11 +497,11 @@ def nameToPlug( node, attrName=None, OldApi=True):
 	"""function that finds a plug given a node object and plug name"""
 	# CHECK IF THE INPUT NODE IS NOT AND NODE OBJECT BUT THE NAME OF AN OBJECT
 	plug = None
-	if isinstance(node, (str, unicode)):
+	if isinstance(node, str):
 		if node.count("."):
 			plug = toMPlug(node, OldApi=OldApi)
 		else:
-			if isinstance(attrName, (str, unicode)):
+			if isinstance(attrName, str):
 				node_fn = nameToNode(node, OldApi=OldApi)
 				node_name = ".".join([node_fn.name(), attrName])
 				plug = toMPlug(node_name, OldApi=OldApi)
@@ -569,7 +569,7 @@ def Convert_MPlug(plug, force_old=False, force_new=False):
 def flatten(x):
 	result = []
 	for el in x:
-		if hasattr(el, "__iter__") and not isinstance(el, basestring):
+		if hasattr(el, "__iter__") and not isinstance(el, str):
 			result.extend(flatten(el))
 		else:
 			result.append(el)
@@ -583,22 +583,22 @@ class Named_Object(object):
 		self._name = name
 	#----------------------------------------------------------------------
 	def __str__(self):
-		return unicode(self.name)
+		return str(self.name)
 	#----------------------------------------------------------------------
 	def __repr__(self):
-		return unicode(self.name)
+		return str(self.name)
 	#----------------------------------------------------------------------
 	def __hash__(self):
 		return hash(self.name)
 	#----------------------------------------------------------------------
 	def __eq__(self, other):
-		return unicode(self.name) == unicode(other)
+		return str(self.name) == str(other)
 	#----------------------------------------------------------------------
 	def __ne__(self, other):
-		return unicode(self.name) != unicode(other)
+		return str(self.name) != str(other)
 	#----------------------------------------------------------------------
 	def get_name(self):
-		return unicode(self._name)
+		return str(self._name)
 	#----------------------------------------------------------------------
 	name          = property(get_name)
 ########################################################################
@@ -699,14 +699,14 @@ class NameSpace(Named_Object):
 			self._name = new_namespace.name
 	#----------------------------------------------------------------------
 	def get_name(self):
-		return unicode(self._name)
+		return str(self._name)
 	#----------------------------------------------------------------------
 	def set_name(self, name):
 		name = cmds.namespace(validateName=name)
-		if not isinstance(name, (str, unicode, Named_Object)):
+		if not isinstance(name, (str, Named_Object)):
 			raise ValueError("The name attriute can only be set to a str or unicode value")
 		cmds.namespace(parent=self.parent,rename=[self.name,name])
-		self._name = unicode(str(name))
+		self._name = str(str(name))
 	#----------------------------------------------------------------------
 	name          = property(get_name, set_name)
 ########################################################################
@@ -1206,7 +1206,7 @@ class _API_MPlug(newOM.MPlug):
 
 		arg_type = type(arg)
 
-		if not arg_type in [int, str, unicode]:
+		if not arg_type in [int, str, str]:
 			raise TypeError("input must be one of types [int,str,unicode] and a %s type was found" % arg_type.__name__)
 
 		if arg_type is int:
@@ -1215,7 +1215,7 @@ class _API_MPlug(newOM.MPlug):
 			else:
 				index = arg
 
-		elif type(arg) in [str, unicode]:
+		elif type(arg) in [str, str]:
 			names = self.childNames()
 			if not arg in names:
 				raise LookupError("The Attribute %s Has No Child With The Input %r " % (self.name, arg))
@@ -1268,7 +1268,7 @@ class MPLUG(object):
 				self.old_obj  = nameToPlug(node.name(), att, OldApi=True)
 				self.api_obj  = _API_MPlug(self.new_obj)
 				self.node     = Maya_Node(node.name().split(".")[0])
-			elif isinstance(node, (str, unicode)):
+			elif isinstance(node, str):
 				if node.count('.'):
 					att  =  node.split(".", 1)[1]
 					node =  node.split(".", 1)[0]
@@ -1664,7 +1664,7 @@ class MPLUG(object):
 			else:
 				return MPLUG(self.new_obj.child(arg))
 			
-		elif type(arg) == str or type(arg) == unicode:
+		elif type(arg) == str or type(arg) == str:
 			if not arg in self.childNames:
 				raise LookupError("The Attribute %s Has No Child With The Input %r " % (self.name, arg))
 			else:
@@ -1823,7 +1823,7 @@ class MPLUG(object):
 		else:
 			plug = self
 		if plug.multi:
-			if range(plug.numConnectedElements) != plug.multiIndices:
+			if list(range(plug.numConnectedElements)) != plug.multiIndices:
 				
 				if plug.has_source_connections:
 					connection_plgs = plug.input_Plugs
@@ -1915,7 +1915,7 @@ class Maya_Node(object):
 	#_node_collection = Node_Types_Container()
 	#----------------------------------------------------------------------
 	def __new__(cls,*args,**kwargs):
-		if len(args) and not kwargs.has_key("name"):
+		if len(args) and "name" not in kwargs:
 			nodeName = args[0]
 		else:
 			nodeName = kwargs.get("nodeName",kwargs.get("name",None))
@@ -1950,8 +1950,8 @@ class Maya_Node(object):
 				self._MFns          = fns
 				self._MObjectHandle = handle
 				self.select_commsnds = Class_Comands.Select_Command_Content(self)
-			except StandardError, error:
-				raise StandardError(error)
+			except Exception as error:
+				raise Exception(error)
 	#----------------------------------------------------------------------
 	def __str__(self):
 		return self.name
@@ -1975,7 +1975,7 @@ class Maya_Node(object):
 		return _isValidMObjectHandle(self._MObjectHandle)
 	#----------------------------------------------------------------------
 	def __ne__(self, other):
-		return unicode(self.name) != unicode(other)
+		return str(self.name) != str(other)
 	#----------------------------------------------------------------------
 	def __get_name(self):
 		if hasattr(self._MFns,"fullPathName"):
@@ -1985,7 +1985,7 @@ class Maya_Node(object):
 	#----------------------------------------------------------------------
 	@nodeLockManager
 	def __set_name(self,value):
-		cmds.rename(self.name,unicode(value))
+		cmds.rename(self.name,str(value))
 	#----------------------------------------------------------------------
 	@property
 	def nice_name(self):
@@ -2225,7 +2225,7 @@ class Maya_Node(object):
 		kwargs["allAttributes"]=False
 		res = []
 		for att in cmds.attributeInfo( self.name , **kwargs):
-			print att
+			print(att)
 			res.append(MPLUG(self.name,att))
 		return res
 	#----------------------------------------------------------------------
@@ -2365,7 +2365,7 @@ class RenderLayer(Maya_Node):
 		cmds.select(self,replace=True)
 ########################################################################
 class DisplayLayer(Maya_Node):
-	Normal,Reference,Template = range(3)
+	Normal,Reference,Template = list(range(3))
 	#----------------------------------------------------------------------
 	def __init__(self,name,makeCurrent=False,empty=True,noRecurse=True):
 		kwargs = dict(name=name,makeCurrent=makeCurrent,empty=empty,noRecurse=noRecurse)
@@ -2440,7 +2440,7 @@ class DisplayLayer(Maya_Node):
 	#----------------------------------------------------------------------
 	@property
 	def member_names(self):
-		return [unicode(item.name) for item in self.members]
+		return [str(item.name) for item in self.members]
 
 	#----------------------------------------------------------------------
 	def select_Members(self, replace=True, add=False, remove=False):
@@ -2484,7 +2484,7 @@ class Display_Layer_Manager(Maya_Node):
 	#----------------------------------------------------------------------
 	def clean_LayerId_Indexing(self):
 		plug = self.displayLayerId
-		if range(plug.numConnectedElements) != plug.multiIndices:
+		if list(range(plug.numConnectedElements)) != plug.multiIndices:
 			connection_plgs = plug.element_plugs
 			if len(connection_plgs) > 1:
 				connection_plgs = connection_plgs[1:]
@@ -2652,7 +2652,7 @@ class SelectionSet(Maya_Node):
 	#----------------------------------------------------------------------
 	@property
 	def memberNames(self):
-		return [unicode(m) for m in self.members]
+		return [str(m) for m in self.members]
 	#----------------------------------------------------------------------
 	@property
 	def query_members(self):
@@ -2773,7 +2773,7 @@ class SelectionSet(Maya_Node):
 					if not [childA,childB] in found_pairs and not [childB,childA] in found_pairs:
 						found_pairs.append([childA,childB])
 
-						print "Intersecting Members found between Sets %s and %s with items %r" % (childA,childB,intersecting_items)
+						print(("Intersecting Members found between Sets %s and %s with items %r" % (childA,childB,intersecting_items)))
 						cmds.select(intersecting_items)
 						sub_set = SelectionSet(childA.name+"_"+childB.name)
 						inersecting_sets >> sub_set
@@ -2844,11 +2844,11 @@ class Shading_Engine(SelectionSet):
 			try:
 				cmds.sets(new_items, edit=True, forceElement=self)
 			except:
-				print "Could Not Assing Items {}".format(new_items)
+				print(("Could Not Assing Items {}".format(new_items)))
 	#----------------------------------------------------------------------
 	@property
 	def memberNames(self):
-		return [unicode(m) for m in self.members]
+		return [str(m) for m in self.members]
 	#----------------------------------------------------------------------
 	@property
 	def members(self):
@@ -3019,7 +3019,7 @@ class AnimCurve(Maya_Node):
 		"""Returns list of available drivers for the attribute."""
 		plgs = self.connected_output_attribute_plugs
 		if plgs:
-			print plgs
+			print(plgs)
 			res = cmds.setDrivenKeyframe( plgs, q=True, dr=True )
 			if res[0] == "No drivers.":
 				return []

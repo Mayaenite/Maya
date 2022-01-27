@@ -1,6 +1,6 @@
 __all__ = ["Window", "Editor", "ProgressWindow", "PromptDialog"]
 import maya.cmds as cmds
-import UI_Object
+from . import UI_Object
 
 
 ########################################################################
@@ -9,7 +9,7 @@ class ColorEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -43,7 +43,7 @@ class ConfirmDialog(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -62,7 +62,7 @@ class CreateEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -81,7 +81,7 @@ class DefaultNavigation(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -100,7 +100,7 @@ class Editor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -220,7 +220,7 @@ class EditorTemplate(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -239,7 +239,7 @@ class FontDialog(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -258,7 +258,7 @@ class LayoutDialog(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -277,7 +277,7 @@ class MinimizeApp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -296,7 +296,7 @@ class ProgressWindow(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -384,7 +384,7 @@ class PromptDialog(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -408,7 +408,7 @@ class RefreshEditorTemplates(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -432,7 +432,7 @@ class ScriptEditorInfo(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -533,7 +533,7 @@ class ShowSelectionInTitle(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -634,7 +634,7 @@ class ShowWindow(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -735,7 +735,7 @@ class ToggleWindowVisibility(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -836,7 +836,7 @@ class Window(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1091,7 +1091,7 @@ class WindowPref(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:

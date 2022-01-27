@@ -4,7 +4,7 @@ import yaml
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
-import Compiled_UIs.Vray_Scene_State_Manager
+from . import Compiled_UIs.Vray_Scene_State_Manager
 try:
 	_maya_check = True
 	import Scripts.UIFns.Find_UI
@@ -12,7 +12,7 @@ try:
 	import Scripts.NodeCls.M_Nodes
 	import maya.cmds as cmds
 except ImportError as  e:
-	print e
+	print(e)
 	_maya_check = False
 	
 Custom_Widgets = Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets

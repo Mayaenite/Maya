@@ -1,7 +1,7 @@
 
 import maya.cmds  as cmds
 import pymel.core as pm
-import DeadLine_Access
+from . import DeadLine_Access
 import os
 #---------------------------------------------------------
 # Functions for saving submission in a compound attribute.

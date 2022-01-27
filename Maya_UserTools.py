@@ -2,13 +2,14 @@
 #Creation Date:  (December 1, 2006)
 
 #Author: John Creson
+from  importlib import reload
 import maya.cmds as cmds
 import maya, os, sys, fnmatch
 from pathlib2 import Path
 import re
 _aw_python_scripts_menu_name  = "aw_user_tools_menu"
 _aw_python_scripts_menu_label = "AW User Tools"
-if os.environ.has_key("MAYA_USER_TOOLS_DIR"):
+if "MAYA_USER_TOOLS_DIR" in os.environ:
 	_aw_user_tools_main_folder    = Path(os.path.expandvars(os.environ["MAYA_USER_TOOLS_DIR"]))
 else:
 	_aw_user_tools_main_folder = ""
@@ -98,13 +99,13 @@ def importAndRun(scrpt):
 	# create the Python command that is invoked by the menu item
 	# This could be changed to scrpt.main if that is normal
 	# The reload command should have a way of being turned off and on from the UI
-	exec 'import ' + scrpt
+	exec('import ' + scrpt)
 	if not scrpt in ["Align_Objects"]:
-		exec  'reload (' + scrpt + ')'
+		exec('reload (' + scrpt + ')')
 	if scrpt == "Maya_UserTools":
-		exec scrpt + '.pythonScripts()'
+		exec(scrpt + '.pythonScripts()')
 	else:
-		exec scrpt + '.' + scrpt + '()'
+		exec(scrpt + '.' + scrpt + '()')
 
 def menu_exist(menu_name):
 	return cmds.menu(menu_name, exists=True)

@@ -22,11 +22,11 @@ import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
 
 if int(cmds.about(version=True)) >= 2017:
-	import Compiled_UIs.Vray_Scene_State_Viewer
-	Compiled_Vray_Scene_State_Viewer = Compiled_UIs.Vray_Scene_State_Viewer
+	import Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.Vray_Scene_State_Viewer
+	Compiled_Vray_Scene_State_Viewer = Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.Vray_Scene_State_Viewer
 else:
-	import Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
-	Compiled_Vray_Scene_State_Viewer = Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
+	import Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
+	Compiled_Vray_Scene_State_Viewer = Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.pyside_V1.Vray_Scene_State_Viewer
 
 import Scripts.General_Maya_Util
 Custom_Widgets = Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
@@ -42,7 +42,7 @@ QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Tree_View)
 QT.ui_Loader.registerCustomWidget(Custom_Widgets.Asset_Grid)
 
 ui_file = os.path.realpath(os.path.dirname(__file__)+"\Vray_Scene_State_Viewer.ui")
-update_warning_file = os.path.realpath(os.path.dirname(__file__)+"\UI\Warning_Message.ui")
+update_warning_file = os.path.realpath(os.path.dirname(__file__)+"\\UI\Warning_Message.ui")
 #uiform, uibase = uic.loadUiType(ui_file)
 
 #class Enum_List_Delegate(QT.QItemDelegate):
@@ -133,7 +133,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 			return self.model.File_References.Children
 		elif isinstance(lookup,int):
 			res = self.model.File_References.child(lookup)
-		elif isinstance(lookup,basestring):
+		elif isinstance(lookup,str):
 			res = self.model.File_References.find_child_items(lookup,recurive=False)
 			if len(res):
 				res = res[0]
@@ -275,7 +275,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 							item.asset_states.setCurrentIndex(current)
 							item.asset_states.update_asset_attribute()
 						else:
-							if not item.title() in warnings.keys():
+							if not item.title() in list(warnings.keys()):
 								warnings[item.title()]=[]
 							warnings[item.title()].append(str(layer))
 					cmds.progressWindow( edit=True, step=1)
@@ -284,7 +284,7 @@ class Vray_Scene_States_Viewer_MainWindow(MayaQWidgetDockableMixin, QT.QMainWind
 					cmds.confirmDialog( title='Rebuild', message="Rebuild Finished Without Errors")
 				else:
 					message = ""
-					for asset_name,layers in warnings.iteritems():
+					for asset_name,layers in warnings.items():
 						message = "The Layers For Reference {}.\nCould Not Be Rebuilt Because Assigned State Does Not Exist\n".format(asset_name)
 						message += ",".join(layers)+"\n\n"
 					cmds.confirmDialog( title='Rebuild Warnings', message=message)

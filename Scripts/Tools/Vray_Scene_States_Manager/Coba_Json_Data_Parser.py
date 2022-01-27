@@ -9,7 +9,7 @@ def build_Name_To_Layer_Data():
 	""""""
 	_G_ALL_DISPLAY_LAYERS = cmds.ls(typ="displayLayer")
 	_G_ALL_DISPLAY_LAYER_Short_Names = [item.split("_",1)[-1] for item in _G_ALL_DISPLAY_LAYERS]
-	return dict(zip(_G_ALL_DISPLAY_LAYER_Short_Names,_G_ALL_DISPLAY_LAYERS))
+	return dict(list(zip(_G_ALL_DISPLAY_LAYER_Short_Names,_G_ALL_DISPLAY_LAYERS)))
 
 _G_DISPLAY_LAYER_DICT = build_Name_To_Layer_Data()
 
@@ -115,7 +115,7 @@ class Json_Config_Data(object):
 		
 	#----------------------------------------------------------------------
 	def hide_all(self):
-		for layer_item in self.master_layer_dict.itervalues():
+		for layer_item in self.master_layer_dict.values():
 			layer_item.hide()
 			
 	def show_build(self,num):

@@ -1,8 +1,8 @@
 import sys, os
 import maya.cmds as cmds
 import maya.mel
-import OpenMaya_Util_API
-import Maya_Callback_Builders
+from . import OpenMaya_Util_API
+from . import Maya_Callback_Builders
 
 _G_Active_Render_Layer_Before_Save =  ""
 #----------------------------------------------------------------------

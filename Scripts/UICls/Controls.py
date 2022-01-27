@@ -24,8 +24,9 @@ __all__ = ['AttrColorSliderGrp'     , 'AttrControlGrp'          , 'AttrFieldGrp'
            'TextScrollList'         , 'TimeControl'             , 'TimePort',
            'ToolButton'             , 'ToolCollection'          , 'TreeLister']
 import maya.cmds as cmds
-import UI_Object
-reload(UI_Object)
+from . import UI_Object
+import importlib
+importlib.reload(UI_Object)
 
 ########################################################################
 class AttrColorSliderGrp(UI_Object.UI):
@@ -33,7 +34,7 @@ class AttrColorSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -383,7 +384,7 @@ class AttrControlGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -482,7 +483,7 @@ class AttrFieldGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -840,7 +841,7 @@ class AttrFieldSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1253,7 +1254,7 @@ class AttrNavigationControlGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1673,7 +1674,7 @@ class Button(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1899,7 +1900,7 @@ class Canvas(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2089,7 +2090,7 @@ class ChannelBox(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2527,7 +2528,7 @@ class CheckBox(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2755,7 +2756,7 @@ class CheckBoxGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3298,7 +3299,7 @@ class CmdScrollFieldExecuter(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3572,7 +3573,7 @@ class CmdScrollFieldReporter(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3737,7 +3738,7 @@ class CmdShell(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3933,7 +3934,7 @@ class ColorIndexSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4291,7 +4292,7 @@ class ColorSliderButtonGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4657,7 +4658,7 @@ class ColorSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4985,7 +4986,7 @@ class CommandLine(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -5209,7 +5210,7 @@ class ComponentBox(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -5428,7 +5429,7 @@ class Control(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -5594,7 +5595,7 @@ class FloatField(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -5836,7 +5837,7 @@ class FloatFieldGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -6258,7 +6259,7 @@ class FloatScrollBar(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -6487,7 +6488,7 @@ class FloatSlider(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -6706,7 +6707,7 @@ class FloatSlider2(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -6942,7 +6943,7 @@ class FloatSliderButtonGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -7382,7 +7383,7 @@ class FloatSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -7784,7 +7785,7 @@ class GradientControl(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -8027,7 +8028,7 @@ class GradientControlNoAttr(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -8280,7 +8281,7 @@ class HelpLine(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -8841,7 +8842,7 @@ class HudSliderButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 		if cmds.headsUpDisplay(name, exists=True):
 			self._id = name
@@ -9155,7 +9156,7 @@ class IconTextButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -9559,7 +9560,7 @@ class IconTextCheckBox(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -9965,7 +9966,7 @@ class IconTextRadioButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -10371,7 +10372,7 @@ class IconTextRadioCollection(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -10419,7 +10420,7 @@ class IconTextScrollList(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -10658,7 +10659,7 @@ class IconTextStaticLabel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -10984,7 +10985,7 @@ class Image(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -11160,7 +11161,7 @@ class IntField(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -11392,7 +11393,7 @@ class IntFieldGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -11800,7 +11801,7 @@ class IntScrollBar(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -12029,7 +12030,7 @@ class IntSlider(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -12248,7 +12249,7 @@ class IntSliderGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -12646,7 +12647,7 @@ class LayerButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -12910,7 +12911,7 @@ class MessageLine(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -13076,7 +13077,7 @@ class NameField(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -13282,7 +13283,7 @@ class NodeTreeLister(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -13507,7 +13508,7 @@ class PalettePort(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -13755,7 +13756,7 @@ class Picture(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -13941,7 +13942,7 @@ class ProgressBar(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -14184,7 +14185,7 @@ class RadioButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -14422,7 +14423,7 @@ class RadioButtonGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -15007,7 +15008,7 @@ class RadioCollection(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -15051,7 +15052,7 @@ class RangeControl(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -15245,7 +15246,7 @@ class ScriptTable(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -15615,7 +15616,7 @@ class ScrollField(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -15851,7 +15852,7 @@ class Separator(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -16032,7 +16033,7 @@ class ShelfButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -16436,7 +16437,7 @@ class SoundControl(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -16692,7 +16693,7 @@ class SwatchDisplayPort(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -16906,7 +16907,7 @@ class SwitchTable(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -17100,7 +17101,7 @@ class SymbolButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -17286,7 +17287,7 @@ class SymbolCheckBox(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -17534,7 +17535,7 @@ class Text(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -17759,7 +17760,7 @@ class TextField(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -18011,7 +18012,7 @@ class TextFieldButtonGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -18401,7 +18402,7 @@ class TextFieldGrp(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -18767,7 +18768,7 @@ class TextScrollList(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -19074,7 +19075,7 @@ class TimeControl(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -19429,7 +19430,7 @@ class TimePort(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -19615,7 +19616,7 @@ class ToolButton(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -19924,7 +19925,7 @@ class ToolCollection(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -19968,7 +19969,7 @@ class TreeLister(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -20193,7 +20194,7 @@ class TreeView(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:

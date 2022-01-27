@@ -68,7 +68,7 @@ def Shader_Overides_To_Master_Layer(layer,log_text):
 		return res
 	#----------------------------------------------------------------------
 	def apply_Shading_Engine_dict(data):
-		for sg,items in data.iteritems():
+		for sg,items in data.items():
 			if len(items):
 				cmds.sets(items,edit=True,forceElement=sg)
 	
@@ -424,7 +424,7 @@ class Alembic_Asset_Writer(object):
 				try:
 					item_node = MNODE(item)
 					self.all_top_level_node_geometry_descendent_nodes.append(item_node)
-				except StandardError:
+				except Exception:
 					self.bad_geometry_node_names.append(item)
 					self.all_top_level_node_geometry_descendent_node_names.remove(item)
 				progressBar.add_Tick()
@@ -481,7 +481,7 @@ class Alembic_Asset_Writer(object):
 			progressBar.setMaximum(len(items))
 			res = []
 			for item in items:
-				if not item in self._all_shader_engines_dict.keys():
+				if not item in list(self._all_shader_engines_dict.keys()):
 					item_node = Shading_Engine(item)
 					self._all_shader_engines_dict[item] = item_node
 				res.append(self._all_shader_engines_dict[item])
@@ -718,7 +718,7 @@ class Alembic_Asset_Writer(object):
 						cmds.setAttr(node.name+".AW_Extractor_ID", id_extractor_counter)
 						id_extractor_counter += 1
 					except:
-						print "Did Not Add Id To %s" % node.name
+						print(("Did Not Add Id To %s" % node.name))
 				else:
 					cmds.setAttr(node.name+".AW_Extractor_ID", id_extractor_counter)
 					id_extractor_counter += 1

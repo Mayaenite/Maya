@@ -12,6 +12,7 @@ import collections
 import math
 import uuid
 import QT
+import importlib
 
 Qt        = QT.Qt
 QtCore    = QT.QtCore
@@ -50,8 +51,8 @@ import Scripts.UICls
 import Scripts.Utility_And_Helpers
 import Scripts.callbacks
 
-reload(Scripts.NodeCls.M_Nodes)
-reload(Scripts.Global_Constants.Nodes)
+importlib.reload(Scripts.NodeCls.M_Nodes)
+importlib.reload(Scripts.Global_Constants.Nodes)
 
 callbacks             = Scripts.callbacks
 MCallbackIdWrapper    = callbacks.MCallbackIdWrapper
@@ -142,7 +143,7 @@ class Maya_Item(QStandardItem):
 	def data(self, role=IDRLS.DISPLAY):
 		""""""
 		if role == IDRLS.DECORATION:
-			if objectType_to_icon.has_key(self.node.objectType):
+			if self.node.objectType in objectType_to_icon:
 				return objectType_to_icon[self.node.objectType]
 		if role == IDRLS.FOREGROUND:
 			if self.node.isFromReferencedFile:
@@ -252,7 +253,7 @@ def assine_Selected_To_Part_Set_Function(item):
 #----------------------------------------------------------------------
 def make_item(node, parent=None):
 	isinstance(node, M_Nodes.MNODE)
-	if Class_to_objectType.has_key(str(node.objectType)):
+	if str(node.objectType) in Class_to_objectType:
 		res = Class_to_objectType[str(node.objectType)](node)
 	else:
 		res = Maya_Item(node)

@@ -16,12 +16,12 @@ class Named_Object(object):
 		return hash(self.name)
 	#----------------------------------------------------------------------
 	def __eq__(self, other):
-		return unicode(self.name) == unicode(other)
+		return str(self.name) == str(other)
 	#----------------------------------------------------------------------
 	def __ne__(self, other):
-		return unicode(self.name) != unicode(other)
+		return str(self.name) != str(other)
 	#----------------------------------------------------------------------
 	def __get_name(self):
-		return unicode(self._name)
+		return str(self._name)
 	#----------------------------------------------------------------------
 	name          = property(fget=__get_name)

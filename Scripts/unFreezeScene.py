@@ -33,7 +33,7 @@ class Custom_Logger(logging.Logger):
 	""""""
 	def __init__(self,name=None,level=logging.DEBUG,log_file=None,file_mode="w"):
 		if name == None:
-			name = "%s_%i" % (_LOG_FILE,_LOG_NUMBER.next())
+			name = "%s_%i" % (_LOG_FILE,next(_LOG_NUMBER))
 		logging.Logger.__init__(self,name)
 		self.setLevel(level)
 
@@ -41,7 +41,7 @@ class Custom_Logger(logging.Logger):
 			
 			if not os.path.exists(_LOG_FOLDER):
 				os.makedirs(_LOG_FOLDER)
-				print _LOG_FOLDER
+				print(_LOG_FOLDER)
 			file_name = "%s.text" % name
 			
 			log_file = os.path.join(_LOG_FOLDER,file_name)
@@ -117,7 +117,7 @@ def correct_mirros_and_Flips(node):
 		y.value = -1
 		cmds.makeIdentity(node,apply=True,t=True,r=False,s=False,n=False)
 
-		cmds.polyNormal(node,constructionHistory=False,normalMode=04)
+		cmds.polyNormal(node,constructionHistory=False,normalMode=0o4)
 
 
 
@@ -267,7 +267,7 @@ class Node_Freezer_Context(object):
 	#----------------------------------------------------------------------
 	def Scan_Children(self):
 		if self.progressBar.isCanceled():
-			print "task stoped"
+			print("task stoped")
 			return
 		else:
 			progress = self.progressBar.getProgress()
@@ -311,7 +311,7 @@ def dagGraphScanner(progressBar, node=None,inishalize=True,freezType=0):
 
 	else:
 		if progressBar.isCanceled():
-			print "task stoped"
+			print("task stoped")
 			return
 		else:
 			progress = progressBar.getProgress()

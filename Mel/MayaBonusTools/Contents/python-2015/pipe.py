@@ -214,10 +214,10 @@ def pipeInitPipe(basePath,show,verbos):
     pipeBasePath=basePath
 
     if verbosity == 1:
-        print "\n\n-------------------------------------"
-        print "-    PIPE: INITIALIZE THE PIPE      -"
-        print "-------------------------------------"
-        print "  - Check for Pipe XML Config Files"
+        print("\n\n-------------------------------------")
+        print("-    PIPE: INITIALIZE THE PIPE      -")
+        print("-------------------------------------")
+        print("  - Check for Pipe XML Config Files")
 
 # Set Paths
     pipeXMLConfigPath = pipeBasePath + pipeShow + "/config/"
@@ -228,11 +228,11 @@ def pipeInitPipe(basePath,show,verbos):
 # Check if Show Exists
     if os.path.exists(pipeBasePath + pipeShow):
         if verbosity == 1:
-            print '  - Project "' + pipeShow + '" Exists'
+            print(('  - Project "' + pipeShow + '" Exists'))
     else:
         if verbosity == 1:
-            print '  - Project "' + pipeShow + '" Does Not Exists'
-            print '  - Configure New Project "' + pipeShow + '" \n'
+            print(('  - Project "' + pipeShow + '" Does Not Exists'))
+            print(('  - Configure New Project "' + pipeShow + '" \n'))
         pipeCreateShow(pipeBasePath,pipeShow)
 
      
@@ -242,10 +242,10 @@ def pipeInitPipe(basePath,show,verbos):
 
 def pipeCreateShow(pipeBasePath,pipeShow):
     if verbosity == 1:
-       print "---------------------------"
-       print "PIPE: CONFIGURE NEW PROJECT"
-       print "---------------------------"
-       print "  - Setting up Variables"
+       print("---------------------------")
+       print("PIPE: CONFIGURE NEW PROJECT")
+       print("---------------------------")
+       print("  - Setting up Variables")
 
     pipeXMLConfigPath = pipeBasePath + pipeShow + "/config/"
     pipeAssetLibPath = pipeBasePath + pipeShow + "/lib/"
@@ -254,17 +254,17 @@ def pipeCreateShow(pipeBasePath,pipeShow):
 
 # Make Startup Directories
     if verbosity == 1:
-         print "  - Create Initial Directory Structure"
+         print("  - Create Initial Directory Structure")
     if os.path.exists(pipeXMLConfigPath)!=True:
-        os.makedirs(pipeXMLConfigPath, 0777)
+        os.makedirs(pipeXMLConfigPath, 0o777)
     if os.path.exists(pipeAssetLibPath)!=True:
-        os.makedirs(pipeAssetLibPath, 0777)
-        os.makedirs(pipeAssetLibPath+"assets/", 0777)
-        os.makedirs(pipeAssetLibPath+"xml/", 0777)
+        os.makedirs(pipeAssetLibPath, 0o777)
+        os.makedirs(pipeAssetLibPath+"assets/", 0o777)
+        os.makedirs(pipeAssetLibPath+"xml/", 0o777)
     if os.path.exists(pipeAssetDBPath)!=True:
-        os.makedirs(pipeAssetDBPath, 0777)
+        os.makedirs(pipeAssetDBPath, 0o777)
     if os.path.exists(pipeAssetProdPath)!=True:
-        os.makedirs(pipeAssetProdPath, 0777)
+        os.makedirs(pipeAssetProdPath, 0o777)
 
 # Create Initial Asset Library XML
     pipeCreateNewLib()
@@ -279,7 +279,7 @@ def pipeCreateShow(pipeBasePath,pipeShow):
     for tempRepType in initialRepTypes:
         pipeAddRepType(initialRepTypes[i], initialRepDataTypes[i], initialSubdirs[i], initialFilenames[i], initialNumMetric[i])
         i=i+1
-        print tempRepType
+        print(tempRepType)
 
 # Create the Asset Types XML Document
 #    initialAssetTypes = ["envir"]
@@ -309,7 +309,7 @@ def pipeCreateShow(pipeBasePath,pipeShow):
         i=i+1
 
     if verbosity == 1:
-         print '  - New Project "' + pipeShow + '" Initialized\n'
+         print(('  - New Project "' + pipeShow + '" Initialized\n'))
 
 
 ##################################
@@ -319,12 +319,12 @@ def pipeCreateShow(pipeBasePath,pipeShow):
 def pipeAddAssetType(newAssetType):
 # Create the Asset Types XML Document
  if verbosity == 1:
-     print "\n--------------------"
-     print "PIPE: ADD ASSET TYPE"
-     print "--------------------"
-     print '  - Add Asset Type: "' + newAssetType+ '"'
+     print("\n--------------------")
+     print("PIPE: ADD ASSET TYPE")
+     print("--------------------")
+     print(('  - Add Asset Type: "' + newAssetType+ '"'))
  if pipeAssetTypeExists(newAssetType):
-     print "  - Asset Type " +newAssetType + " already Exists:  ABORTING"
+     print(("  - Asset Type " +newAssetType + " already Exists:  ABORTING"))
      return
  tempAssetTypes=[]
  tempRepTypes=[]
@@ -354,26 +354,26 @@ def pipeAddAssetType(newAssetType):
 
 def pipeAddAssetTypeRep(type,repType):
  if verbosity == 1:
-     print "\n------------------------"
-     print "PIPE: ADD ASSET TYPE REP"
-     print "------------------------"
-     print '  - Add '  + type + ' Representation Type: "' + repType+ '"'
+     print("\n------------------------")
+     print("PIPE: ADD ASSET TYPE REP")
+     print("------------------------")
+     print(('  - Add '  + type + ' Representation Type: "' + repType+ '"'))
  tempAssetTypes=[]
  tempReps=[]
  tempRep=""
  tempCurrentData=""
  if pipeAssetTypeExists(type)== False:
-     print '  - Asset Type "'  + type + '" does not exist -- Aborting'
+     print(('  - Asset Type "'  + type + '" does not exist -- Aborting'))
      return
 ####
  if pipeAssetTypeRepExists(type, repType)== True:
-     print '  - Asset Type Rep "' + repType + '" for "'+ type + '" already exist -- Aborting'
+     print(('  - Asset Type Rep "' + repType + '" for "'+ type + '" already exist -- Aborting'))
      return
 ####
  xmlAssTypes = "pipeAssetTypes.xml"
  xmlAssTypesPath = pipeXMLConfigPath+xmlAssTypes
  if os.path.exists(xmlAssTypesPath)!=True:
-     print '  - pipeAssetTypes.xml does not exist -- Aborting'
+     print('  - pipeAssetTypes.xml does not exist -- Aborting')
      return
  tempAssetTypes=pipeListAssetTypes()
  XMLroot = xmlT.Element("pipeAssetTypes")
@@ -394,16 +394,16 @@ def pipeAddAssetTypeRep(type,repType):
 
 def pipeAddRepType(name,data,subdir,filename, numMetric):
  if verbosity == 1:
-     print "\n------------------"
-     print "PIPE: ADD REP TYPE"
-     print "------------------"
-     print '  - Add Representation Type: "' + name+ '"'
+     print("\n------------------")
+     print("PIPE: ADD REP TYPE")
+     print("------------------")
+     print(('  - Add Representation Type: "' + name+ '"'))
  tempRepTypes=[]
  tempCurrentData=""
  xmlRepTypes = "pipeRepTypes.xml"
  xmlRepTypesPath = pipeXMLConfigPath+xmlRepTypes
  if pipeRepExists(name):
-     print '  - Representation Type "'+ name + '" Exists'
+     print(('  - Representation Type "'+ name + '" Exists'))
      return
  XMLroot = xmlT.Element("pipeRepTypes")
 # Loop through the Types
@@ -434,7 +434,7 @@ def pipeAddRepType(name,data,subdir,filename, numMetric):
  tempNewFilenameObj.text = filename
  tempNewNumMetricObj = xmlT.SubElement(tempNewRepObj, name+"NumMetric")
  tempNewNumMetricObj.text = numMetric
- print (name,data,subdir,filename, numMetric)
+ print((name,data,subdir,filename, numMetric))
 # Write out the XML file
  file = open(xmlRepTypesPath, 'w')
  xmlT.ElementTree(XMLroot).write(file)
@@ -444,16 +444,16 @@ def pipeAddRepType(name,data,subdir,filename, numMetric):
 
 def pipeAddDataType(dataType,dataEditor,dataAuthor,dataExt):
  if verbosity == 0:
-     print "\n--------------------------"
-     print "PIPE: Register a Data Type"
-     print "--------------------------"
-     print '  - Register Data Type: "' + dataType+ '"'
+     print("\n--------------------------")
+     print("PIPE: Register a Data Type")
+     print("--------------------------")
+     print(('  - Register Data Type: "' + dataType+ '"'))
  xmlDataTypes = "pipeDataTypes.xml"
  xmlAssDataTypesPath = pipeXMLConfigPath+xmlDataTypes
 # Check if Data Type of new name already exists
  tempDataTypes=[]
  if pipeDataTypeExists(dataType):
-     print '  - Data Type with name "'+ name + '" Already Registered'
+     print(('  - Data Type with name "'+ name + '" Already Registered'))
      return
 # Create a New XML Doc node with the exsting Data Types
  XMLroot = xmlT.Element("pipeDataTypes")
@@ -498,11 +498,11 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
     tempLen = -1
 # Begin New Asset Placeholder Process
     if verbosity == 1:
-        print "\n--------------------------------"
-        print " PIPE: Create Asset Placeholder"
-        print "--------------------------------"
-        print '  - Get Asset List'
-        print '  - Asset Library path : ' + pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
+        print("\n--------------------------------")
+        print(" PIPE: Create Asset Placeholder")
+        print("--------------------------------")
+        print('  - Get Asset List')
+        print(('  - Asset Library path : ' + pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"))
 
 
 # Check if the Asset Type is Valid
@@ -512,8 +512,8 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
 	    if tempAssetType==newAssetType:
 	        tempAssetTypeCheck = 1
     if tempAssetTypeCheck == 0:
-        print '  - Asset Type "' + newAssetType + '" is not a valid Asset Type'
-	print '  - Aborting Asset Creation: Try again'
+        print(('  - Asset Type "' + newAssetType + '" is not a valid Asset Type'))
+	print('  - Aborting Asset Creation: Try again')
 	return
 # Get current Asset list
     listAssets = []
@@ -521,18 +521,18 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
     if listAssets[0] == "*N/A*":
         tempLen=0
         listAssets = []
-        print listAssets
-        print tempLen
+        print(listAssets)
+        print(tempLen)
     else:
         tempLen = len(listAssets)
 # Check if an asset with the name of the new asset already exists
     if pipeAssetExists(newAssetName):
-                print  '  - Create Asset Fail:  PipeAsset named"' + newAssetName + '" already exists!!!'
+                print(('  - Create Asset Fail:  PipeAsset named"' + newAssetName + '" already exists!!!'))
                 return
 # Check if Library is locked
     if os.path.exists(pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml.lock")==True:
-        print '  - Asset Library Currently Locked'
-	print '  - Aborting Asset Creation: Try again'
+        print('  - Asset Library Currently Locked')
+	print('  - Aborting Asset Creation: Try again')
 	return
 # Try to Lock the Asset Lib
     libXmlpath = pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
@@ -542,10 +542,10 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
         file.close()
         shutil.copy(libXmlpath,libXmlpath+".back")
         if verbosity == 1:
-            print "  - Asset Library Locked"
+            print("  - Asset Library Locked")
     except:
-        print '  - Cannot Lock Asset Library Currently'
-        print '  - Aborting Asset Creation . . .'
+        print('  - Cannot Lock Asset Library Currently')
+        print('  - Aborting Asset Creation . . .')
         return
 # Determine New ID Number
 ###    newAssetID = str(tempLen)
@@ -554,7 +554,7 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
 ###    print "  - New Asset ID = " + newAssetID
 # Update Asset Library XML    
     assetLibRoot = xmlT.Element('pipeAssets')
-    print listAssets
+    print(listAssets)
     if listAssets!= "*N/A*":
         for asset in listAssets:
  ###           id = pipeGetAssetInfoName(asset,"Id")
@@ -584,35 +584,35 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
 
 # Make directories for Asset
     if os.path.exists(pipeAssetLibPath+"assets/"+ newAssetName + "/xml/")!=True:
-        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/xml/", 0777)
+        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/xml/", 0o777)
     if os.path.exists(pipeAssetLibPath+"assets/"+ newAssetName + "/data/")!=True:
-        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/", 0777)
+        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/", 0o777)
     if os.path.exists(pipeAssetLibPath+"assets/"+ newAssetName + "/data/definition/")!=True:
-        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/definition/", 0777)
+        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/definition/", 0o777)
     if os.path.exists(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/")!=True:
-        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/", 0777)
+        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/", 0o777)
     if os.path.exists(pipeAssetLibPath+"assets/"+ newAssetName + "/data/textures/")!=True:
-        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/textures/", 0777)
+        os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/textures/", 0o777)
 # Write Asset XML File
     file = open(xmlPath, 'w')
     xmlT.ElementTree(assetAssetLibRoot).write(file)
     file.close()
 
     if verbosity == 1:
-        print "  - Asset Library Updated"
+        print("  - Asset Library Updated")
 # Make directories for variations and representations
     tempVars = pipeListAssetVars(newAssetName)
     if tempVars[0] != "*N/A*":
          for tempVar in tempVars:
-            os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/" + tempVar + "/", 0777)
+            os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/" + tempVar + "/", 0o777)
             tempReps = pipeListAssetVarReps(newAssetType, tempVar)
             for tempRep in tempReps:
-                os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/" + tempVar + "/" + tempRep, 0777)
+                os.makedirs(pipeAssetLibPath+"assets/"+ newAssetName + "/data/variations/" + tempVar + "/" + tempRep, 0o777)
 # Remove the Lock
     os.remove(libXmlpath+".lock")
     if verbosity == 1:
-        print "  - Asset Library Lock Removed"
-    print '  - Asset Placeholder for "' + newAssetName + '" had been completed\n'
+        print("  - Asset Library Lock Removed")
+    print(('  - Asset Placeholder for "' + newAssetName + '" had been completed\n'))
 
 
 #############################
@@ -624,10 +624,10 @@ def pipeAddAsset(newAssetName,newAssetType,newNotes):
 def pipeEditAsset(assetName,input,tempCommand):
 # Begin Edit Asset Placeholder Process
     if verbosity == 1:
-        print "\n---------------------------------"
-        print " PIPE: Edit an  Asset Placeholder"
-        print "---------------------------------"
-        print '  - Get Asset List'
+        print("\n---------------------------------")
+        print(" PIPE: Edit an  Asset Placeholder")
+        print("---------------------------------")
+        print('  - Get Asset List')
 
 # Declare Variables
     pipeAssetLibXMLPath = pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
@@ -636,7 +636,7 @@ def pipeEditAsset(assetName,input,tempCommand):
     tempTest = ""
     assetVariations = []
     if verbosity == 1:
-        print '  - Asset Library path : ' + pipeAssetLibXMLPath
+        print(('  - Asset Library path : ' + pipeAssetLibXMLPath))
 
 # Get a list of all of the current Representation types for the current Show
     tempAllRepTypes = pipeListRepTypes()
@@ -646,17 +646,17 @@ def pipeEditAsset(assetName,input,tempCommand):
 
 # Check if an asset with the name of the new asset already exists
     if pipeAssetExists(assetName) ==False:
-            print  '  - Edit Placeholder Failed:  PipeAsset named "' + assetName + '" does not exist!!!'
+            print(('  - Edit Placeholder Failed:  PipeAsset named "' + assetName + '" does not exist!!!'))
             return
 
 # Check if an asset variation with that name already exists
     if tempCommand=="addVar" and pipeAssetVariationExists(assetName,input[0])==True:
-            print  '  - Edit Placeholder Failed:  PipeAsset Variation named "' + input[0] + '" already exists!!!'
+            print(('  - Edit Placeholder Failed:  PipeAsset Variation named "' + input[0] + '" already exists!!!'))
             return
 
 # Check if an asset variation rep exists with that name
     if tempCommand=="addRep" and pipeAssetVarRepExists(assetName,input[0],input[1])==True:
-            print  '  - Edit Placeholder Failed:  PipeAsset Variation Representation named "' + input[1] + '" already exists!!!'
+            print(('  - Edit Placeholder Failed:  PipeAsset Variation Representation named "' + input[1] + '" already exists!!!'))
             return
 
 # Loop through existing Assets
@@ -697,20 +697,20 @@ def pipeEditAsset(assetName,input,tempCommand):
                     tempNewVarRepObj.attrib['type']= input[1]
                     tempTypeTester="NoMatch"
                     for tempRepType in tempAllRepTypes:
-                        print tempRepType + "\n"
+                        print((tempRepType + "\n"))
                         if tempRepType == input[1]:
                             tempTypeTester="Match"
                     if os.path.exists(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + input[0] +"/" + input[1] + "/")!=True:
-                        os.makedirs(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + input[0] +"/" + input[1] + "/", 0777)
+                        os.makedirs(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + input[0] +"/" + input[1] + "/", 0o777)
                     if tempTypeTester!="Match":
-                        print '  - **Warning**: Representation "' + input[1] + '" is not registered'
+                        print(('  - **Warning**: Representation "' + input[1] + '" is not registered'))
 # Add Variation
     if tempCommand=="addVar" and tempName==assetName:
             tempNewVarName = input[0]
             tempNewAssetVarObj = xmlT.SubElement(tempNewAssetVarsObj,tempNewVarName)
             if os.path.exists(pipeAssetLibPath+"assets/"+ assetName + "/data/variations/"+ tempNewVarName)!=True:
-                os.makedirs(pipeAssetLibPath+"assets/"+ assetName + "/data/variations/"+ tempNewVarName, 0777)
-                os.makedirs(pipeAssetLibPath+"assets/"+ assetName + "/data/definition/"+ tempNewVarName, 0777)
+                os.makedirs(pipeAssetLibPath+"assets/"+ assetName + "/data/variations/"+ tempNewVarName, 0o777)
+                os.makedirs(pipeAssetLibPath+"assets/"+ assetName + "/data/definition/"+ tempNewVarName, 0o777)
             tempAssetTypes = pipeGetAssetInfoName(assetName,"Type")
             tempDefVars = pipeListAssetTypeReps(tempAssetTypes)
             for tempInput in tempDefVars:
@@ -724,15 +724,15 @@ def pipeEditAsset(assetName,input,tempCommand):
                     tempNewVarRepObj.attrib['type']= tempInput
                     tempNewSubdir = pipeGetRepDataType(tempInput,"SubDir")
                     if os.path.exists(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + tempNewVarName +"/" + tempInput + "/" + tempNewSubdir)!=True:
-                        os.makedirs(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + tempNewVarName +"/" + tempInput + "/" + tempNewSubdir, 0777)
+                        os.makedirs(pipeAssetLibPath+"assets/"+ tempName + "/data/variations/" + tempNewVarName +"/" + tempInput + "/" + tempNewSubdir, 0o777)
                     if tempTypeTester!="Match":
-                        print '  - Warning: Representation "' + tempInput + '" is not registered'
+                        print(('  - Warning: Representation "' + tempInput + '" is not registered'))
 # Write the New Asset Library File
     file = open(assetXMLPath, 'w')
     xmlT.ElementTree(xmlRoot).write(file)
     file.close()
     if verbosity == 1:
-        print '  - Asset Placeholder for "' + tempName + '" has been edited\n'
+        print(('  - Asset Placeholder for "' + tempName + '" has been edited\n'))
 
 
 
@@ -743,10 +743,10 @@ def pipeEditAsset(assetName,input,tempCommand):
 # Test If Asset Type Exist
 def pipeAssetTypeExists(type):
  if verbosity == 1:
-     print "\n------------------------"
-     print "PIPE: ASSET TYPE EXISTS?"
-     print "------------------------"
-     print '  - Does '  + type + '  Type Exist?'
+     print("\n------------------------")
+     print("PIPE: ASSET TYPE EXISTS?")
+     print("------------------------")
+     print(('  - Does '  + type + '  Type Exist?'))
  tempAssetTypes=[]
  xmlAssTypes = "pipeAssetTypes.xml"
  xmlAssTypesPath = pipeXMLConfigPath+xmlAssTypes
@@ -760,10 +760,10 @@ def pipeAssetTypeExists(type):
 # Test If Data Type Exist
 def pipeDataTypeExists(type):
  if verbosity == 1:
-     print "\n-----------------------"
-     print "PIPE: DATA TYPE EXISTS?"
-     print "-----------------------"
-     print '  - Does Data Type'  + type + ' Exist?'
+     print("\n-----------------------")
+     print("PIPE: DATA TYPE EXISTS?")
+     print("-----------------------")
+     print(('  - Does Data Type'  + type + ' Exist?'))
  tempAssetTypes=[]
  xmlDataTypes = "pipeDataTypes.xml"
  xmlAssTypesPath = pipeXMLConfigPath+xmlDataTypes
@@ -778,10 +778,10 @@ def pipeDataTypeExists(type):
 # Test If An Asset Exists
 def pipeAssetExists(name):
  if verbosity == 1:
-     print "\n-------------------"
-     print "PIPE: ASSET EXISTS?"
-     print "-------------------"
-     print '  - Does '  + name + ' Exist?'
+     print("\n-------------------")
+     print("PIPE: ASSET EXISTS?")
+     print("-------------------")
+     print(('  - Does '  + name + ' Exist?'))
  tempAssets=[]
  tempXmlPath=pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
  if os.path.exists(tempXmlPath)==True:
@@ -795,10 +795,10 @@ def pipeAssetExists(name):
 # Test If An Asset Variation Exists
 def pipeAssetVariationExists(asset,variation):
  if verbosity == 1:
-     print "\n-----------------------------"
-     print "PIPE: ASSET VARIATION EXISTS?"
-     print "-----------------------------"
-     print '  - Does '  + variation + '  Variation Exist For Asset ' + asset + '?'
+     print("\n-----------------------------")
+     print("PIPE: ASSET VARIATION EXISTS?")
+     print("-----------------------------")
+     print(('  - Does '  + variation + '  Variation Exist For Asset ' + asset + '?'))
  tempVars=[]
  tempXmlPath=pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
  if os.path.exists(tempXmlPath)==True:
@@ -814,10 +814,10 @@ def pipeAssetVariationExists(asset,variation):
 # Test If An Asset Variation Representation Exist
 def pipeAssetVarRepExists(assetName,varType, representation):
  if verbosity == 1:
-     print "\n-------------------------------------------"
-     print "PIPE: ASSET VARIATION REPRESENTAION EXISTS?"
-     print "-------------------------------------------"
-     print '  - Does representation ' + representation + ' for '  + varType + '   exist for asset ' + assetName + '?'
+     print("\n-------------------------------------------")
+     print("PIPE: ASSET VARIATION REPRESENTAION EXISTS?")
+     print("-------------------------------------------")
+     print(('  - Does representation ' + representation + ' for '  + varType + '   exist for asset ' + assetName + '?'))
  tempVars=[]
  tempXmlPath=pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
  if os.path.exists(tempXmlPath)==True:
@@ -832,10 +832,10 @@ def pipeAssetVarRepExists(assetName,varType, representation):
 # Test if a Representation Type Exists
 def pipeRepExists(representation):
  if verbosity == 1:
-     print "\n---------------------------------"
-     print "PIPE: REPRESENTAION TYPE EXISTS?"
-     print "--------------------------------"
-     print '  - Does representation type' + representation + ' exist?'
+     print("\n---------------------------------")
+     print("PIPE: REPRESENTAION TYPE EXISTS?")
+     print("--------------------------------")
+     print(('  - Does representation type' + representation + ' exist?'))
  tempVars=[]
  tempXmlPath = pipeXMLConfigPath + "pipeDataTypes.xml"
  if os.path.exists(tempXmlPath)==True:
@@ -850,10 +850,10 @@ def pipeRepExists(representation):
 # Test if an Asset Type Representation Type Exists
 def pipeAssetTypeRepExists(type, representation):
  if verbosity == 1:
-     print "\n---------------------------------"
-     print "PIPE: ASSET TYPE REPRESENTAION TYPE EXISTS?"
-     print "--------------------------------"
-     print '  - Does representation type' + representation + ' exist for asset type ' + type +'?'
+     print("\n---------------------------------")
+     print("PIPE: ASSET TYPE REPRESENTAION TYPE EXISTS?")
+     print("--------------------------------")
+     print(('  - Does representation type' + representation + ' exist for asset type ' + type +'?'))
  tempVars=[]
  xmlAssTypes = "pipeAssetTypes.xml"
  tempXmlPath = pipeXMLConfigPath+xmlAssTypes
@@ -880,10 +880,10 @@ def pipeGetPipePath():
 # Get all the Asset Types
 def pipeListAssetTypes():
     if verbosity == 1:
-        print "\n-----------------------"
-        print " PIPE: Get Asset Types "
-        print "-----------------------"
-        print '  - Get Asset Types'
+        print("\n-----------------------")
+        print(" PIPE: Get Asset Types ")
+        print("-----------------------")
+        print('  - Get Asset Types')
     tempXmlPath = pipeXMLConfigPath + "pipeAssetTypes.xml"
     tree = xmlT.ElementTree(file=tempXmlPath)
     assetTypesObj = tree.getroot()
@@ -894,17 +894,17 @@ def pipeListAssetTypes():
         assetTypes.append('*N/A*')
     for x in assetTypes:
         if verbosity == 1:
-            print "     " + x
+            print(("     " + x))
     assetTypes.sort()
     return assetTypes
 
 # Get Asset Info by Name
 def pipeGetAssetInfoName(tempName,info):
     if verbosity == 1:
-        print "\n-----------------------------"
-        print " PIPE: Get Asset Info By Name"
-        print "-----------------------------"
-        print '  - Get Asset ' + info + ' for "' +tempName +'"'
+        print("\n-----------------------------")
+        print(" PIPE: Get Asset Info By Name")
+        print("-----------------------------")
+        print(('  - Get Asset ' + info + ' for "' +tempName +'"'))
     tempValues = []
     tempXmlPath=pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
 
@@ -922,16 +922,16 @@ def pipeGetAssetInfoName(tempName,info):
     if len(x)==0:
         x="*N/A*"
     if verbosity == 1:
-        print "     " +  x + "\n"
+        print(("     " +  x + "\n"))
     return x
 
 # List the Asset Type Representations
 def pipeListAssetTypeReps(type):
     if verbosity == 1:
-        print "\n----------------------------"
-        print " PIPE: Get Asset Types Reps "
-        print "----------------------------"
-        print '  - Get Asset Type Reps for "' + type + '"'
+        print("\n----------------------------")
+        print(" PIPE: Get Asset Types Reps ")
+        print("----------------------------")
+        print(('  - Get Asset Type Reps for "' + type + '"'))
     tempXmlPath = pipeXMLConfigPath + "pipeAssetTypes.xml"
     tree = xmlT.ElementTree(file=tempXmlPath)
     assetTypesObj = tree.getroot()
@@ -945,16 +945,16 @@ def pipeListAssetTypeReps(type):
         tempValues.append('*N/A*')
     if verbosity == 1:
         for x in tempValues:
-            print "     " + x +"\n"
+            print(("     " + x +"\n"))
     return tempValues
 
 # List all assets in the Show
 def pipeListAssets():
     if verbosity == 1:
-        print "\n------------------"
-        print " PIPE: Get Assets "
-        print "------------------"
-        print '  - Get Assets in show "' +  pipeShow + '":'
+        print("\n------------------")
+        print(" PIPE: Get Assets ")
+        print("------------------")
+        print(('  - Get Assets in show "' +  pipeShow + '":'))
 
     tempXmlPath=pipeAssetLibPath+"xml/"+"pipeAssetLibrary.xml"
     tempAssets = []
@@ -966,16 +966,16 @@ def pipeListAssets():
         tempAssets.append('*N/A*')
     if verbosity == 1:
         for x in tempAssets:
-            print "     " + x +"\n"
+            print(("     " + x +"\n"))
     return tempAssets
 
 # Get variations of an asset
 def pipeListAssetVars(assetName):
     if verbosity == 1:
-        print "\n----------------------------"
-        print " PIPE: Get Asset Variations "
-        print "----------------------------"
-        print '  - Get Variations for Asset "' +  assetName + '"'
+        print("\n----------------------------")
+        print(" PIPE: Get Asset Variations ")
+        print("----------------------------")
+        print(('  - Get Variations for Asset "' +  assetName + '"'))
 
     tempXmlPath =  (pipeAssetLibPath + "assets/" + assetName + "/xml/"+assetName + ".asset.xml")
     tempValues = []
@@ -993,16 +993,16 @@ def pipeListAssetVars(assetName):
         tempValues.append('*N/A*')
     if verbosity == 1:
         for x in tempValues:
-            print "     " + x +"\n"
+            print(("     " + x +"\n"))
     return tempValues
 
 # Get the representations of a variation of an asset
 def pipeListAssetVarReps(assetName,varType):
     if verbosity == 1:
-        print "\n--------------------------------------------"
-        print " PIPE: Get Asset Variation Representations "
-        print "--------------------------------------------"
-        print '  - Get Representations for Variation "' +varType + '" for Asset Name "' + assetName +'":'
+        print("\n--------------------------------------------")
+        print(" PIPE: Get Asset Variation Representations ")
+        print("--------------------------------------------")
+        print(('  - Get Representations for Variation "' +varType + '" for Asset Name "' + assetName +'":'))
 
     tempXmlPath =  (pipeAssetLibPath + "assets/" + assetName + "/xml/"+assetName + ".asset.xml")
 
@@ -1016,19 +1016,19 @@ def pipeListAssetVarReps(assetName,varType):
         tempValues.append("*N/A*")
     for x in tempValues:
         if verbosity == 1:
-            print "     " + x
+            print(("     " + x))
     tempValues.sort()
     if verbosity == 1:
-        print "     " + x +"\n"
+        print(("     " + x +"\n"))
     return tempValues
 
 # Get all Data Types
 def pipeListDataTypes():
     if verbosity == 1:
-        print "\n-----------------------"
-        print " PIPE: Get Data Types "
-        print "-----------------------"
-        print '  - Get Data Types:'
+        print("\n-----------------------")
+        print(" PIPE: Get Data Types ")
+        print("-----------------------")
+        print('  - Get Data Types:')
     tempXmlPath = pipeXMLConfigPath + "pipeDataTypes.xml"
     if os.path.exists(tempXmlPath)!=True:
         dataTypes=[]
@@ -1042,19 +1042,19 @@ def pipeListDataTypes():
         dataTypes.append('*N/A*')
     for temp in dataTypes:
         if verbosity == 1:
-                print "     " + temp
+                print(("     " + temp))
     dataTypes.sort()
     if verbosity == 1:
-        print "\n"
+        print("\n")
     return dataTypes
 
 # get Data Type Info
 def pipeGetDataTypeInfo(dataType,Tag):
     if verbosity == 1:
-        print "\n--------------------------"
-        print " PIPE: Get Data Type Info "
-        print "--------------------------"
-        print '  - Get Editor Application for Data Type "' +dataType + Tag + '"'
+        print("\n--------------------------")
+        print(" PIPE: Get Data Type Info ")
+        print("--------------------------")
+        print(('  - Get Editor Application for Data Type "' +dataType + Tag + '"'))
     tempValues = []
     tempXmlPath = pipeXMLConfigPath+"pipeDataTypes.xml"
     xmldoc = minidom.parse(tempXmlPath)
@@ -1063,17 +1063,17 @@ def pipeGetDataTypeInfo(dataType,Tag):
     if len(x)==0:
         x="*N/A*"
     if verbosity == 1:
-        print "     " + x
-        print "\n"
+        print(("     " + x))
+        print("\n")
     return x
 
 # Get all Rep Types
 def pipeListRepTypes():
     if verbosity == 1:
-        print "\n----------------------"
-        print " PIPE: Get Data Types"
-        print "----------------------"
-        print '  - Get Rep Types:'
+        print("\n----------------------")
+        print(" PIPE: Get Data Types")
+        print("----------------------")
+        print('  - Get Rep Types:')
     tempXmlPath = pipeXMLConfigPath + "pipeRepTypes.xml"
     if os.path.exists(tempXmlPath)!=True:
         repTypes=[]
@@ -1087,19 +1087,19 @@ def pipeListRepTypes():
         repTypes.append('*N/A*')
     for temp in repTypes:
         if verbosity == 1:
-                print "     " + temp
+                print(("     " + temp))
     repTypes.sort()
     if verbosity == 1:
-         print "\n"
+         print("\n")
     return repTypes
 
 # get Rep Info
 def pipeGetRepDataType(repType, Tag):
     if verbosity == 1:
-        print "\n-------------------------"
-        print " PIPE: Get Rep Data Type "
-        print "-------------------------"
-        print '  - Get Data Type for Representation "' +repType +Tag + '"'
+        print("\n-------------------------")
+        print(" PIPE: Get Rep Data Type ")
+        print("-------------------------")
+        print(('  - Get Data Type for Representation "' +repType +Tag + '"'))
     tempValues = []
     tempXmlPath = pipeXMLConfigPath+"pipeRepTypes.xml"
     xmldoc = minidom.parse(tempXmlPath)
@@ -1108,7 +1108,7 @@ def pipeGetRepDataType(repType, Tag):
     if len(x)==0:
         x="*N/A*"
     if verbosity == 1:
-        print "     " + x + "\n"
+        print(("     " + x + "\n"))
     return x
     
 #################################

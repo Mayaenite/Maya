@@ -81,7 +81,7 @@ def bt_findMissingTextures():
     #print fileNodes
     fileCount = len(fileNodes)
     print ('\n##########################################################################\n')
-    print ('Checking ' + str(fileCount) + ' nodes for associated texture/image files\n')
+    print(('Checking ' + str(fileCount) + ' nodes for associated texture/image files\n'))
 
 
                
@@ -90,29 +90,29 @@ def bt_findMissingTextures():
       
     else:    
         for fileNode in fileNodes:
-            print ('Checking file node -> ' + fileNode + '.fileTextureName')
+            print(('Checking file node -> ' + fileNode + '.fileTextureName'))
             #get file names
             pathFileName = (cmds.getAttr(fileNode + '.fileTextureName'))
             if (os.path.isfile(pathFileName) == 0):
                 fileName = os.path.basename(pathFileName)
-                print ('File does not exist at currently specified path : ' + pathFileName)
-                print ('Searching project for : ' + fileName)
+                print(('File does not exist at currently specified path : ' + pathFileName))
+                print(('Searching project for : ' + fileName))
                 cmds.filePathEditor ((fileNode + '.fileTextureName'),repath=currentProject,recursive=1)
                 pathFileName = (cmds.getAttr(fileNode + '.fileTextureName'))   
                 if (os.path.isfile(pathFileName) == 1):
-                    print ('SUCCESS:  File relocated at: ' + pathFileName + '\n')
+                    print(('SUCCESS:  File relocated at: ' + pathFileName + '\n'))
                     successCount += 1
                 else:
-                    print ('FAILURE:  File can not be found in current project: ' + fileName + '\n')  
+                    print(('FAILURE:  File can not be found in current project: ' + fileName + '\n'))  
                     failureCount += 1       
             else:
-                print ('File found at existing path: ' + pathFileName + '\n')
+                print(('File found at existing path: ' + pathFileName + '\n'))
     
     if (len(selectedAll) != 0):    
         cmds.select(selectedAll, r=1)
     
     if (successCount > 0):
-        print ('SUCCESS:  Relocated ' + str(successCount) + ' missing texture/image files. (See Script Editor for details)')
+        print(('SUCCESS:  Relocated ' + str(successCount) + ' missing texture/image files. (See Script Editor for details)'))
 
     if ((successCount == 0) and (failureCount == 0)):
         cmds.warning ('No changes were made. (See Script Editor for details)')

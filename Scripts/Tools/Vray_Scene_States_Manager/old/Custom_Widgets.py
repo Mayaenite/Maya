@@ -1,7 +1,7 @@
 #speak = QtCore.Signal((int,), (str,))
 import os
 import yaml
-import Yaml_Config_Data
+from . import Yaml_Config_Data
 
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
@@ -988,7 +988,7 @@ class Active_Asset_ComboBox(ComboBox):
 	def editing_Finished(self):
 		line = self.lineEdit()
 		text = line.text()
-		print text
+		print(text)
 		
 	def setItemText(self,index, value):
 		super(Active_Asset_ComboBox,self).setItemText(index, value)
@@ -2501,7 +2501,7 @@ class Part_Sets_List_View(Filtered_Proxy_List_View):
 	
 	def print_item(self):
 		index = self.indexAt(self._context_pos).data()
-		print index.data()
+		print((index.data()))
 	#----------------------------------------------------------------------
 	def contextMenuEvent(self, event):
 		win = self.window()
@@ -2972,7 +2972,7 @@ class _Named_Data_Item(_Data_Item):
 
 	def setData(self, value, role=Data_Roles.EDIT):
 		if role in self.Item_Data_Roles.DP_ED:
-			if isinstance(value, (unicode, str)):
+			if isinstance(value, str):
 				self._data.name = value
 			else:
 				self._data = value
@@ -3722,7 +3722,7 @@ class Vray_Object_Properties_Item(Maya_Selection_Set_Item):
 class Assets_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
 	def __init__(self,**kwargs):
-		if kwargs.has_key("yaml"):
+		if "yaml" in kwargs:
 			assets = kwargs.pop("yaml")
 			from_yaml = True
 		else:
@@ -3774,7 +3774,7 @@ class File_Reference_Item(_Named_Data_Item):
 class Part_Sets_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
 	def __init__(self,**kwargs):
-		if kwargs.has_key("yaml"):
+		if "yaml" in kwargs:
 			assets = kwargs.pop("yaml")
 			from_yaml = True
 		else:
@@ -3808,7 +3808,7 @@ class Part_Sets_Item(_Named_Data_Item):
 class Render_States_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
 	def __init__(self,**kwargs):
-		if kwargs.has_key("yaml") and  kwargs.has_key("part_sets"):
+		if "yaml" in kwargs and  "part_sets" in kwargs:
 			render_states = kwargs.pop("yaml")
 			part_sets     = kwargs.pop("part_sets")
 			asset_parent  = kwargs.pop("asset_parent")
@@ -3853,7 +3853,7 @@ class Render_State_Item(_Named_Data_Item):
 	ITEM_TYPE  = QT.user_type_counter()
 	#----------------------------------------------------------------------
 	def __init__(self,name,**kwargs):
-		if kwargs.has_key("yaml") and kwargs.has_key("part_sets"):
+		if "yaml" in kwargs and "part_sets" in kwargs:
 			render_state = kwargs.pop("yaml")
 			part_sets    = kwargs.pop("part_sets")
 			super(Render_State_Item,self).__init__(render_state.name,**kwargs)
@@ -3945,7 +3945,7 @@ class Reference_Container_Item(_Named_Data_Item):
 	""""""
 	#----------------------------------------------------------------------
 	def __init__(self, name, **kwargs):
-		if kwargs.has_key("yaml") and kwargs.has_key("part_sets"):
+		if "yaml" in kwargs and "part_sets" in kwargs:
 			from_yaml = True
 			container = kwargs.pop("yaml")
 			part_sets = kwargs.pop("part_sets")
@@ -4084,7 +4084,7 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 		try:
 			self._data.lockNode()
 		except:
-			print "Was Unable to lock %s " % self._data.name
+			print(("Was Unable to lock %s " % self._data.name))
 		
 	#----------------------------------------------------------------------
 	def to_Yaml(self):
@@ -4096,7 +4096,7 @@ class Asset_Item(Maya_Asset_Item):
 	ITEM_TYPE  = QT.user_type_counter()
 	#----------------------------------------------------------------------
 	def __init__(self,asset,**kwargs):
-		if kwargs.has_key("asset_parent"):
+		if "asset_parent" in kwargs:
 			parent = kwargs.pop("asset_parent")
 		else:
 			parent = None

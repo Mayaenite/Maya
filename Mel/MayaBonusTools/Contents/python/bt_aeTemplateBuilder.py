@@ -171,7 +171,7 @@ def simpleTemplateEditorUI():
 # Set VerbMode
  def simpleTemplateVerbMode( *args):
   verbMode = str(cmds.menuItem(verbMenuI, q=1, checkBox = True))
-  print "  - Verbosity Mode Set to: " + verbMode
+  print(("  - Verbosity Mode Set to: " + verbMode))
 #
 #Add Callbacks to Selected items in the current View
  def simpleTemplateEditorAddCallbacks( *args):
@@ -197,32 +197,32 @@ def simpleTemplateEditorUI():
   				tempAttrStrp = tempAttrStrp.replace(" *","")
   				dictCallbacks[currTab + "_" + tempAttrStrp] = text
 				if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		  			print ('  - Callback created for ' + tempAttrStrp + ' in view "' + currTab + '"')
+		  			print(('  - Callback created for ' + tempAttrStrp + ' in view "' + currTab + '"'))
   				cmds.textScrollList(curList, e=1, rii=tempAttrI)
 				cmds.textScrollList(curList, e=1, ap=[tempAttrI,"      " + tempAttrStrp+ " *"])
 
 # List callbacks in Current View
  def simpleTemplateEditorPrintCallbacks( *args):
   currTab = str(cmds.tabLayout(tabs1,q=1, st=1))
-  tempkeys = dictCallbacks.keys()
-  print '\n-------------------------------------\n Callbacks list in the "' + currTab + '" View\n-------------------------------------'
+  tempkeys = list(dictCallbacks.keys())
+  print(('\n-------------------------------------\n Callbacks list in the "' + currTab + '" View\n-------------------------------------'))
   for temp in tempkeys:
   	if temp.startswith(currTab):
   		tempCB = dictCallbacks[temp]
   		temp = temp.replace(currTab + "_","")
-  		print temp + ":  " + tempCB
+  		print((temp + ":  " + tempCB))
 
 # List all callbacks
  def simpleTemplateEditorPrintAllCallbacks( *args):
   currTab = str(cmds.tabLayout(tabs1,q=1, st=1))
-  tempkeys = dictCallbacks.keys()
+  tempkeys = list(dictCallbacks.keys())
   tempkeys.sort()
-  print '\n-------------------------------------\n Callbacks list in all views\n-------------------------------------'
+  print('\n-------------------------------------\n Callbacks list in all views\n-------------------------------------')
   for temp in tempkeys:
   	tempCB = dictCallbacks[temp]
   	tSplit = temp.split("_")
 	temp = temp.replace(tSplit[0] + "_","")
-	print tSplit[0] + " View " + temp + ":  " + tempCB
+	print((tSplit[0] + " View " + temp + ":  " + tempCB))
 
 
 #
@@ -235,7 +235,7 @@ def simpleTemplateEditorUI():
   	feedback = cmds.confirmDialog(button=["Reset Editor","Continue Editing"], defaultButton = "Continue Editing",cancelButton="Continue Editing", message="Reset Template Editor?\n\nYou will lose any unsaved template editing.\n\n")
   if feedback == "Reset Editor":
 	  if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-	  	print "  - Template Editor Reset"
+	  	print("  - Template Editor Reset")
 	  temp2= []
 	  temp2= cmds.ls(sl=True)
 	  if len(temp2)!=1:
@@ -256,7 +256,7 @@ def simpleTemplateEditorUI():
 					cmds.textScrollList(txtScrl1, e=1, append=temp)
 			except:
 				if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-				  	print ("  - " + currentNode+'.'+temp + ' was skipped')
+				  	print(("  - " + currentNode+'.'+temp + ' was skipped'))
 	  cmds.deleteUI("simpleTemplateEditorUITabsLayout", layout=True)
 	  cmds.setParent(col33)
 	  cmds.tabLayout("simpleTemplateEditorUITabsLayout")
@@ -325,7 +325,7 @@ def simpleTemplateEditorUI():
 		cmds.setParent('..')
 		cmds.tabLayout(tabs1, e=1, mt = [len(tabsList), tempC])
 		if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		  	print ('  - Added View "' + text +  '"')
+		  	print(('  - Added View "' + text +  '"'))
 		
 #
 # Dupe View to the Template UI
@@ -387,9 +387,9 @@ def simpleTemplateEditorUI():
 		cmds.setParent('..')
 		cmds.tabLayout(tabs1, e=1, mt = [len(tabsList), tempC])
 		if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		  	print ('  - Duplicated View "'+ currView + '" as "' + text +  '" View')
+		  	print(('  - Duplicated View "'+ currView + '" as "' + text +  '" View'))
 		currTab = str(cmds.tabLayout(tabs1,q=1, st=1))
-  		tempkeys = dictCallbacks.keys()
+  		tempkeys = list(dictCallbacks.keys())
 		for temp in tempkeys:
 		 	if temp.startswith(currView):
 		  		tempCB = dictCallbacks[temp]
@@ -407,13 +407,13 @@ def simpleTemplateEditorUI():
   else:
   	if cmds.confirmDialog(button=["Delete View","Cancel"], defaultButton = "Cancel",cancelButton="Cancel", message="Delete " +currView + " view?\n\nYou will lose any unsaved template editing.\n\n") == "Delete View":
 
-  		tempkeys = dictCallbacks.keys()
+  		tempkeys = list(dictCallbacks.keys())
   		for temp in tempkeys:
   			if temp.startswith(currView):
   				del dictCallbacks[temp]
 		cmds.deleteUI(currView, layout=True)
 		if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		  	print ('  - View "'+ currView + '" has been deleted')
+		  	print(('  - View "'+ currView + '" has been deleted'))
 
 #
 # Add Attribute(s) to current View List
@@ -429,7 +429,7 @@ def simpleTemplateEditorUI():
   for temp in attrsList:
   	cmds.textScrollList(curList, e=1, append=("      " + temp))
    	if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		print ('  - Added "' + temp + '" to the "' + str(cmds.tabLayout(tabs1,q=1, st=1)) +'" View ')
+		print(('  - Added "' + temp + '" to the "' + str(cmds.tabLayout(tabs1,q=1, st=1)) +'" View '))
  
 #
 # Remove Attribute(s) from current View List
@@ -456,7 +456,7 @@ def simpleTemplateEditorUI():
 			del dictCallbacks[tempKey]
   		cmds.textScrollList(curList, e=1, rii=temp)
    		if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-			print ('  - Removed "' + tempAttrStrp + '" from the "' + currTab +'" View ')
+			print(('  - Removed "' + tempAttrStrp + '" from the "' + currTab +'" View '))
 
 #
 # Move Attribute(s) in current Up 
@@ -620,12 +620,12 @@ def simpleTemplateEditorUI():
 		tFile.write("                        <label>" + tmpLabel + "</label>\n")
 		tFile.write("                </attribute>\n")
 		if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-			print ('  - Declare Attribute ' + name)
+			print(('  - Declare Attribute ' + name))
 
   tFile.write("    </template>\n\n")
   for curTab in allTabs:
    	if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		print ('  - Create View ' + curTab)
+		print(('  - Create View ' + curTab))
    	tFile.write('    <view name="' + curTab + '" template="AE' + tempNodeType + '">\n')
     	currColChld = cmds.columnLayout(curTab,q=1, ca=1)
   	curList = ""
@@ -663,7 +663,7 @@ def simpleTemplateEditorUI():
   tFile.close()
   if cmds.checkBoxGrp(chkBox1,q=1,v1=1)==1:
    	if (cmds.menuItem(verbMenuI, q=1, checkBox = True)) == True:
-		print ('  - Adding "' +  tempPath + '" to Paths')
+		print(('  - Adding "' +  tempPath + '" to Paths'))
 	tempTempPaths = mel.eval('getenv MAYA_CUSTOM_TEMPLATE_PATH')
 	tmptst=""
 	mel.eval('putenv "MAYA_CUSTOM_TEMPLATE_PATH" "' + tempPath + '; ' + tempTempPaths + '"')
@@ -671,8 +671,8 @@ def simpleTemplateEditorUI():
 	mel.eval('putenv "MAYA_SCRIPT_PATH" "' + tempPath + '; ' + tempTempPaths + '"')
 	sys.path.append(tempPath)
   cmds.confirmDialog(button="OK", message="\nTEMPLATE SAVED\n\n" + tempFileName + "\n\nYou may need to run a 'refreshCustomTemplate' command\nto see the results of the new template.")
-  print "--------------\nTemplate Saved\n--------------"
-  print "File: " + tempFileName + "\n"
+  print("--------------\nTemplate Saved\n--------------")
+  print(("File: " + tempFileName + "\n"))
   
 
  cmds.menuItem(verbMenuI, e=1, c=simpleTemplateVerbMode)

@@ -2,7 +2,7 @@ import sys, os
 import maya.api.OpenMaya as newOM
 import maya.OpenMaya as oldOM
 import maya.cmds as cmds
-import OpenMaya_Util_API
+from . import OpenMaya_Util_API
 
 #--------------------------
 # PyNode Exceptions
@@ -10,7 +10,7 @@ import OpenMaya_Util_API
 class Input_Convershion_Error(TypeError):
 	_objectDescription = 'Object'
 	def __init__(self, node=None):
-		self.node = unicode(node)
+		self.node = str(node)
 	def __str__(self):
 		msg = "Maya %s does not exist (or is not unique) And Could Not Be Converted To An MObject:" % (self._objectDescription)
 		if self.node:
@@ -23,7 +23,7 @@ def __input_Node_Arg_Convershion(node_name):
 	if isinstance(node_name, OpenMaya_Util_API.oldOM.MObject):
 		nodeObj = node_name
 		
-	elif isinstance(node_name, (str, unicode)):
+	elif isinstance(node_name, str):
 		try:
 			nodeObj = OpenMaya_Util_API.toMObject(node_name)
 		except MObjectCreationError:

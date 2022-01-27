@@ -86,7 +86,7 @@ class Callbacks_Collection_Modual(object):
 	@staticmethod
 	def Is_Initialized():
 		""""""
-		return sys.modules.has_key("DML_DISPLAY_LAYER_EDITOR_CALLBACK_IDS")
+		return "DML_DISPLAY_LAYER_EDITOR_CALLBACK_IDS" in sys.modules
 	#----------------------------------------------------------------------
 	@staticmethod
 	def get_Callbacks_Modual():
@@ -126,7 +126,7 @@ class Callbacks_Collection_Modual(object):
 		Mobject = name_Depend_Node(node_name)
 		handel = OM.MObjectHandle(Mobject)
 		modual = Callbacks_Collection_Modual.get_Node_To_Tree_Items_Modual()
-		if modual.has_key(handel.hashCode()):
+		if handel.hashCode() in modual:
 			return modual[handel.hashCode()]
 		return []
 	#----------------------------------------------------------------------
@@ -138,7 +138,7 @@ class Callbacks_Collection_Modual(object):
 		Mobject = name_Depend_Node(node_name)
 		handel = OM.MObjectHandle(Mobject)
 		modual = Callbacks_Collection_Modual.get_Node_To_Tree_Items_Modual()
-		if not modual.has_key(handel.hashCode()):
+		if handel.hashCode() not in modual:
 			modual[handel.hashCode()]=[]
 		modual[handel.hashCode()].append(tree_item)
 		return handel
@@ -149,7 +149,7 @@ class Callbacks_Collection_Modual(object):
 		Mobject = name_Depend_Node(node_name)
 		handel = OM.MObjectHandle(Mobject)
 		modual = Callbacks_Collection_Modual.get_Node_To_Tree_Items_Modual()
-		if modual.has_key(handel.hashCode()):
+		if handel.hashCode() in modual:
 			del modual[handel.hashCode()]
 	#----------------------------------------------------------------------
 	@staticmethod
@@ -170,7 +170,7 @@ class Callbacks_Collection_Modual(object):
 		Mobject = name_Depend_Node(node_name)
 		handel  = OM.MObjectHandle(Mobject)
 		modual = Callbacks_Collection_Modual.get_Per_Node_Callback_Ids_Modual()
-		if modual.has_key(handel.hashCode()):
+		if handel.hashCode() in modual:
 			del modual[handel.hashCode()]
 	#----------------------------------------------------------------------
 	@staticmethod
@@ -1155,7 +1155,7 @@ class Display_Layer_Manager_Model(TreeModel):
 ########################################################################
 class Display_Layer_Manager_Proxy_Model(DATA_MODELS.Node_Proxy_Models.BASE_SORT_FILTER_PROXY_MODEL):
 	""""""
-	startswith,endswith,contains = range(3)
+	startswith,endswith,contains = list(range(3))
 	def __init__(self, parent=None):
 		super(Display_Layer_Manager_Proxy_Model, self).__init__(parent=parent)
 		self._filter_type =  self.startswith

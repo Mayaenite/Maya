@@ -89,7 +89,7 @@ def aw_Reverse_Selected_Poly_Normals():
 				itemShape = itemShapes[0]
 				if cmds.objectType(itemShape, isType="mesh"):
 						cmds.select(item, r=True)
-						cmds.polyNormal(constructionHistory=False, normalMode=04)
+						cmds.polyNormal(constructionHistory=False, normalMode=0o4)
 	cmds.select(selList, r=True)
 	if history_check:
 		cmds.constructionHistory(tgl=True)
@@ -101,13 +101,13 @@ def HOT_PIVOT_ACTION():
 	negative = [-1,-1,-1]
 	
 	for x in selection:
-		print x
+		print(x)
 		originPivot = pm.xform(q=True, rp=True)
 	
-		invert = map(lambda x,y:x*y,originPivot,negative)
+		invert = list(map(lambda x,y:x*y,originPivot,negative))
 	
-		print originPivot
-		print invert
+		print(originPivot)
+		print(invert)
 		pm.xform( t = invert)
 		pm.makeIdentity(a=True, t=True)
 		pm.xform( t = originPivot)
@@ -119,7 +119,7 @@ def Visibility_Connect_Maker():
 	controller = selection[-1]
 	
 	for item in memberSet:
-		print item, pm.nodeType(item)
+		print((item, pm.nodeType(item)))
 		if pm.nodeType(item) == 'transform':
 			pm.connectAttr( controller.visibility, item.visibility )
 

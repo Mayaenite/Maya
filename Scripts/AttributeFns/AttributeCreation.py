@@ -3,7 +3,7 @@ import maya.cmds as cmds
 def flatten(x):
 	result = []
 	for el in x:
-		if hasattr(el, "__iter__") and not isinstance(el, basestring):
+		if hasattr(el, "__iter__") and not isinstance(el, str):
 			result.extend(flatten(el))
 		else:
 			result.append(el)
@@ -390,7 +390,7 @@ def Set_String_Array_M(node,attr,StrValues,Index):
 def Add_Compound_Attribute(node, attrName, child_attribs):
 	if not Attribute_Exists( node, attrName):
 		child_count = len(child_attribs)
-		print cmds.addAttr(node, shortName=attrName, longName=attrName, numberOfChildren=child_count, attributeType='compound' )
+		print((cmds.addAttr(node, shortName=attrName, longName=attrName, numberOfChildren=child_count, attributeType='compound' )))
 		for typ, name in child_attribs:
 			if typ == "bool":
 				Add_Bool(node, attr=name, parent=attrName)

@@ -23,15 +23,15 @@ try:
     from PySide.QtGui import *
     from shiboken import wrapInstance
     _qtImported = 'PySide'
-except ImportError, e1:
+except ImportError as e1:
     try:
         from PyQt4.QtCore import Qt, QPoint, QSize
         from PyQt4.QtCore import pyqtSignal as Signal
         from PyQt4.QtGui import *
         from sip import wrapinstance as wrapInstance
         _qtImported = 'PyQt4'
-    except ImportError, e2:
-        raise ImportError, '%s, %s'%(e1,e2)   
+    except ImportError as e2:
+        raise ImportError('%s, %s'%(e1,e2))   
 
 
 class MayaQWidgetBaseMixin(object):
@@ -129,7 +129,7 @@ class MayaQDockWidget(MayaQWidgetBaseMixin,QDockWidget):
         mainWindow = wrapInstance(long(mainWindowPtr), QMainWindow)
         try:
             self.visibilityChanged.connect(mainWindow.handleDockWidgetVisChange)
-        except AttributeError, e: 
+        except AttributeError as e: 
             # Error connecting visibilityChanged trigger to mainWindow.handleDockWidgetVisChange. 
             # Falling back to using MEL command directly.
             mel.eval('evalDeferred("updateEditorToggleCheckboxes()")')  # Currently mainWindow.handleDockWidgetVisChange only makes this updateEditorToggleCheckboxes call
@@ -525,7 +525,7 @@ class MayaQWidgetDockableMixin(MayaQWidgetBaseMixin):
         reprDict['height'] = sz.height()
         
         # Construct the repr show() string
-        reprShowList = ['%s=%r'%(k,v) for k,v in reprDict.items() if v != None]
+        reprShowList = ['%s=%r'%(k,v) for k,v in list(reprDict.items()) if v != None]
         reprShowStr = 'show(%s)'%(', '.join(reprShowList))
         return reprShowStr
 # Copyright (C) 1997-2014 Autodesk, Inc., and/or its licensors.

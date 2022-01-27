@@ -1,6 +1,6 @@
 __all__ = ["ColumnLayout", "DockControl", "FlowLayout", "FormLayout", "FrameLayout", "GridLayout", "Layout", "MenuBarLayout", "PaneLayout", "RowColumnLayout", "RowLayout", "ScrollLayout", "ShelfLayout", "ShelfTabLayout", "TabLayout", "ToolBar"]
 import maya.cmds as cmds
-import UI_Object
+from . import UI_Object
 
 
 ########################################################################
@@ -9,7 +9,7 @@ class ColumnLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -221,7 +221,7 @@ class DockControl(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -466,7 +466,7 @@ class FlowLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -667,7 +667,7 @@ class FormLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -877,7 +877,7 @@ class FrameLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1169,7 +1169,7 @@ class GridLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1417,7 +1417,7 @@ class Layout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1593,7 +1593,7 @@ class MenuBarLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1793,7 +1793,7 @@ class PaneLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2075,7 +2075,7 @@ class RowColumnLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2301,7 +2301,7 @@ class RowLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2502,7 +2502,7 @@ class ScrollLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2723,7 +2723,7 @@ class ShelfLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2943,7 +2943,7 @@ class ShelfTabLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3248,7 +3248,7 @@ class TabLayout(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3553,7 +3553,7 @@ class ToolBar(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:

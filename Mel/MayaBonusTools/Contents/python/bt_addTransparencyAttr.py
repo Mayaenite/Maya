@@ -38,13 +38,13 @@ def bt_addTransparencyAttr():
         for object in selection:
             cmds.select(object, r=True)
             shader = cmds.ls(cmds.listConnections(cmds.listConnections(cmds.ls(sl=True, o=True, dag=True, s=True),type = "shadingEngine")), mat=True)[0]
-            if shader not in shaders.keys():
+            if shader not in list(shaders.keys()):
                 shaders[shader]=[]
             shaders[shader].append(object)
         
         
         
-        for shader in shaders.keys():
+        for shader in list(shaders.keys()):
         
             switches = cmds.listConnections(shader,shaders[shader],type="tripleShadingSwitch",c=True)  
             
@@ -99,7 +99,7 @@ def bt_addTransparencyAttr():
                         thisSpecBlend = [blender for blender in thisBlendList if str(blender).startswith("specs")][0]
                     if len( [blender for blender in thisBlendList if str(blender).startswith("specs")])==0:
                         thisSpecBlend = cmds.shadingNode ("blendColors", asUtility=True, name = "specsBlendColors1")  
-                        print thisSpecBlend
+                        print(thisSpecBlend)
                         cmds.setAttr(thisSpecBlend+".color2",  0,0,0, type="double3" )
                         cmds.setAttr(thisSpecBlend+".color1",  *cmds.getAttr(shader+".specularColor")[0], type="double3" )
                         cmds.setAttr(thisSpecBlend+".blender",  0)
@@ -131,4 +131,4 @@ def bt_addTransparencyAttr():
         
         cmds.select(selection, r=True)
     else:
-        print "Please make a selection to update trans attrs."
+        print("Please make a selection to update trans attrs.")

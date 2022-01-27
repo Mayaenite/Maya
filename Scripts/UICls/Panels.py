@@ -1,6 +1,6 @@
 __all__ = ["Panel", "ComponentEditor", "HardwareRenderPanel", "HyperGraph", "HyperPanel", "HyperShade", "ModelEditor", "ModelPanel", "NodeEditor", "OutlinerEditor", "PanelConfiguration", "PanelHistory", "ScriptedPanel", "Visor"]
 import maya.cmds as cmds
-import UI_Object
+from . import UI_Object
 
 ########################################################################
 class ComponentEditor(UI_Object.UI):
@@ -8,7 +8,7 @@ class ComponentEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -239,7 +239,7 @@ class GetPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -258,7 +258,7 @@ class HardwareRenderPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -378,7 +378,7 @@ class HyperGraph(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1006,7 +1006,7 @@ class HyperPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1116,7 +1116,7 @@ class HyperShade(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -1135,7 +1135,7 @@ class ModelEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2217,7 +2217,7 @@ class ModelPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2342,7 +2342,7 @@ class NodeEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -2929,7 +2929,7 @@ class NodeOutliner(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3163,7 +3163,7 @@ class OutlinerEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3818,7 +3818,7 @@ class OutlinerPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -3928,7 +3928,7 @@ class Panel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4033,7 +4033,7 @@ class PanelConfiguration(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4163,7 +4163,7 @@ class PanelHistory(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4228,7 +4228,7 @@ class SaveViewportSettings(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4293,7 +4293,7 @@ class ScriptedPanel(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4403,7 +4403,7 @@ class ScriptedPanelType(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4532,7 +4532,7 @@ class SetFocus(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4661,7 +4661,7 @@ class SpreadSheetEditor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4865,7 +4865,7 @@ class ViewManip(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -4939,7 +4939,7 @@ class Visor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -5133,7 +5133,7 @@ class WebBrowser(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:

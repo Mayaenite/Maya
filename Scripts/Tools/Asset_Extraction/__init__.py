@@ -1,1 +1,1 @@
-import Alembic_Asset_Extraction
+from . import Alembic_Asset_Extraction

@@ -1,1 +1,1 @@
-from Named_Object import Named_Object
+from .Named_Object import Named_Object

@@ -10,18 +10,18 @@ try:
 except:
 	pass
 if int(cmds.about(version=True)) == 2017:
-	import Compiled_UIs.Vray_Scene_State_Manager
-	Compiled_Vray_Scene_State_Manager = Compiled_UIs.Vray_Scene_State_Manager
+	import Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.Vray_Scene_State_Manager
+	Compiled_Vray_Scene_State_Manager = Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.Vray_Scene_State_Manager
 else:
-	import Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
-	Compiled_Vray_Scene_State_Manager = Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
+	import Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
+	Compiled_Vray_Scene_State_Manager = Scripts.Tools.Vray_Scene_States_Manager.Compiled_UIs.pyside_V1.Vray_Scene_State_Manager
 try:
 	_maya_check = True
 	import Scripts.UIFns.Find_UI
 	import Scripts.Global_Constants.Nodes
 	import Scripts.NodeCls.M_Nodes
 except ImportError as  e:
-	print e
+	print(e)
 	_maya_check = False
 	
 Custom_Widgets = Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
@@ -560,7 +560,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	@QT.QtSlot()
 	def Extract_To_Pickle_Data(self):
 		""""""
-		import Vg_EMI_Data_Extractor
+		from . import Vg_EMI_Data_Extractor
 		Vg_EMI_Data_Extractor.dump_EIM_Data()
 	
 	#----------------------------------------------------------------------
@@ -568,7 +568,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	def Construst_Honda_Rebuild_Data(self):
 		""""""
 		if len(cmds.ls("*.hondaRebuildData")):
-			import Honda_Data_Parser
+			from . import Honda_Data_Parser
 		data = Honda_Data_Parser.build_Honda_MetaData()
 		for layer in data.trims.nodes:
 			if not cmds.objExists(layer.display_layer_name):
@@ -612,7 +612,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	@QT.QtSlot()
 	def Construst_From_Pickle_Data(self):
 		""""""
-		import Vg_EMI_Data_Extractor
+		from . import Vg_EMI_Data_Extractor
 		data = Vg_EMI_Data_Extractor.load_EIM_Data()
 		for item in data:
 			for layer in item.layers:
@@ -791,7 +791,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	#----------------------------------------------------------------------
 	def Assine_Part_Set_Refs_To_Render_State_Overide(self, render_state_names, part_set_names,overide_state):
 		""""""
-		if isinstance(render_state_names,basestring):
+		if isinstance(render_state_names,str):
 			render_state_names = [render_state_names]
 			
 			current_item = self.asset_tree_view.current_item()

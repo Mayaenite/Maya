@@ -15,7 +15,7 @@ import yaml
 import QT
 import QT.DataModels.Qt_Roles_And_Enums
 import Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
-import Compiled_UIs.Vray_Scene_State_Viewer
+from . import Compiled_UIs.Vray_Scene_State_Viewer
 import Scripts.General_Maya_Util
 Custom_Widgets = Scripts.Tools.Vray_Scene_States_Manager.Custom_Widgets
 Vray_Scene_State_Viewer_Item_Model  =  Custom_Widgets.Vray_Scene_State_Viewer_Item_Model

@@ -62,7 +62,7 @@ class Counter(object):
 		self.num = count(start)
 	#----------------------------------------------------------------------
 	def __call__(self):
-		return self.num.next()
+		return next(self.num)
 
 plugin_id_counter = Counter(0x00001)
 
@@ -180,7 +180,7 @@ def Attribute_Changed_Callback(msg,plg,otherplg,data):
 			message = message % (change_type, name)
 
 	if not message == "" and not change_type == "":
-		print message
+		print(message)
 #----------------------------------------------------------------------
 def is_Old_API(obj):
 	""""""
@@ -230,7 +230,7 @@ def _isValidMNodeOrPlug(obj):
 #----------------------------------------------------------------------
 def to_New_MObject(nodeName, force_Depend=False):
 	""" Get the API MObject given the name of an existing node """
-	if not isinstance(nodeName, (str, unicode)):
+	if not isinstance(nodeName, str):
 		raise ValueError("nodeName must be a string Repersenting the name of an MObject")
 	else:
 		# MAKE A SELECTIONLIST STORAGE CONTAINER
@@ -253,7 +253,7 @@ def to_New_MObject(nodeName, force_Depend=False):
 #----------------------------------------------------------------------
 def to_Old_MObject(nodeName, force_Depend=False):
 	""" Get the API MObject given the name of an existing node """
-	if not isinstance(nodeName, (str, unicode)):
+	if not isinstance(nodeName, str):
 		raise ValueError("nodeName must be a string Repersenting the name of an MObject")
 	else:
 		# CREATE A MOBJECT AND A DAGPATH MEMORY OBJECT VARIBLE
@@ -282,11 +282,11 @@ def to_Old_MObject(nodeName, force_Depend=False):
 def to_New_MPlug(obj, plug_name):
 	plg = None
 	
-	if isinstance(obj, (str,unicode)):
+	if isinstance(obj, str):
 		obj = to_New_MObject(obj)
 	else:
 		obj = Convert_MObject(obj, force_new=True)
-	if isinstance(plug_name, (str,unicode)):
+	if isinstance(plug_name, str):
 		if obj.hasFn(MFn.kDagNode):
 			obj = obj.node()
 		fn = newOM.MFnDependencyNode(obj)
@@ -307,11 +307,11 @@ def to_New_MPlug(obj, plug_name):
 def to_Old_MPlug(obj, plug_name):
 	plg = None
 	
-	if isinstance(obj, (str,unicode)):
+	if isinstance(obj, str):
 		obj = to_Old_MObject(obj)
 	else:
 		obj = Convert_MObject(obj, force_old=True)
-	if isinstance(plug_name, (str,unicode)):
+	if isinstance(plug_name, str):
 		if obj.hasFn(MFn.kDagNode):
 			obj = obj.node()
 		fn = OpenMaya.MFnDependencyNode(obj)
@@ -650,7 +650,7 @@ class AW_Part_Sets(AW_Base_Sets):
 	def scan_tracking_Data(cls, obj):
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				return cls.kTrackingDictionary[key]["obj"]
 		return None
@@ -779,7 +779,7 @@ class AW_Parts_Container(AW_Base_Sets):
 	def scan_tracking_Data(cls, obj):
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				return cls.kTrackingDictionary[key]["obj"]
 		return None
@@ -935,7 +935,7 @@ class AW_Beauty_Parts(AW_Parts_Container):
 		res = None
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -965,7 +965,7 @@ class AW_Invisible_Parts(AW_Parts_Container):
 		res = None
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -995,7 +995,7 @@ class AW_Matte_Parts(AW_Parts_Container):
 		res = None
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -1023,7 +1023,7 @@ class AW_Scene_State(AW_Base_Sets):
 		res = None
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -1199,7 +1199,7 @@ class AW_Scene_State_List(AW_Base_Sets):
 			dependFn  = OpenMaya.MFnDependencyNode(obj)
 			name = dependFn.name()
 			
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -1337,7 +1337,7 @@ class AW_Scene_State_Manager(AW_Base_Sets):
 		dependFn  = OpenMaya.MFnDependencyNode(obj)
 		name = dependFn.name()
 		res = None
-		for key in cls.kTrackingDictionary.keys():
+		for key in list(cls.kTrackingDictionary.keys()):
 			if cls.kTrackingDictionary[key]["obj"].name() == name:
 				res = cls.kTrackingDictionary[key]["obj"]
 				break
@@ -1515,7 +1515,7 @@ def Find_AW_Scene_State_Manager():
 		if fn.typeId().id() == AW_Scene_State_Manager.kNodeId.id():
 			item = AW_Scene_State_Manager.scan_tracking_Data(dpnode)
 			return item
-		depend_iter.next()
+		next(depend_iter)
 	return False
 #----------------------------------------------------------------------
 def Find_Scene_State_Manager_From_Input_String(name):
@@ -1528,7 +1528,7 @@ def Find_Scene_State_Manager_From_Input_String(name):
 			if fn.name() == name:
 				res = AW_Scene_State_Manager.scan_tracking_Data(item)
 				break
-		dpnIter.next()
+		next(dpnIter)
 	isinstance(res, AW_Scene_State_Manager)
 	return res
 #----------------------------------------------------------------------
@@ -1545,7 +1545,7 @@ def Find_Scene_State_Manager_From_Active_Selection():
 		if fn.typeId().id() == AW_Scene_State_Manager.kNodeId.id():
 			res = AW_Scene_State_Manager.scan_tracking_Data(dpnode)
 			break
-		sel_iter.next()
+		next(sel_iter)
 	isinstance(res, AW_Scene_State_Manager)
 	return res
 #----------------------------------------------------------------------
@@ -1565,7 +1565,7 @@ def Find_Scene_States_From_Active_Selection():
 			found = AW_Scene_State.scan_tracking_Data(dpnode)
 			if found is not None:
 				res.append(found)
-		sel_iter.next()
+		next(sel_iter)
 	return res
 #----------------------------------------------------------------------
 def Find_Scene_State_From_Input_String(name):
@@ -1579,7 +1579,7 @@ def Find_Scene_State_From_Input_String(name):
 			if fn.name() == name:
 				res = AW_Scene_State.scan_tracking_Data(item)
 				break
-		dpnIter.next()
+		next(dpnIter)
 	isinstance(res, AW_Scene_State)
 	return res
 #----------------------------------------------------------------------
@@ -1598,7 +1598,7 @@ def Find_Scene_States_From_Active_Selection():
 		if fn.typeName() == 'VRayObjectProperties':
 			found = ObjectProperties(dpnode)
 			res.append(found)
-		sel_iter.next()
+		next(sel_iter)
 	return res
 #----------------------------------------------------------------------
 def Find_Part_Set_From_Input_String(name):
@@ -1612,7 +1612,7 @@ def Find_Part_Set_From_Input_String(name):
 			if fn.name() == name:
 				res = ObjectProperties(item)
 				break
-		dpnIter.next()
+		next(dpnIter)
 	isinstance(res, ObjectProperties)
 	return res
 #----------------------------------------------------------------------
@@ -1627,7 +1627,7 @@ def Find_All_Part_Sets():
 			item = AW_Part_Sets.scan_tracking_Data(dpnode)
 			if item is not None:
 				res.append(item)
-		depend_iter.next()
+		next(depend_iter)
 	return res
 #----------------------------------------------------------------------
 def Find_Part_Sets_From_Input_String(name):
@@ -1641,7 +1641,7 @@ def Find_Part_Sets_From_Input_String(name):
 			if fn.name() == name:
 				res = AW_Part_Sets.scan_tracking_Data(item)
 				break
-		dpnIter.next()
+		next(dpnIter)
 	isinstance(res, AW_Part_Sets)
 	return res
 #----------------------------------------------------------------------
@@ -1661,10 +1661,10 @@ def Find_Part_Sets_From_Active_Selection():
 			found = AW_Part_Sets.scan_tracking_Data(dpnode)
 			if not found == None:
 				res.append(found)
-		sel_iter.next()
+		next(sel_iter)
 	return res
 
-kBeauty, kMatte, kInvisible =  range(3)
+kBeauty, kMatte, kInvisible =  list(range(3))
 
 class AW_Scene_State_Command(OpenMayaMPx.MPxCommand):
 	#----------------------------------------------------------------------

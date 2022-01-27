@@ -4,14 +4,14 @@ import maya.cmds as cmds
 import re
 import Scripts.AttributeFns.AttributeCreation
 #import Scripts.Global_Constants.Singleton
-import NodeTypes
+from . import NodeTypes
 import Scripts.Maya_Exceptions as Exceptions
 NT = NodeTypes
 #----------------------------------------------------------------------
 def flatten(x):
 	result = []
 	for el in x:
-		if hasattr(el, "__iter__") and not isinstance(el, basestring):
+		if hasattr(el, "__iter__") and not isinstance(el, str):
 			result.extend(flatten(el))
 		else:
 			result.append(el)
@@ -78,7 +78,7 @@ def nameToNode( name=None ,asobj=False):
 			resFn = OpenMaya.MFnMesh(dagnode)
 		except:
 			resFn = OpenMaya.MFnDependencyNode(obj)
-			print resFn.name()
+			print((resFn.name()))
 
 	elif obj.hasFn(OpenMaya.MFn.kDagNode):
 		# IF SO WE WILL NEED TO BE ABLE TO GET THE FULLPATH NAME
@@ -96,7 +96,7 @@ def nameToNode( name=None ,asobj=False):
 def nameToNodePlug( attrName, node , index=-1):
 	"""function that finds a plug given a node object and plug name"""
 	# CHECK IF THE INPUT NODE IS NOT AND NODE OBJECT BUT THE NAME OF AN OBJECT
-	if isinstance(node,(str,unicode)):
+	if isinstance(node,str):
 		# IF SO CONVERT IT TO A NODE
 		node = nameToNode(node,True)
 	elif isinstance(node,MNODE):
@@ -215,13 +215,13 @@ class Named_Object(object):
 		return hash(self.name)
 	#----------------------------------------------------------------------
 	def __eq__(self, other):
-		return unicode(self.name) == unicode(other)
+		return str(self.name) == str(other)
 	#----------------------------------------------------------------------
 	def __ne__(self, other):
-		return unicode(self.name) != unicode(other)
+		return str(self.name) != str(other)
 	#----------------------------------------------------------------------
 	def __get_name(self):
-		return unicode(self._name)
+		return str(self._name)
 	#----------------------------------------------------------------------
 	name          = property(fget=__get_name)
 ########################################################################
@@ -389,7 +389,7 @@ class MPLUG(object):
 				self.obj  = node
 				node, att = node.name().split(".", 1)
 				self.node = MNODE(node)
-			elif isinstance(node, (str, unicode)):
+			elif isinstance(node, str):
 				if att == None:
 					node, att  = node.split(".", 1)
 				self.obj  = nameToNodePlug( att, node )
@@ -996,9 +996,9 @@ class MNODE(Attribute_Creator):
 		return hash(self.name)
 
 	def __eq__(self, other):
-		return unicode(self.name) == unicode(other)
+		return str(self.name) == str(other)
 	def __ne__(self, other):
-		return unicode(self.name) != unicode(other)
+		return str(self.name) != str(other)
 	#----------------------------------------------------------------------
 	def __get_name(self):
 		if hasattr(self.obj,"fullPathName"):
@@ -1188,7 +1188,7 @@ class MNODE(Attribute_Creator):
 		kwargs["allAttributes"]=False
 		res = []
 		for att in cmds.attributeInfo( self.name , **kwargs):
-			print att
+			print(att)
 			res.append(MPLUG(self.name,att))
 		return res
 	#----------------------------------------------------------------------
@@ -1269,7 +1269,7 @@ class RenderLayer(MNODE):
 
 ########################################################################
 class DisplayLayer(MNODE):
-	Normal,Reference,Template = range(3)
+	Normal,Reference,Template = list(range(3))
 	#----------------------------------------------------------------------
 	def __init__(self,name,makeCurrent=False,empty=True,noRecurse=True):
 		kwargs = dict(name=name,makeCurrent=makeCurrent,empty=empty,noRecurse=noRecurse)
@@ -1331,7 +1331,7 @@ class DisplayLayer(MNODE):
 	#----------------------------------------------------------------------
 	@property
 	def member_names(self):
-		return [unicode(item.name) for item in self.members]
+		return [str(item.name) for item in self.members]
 
 	#----------------------------------------------------------------------
 	def select_members(self, replace=True, add=False, remove=False):
@@ -1441,7 +1441,7 @@ class SelectionSet(MNODE):
 	#----------------------------------------------------------------------
 	@property
 	def memberNames(self):
-		return [unicode(m) for m in self.members]
+		return [str(m) for m in self.members]
 	#----------------------------------------------------------------------
 	@property
 	def members(self):
@@ -1513,7 +1513,7 @@ class SelectionSet(MNODE):
 					if not [childA,childB] in found_pairs and not [childB,childA] in found_pairs:
 						found_pairs.append([childA,childB])
 
-						print "Intersecting Members found between Sets %s and %s with items %r" % (childA,childB,intersecting_items)
+						print(("Intersecting Members found between Sets %s and %s with items %r" % (childA,childB,intersecting_items)))
 						cmds.select(intersecting_items)
 						sub_set = SelectionSet(childA.name+"_"+childB.name)
 						inersecting_sets >> sub_set
@@ -1570,7 +1570,7 @@ class Shading_Engine(SelectionSet):
 	#----------------------------------------------------------------------
 	@property
 	def memberNames(self):
-		return [unicode(m) for m in self.members]
+		return [str(m) for m in self.members]
 	#----------------------------------------------------------------------
 	@property
 	def members(self):
@@ -1693,39 +1693,39 @@ class VRay_Render_Layer_Render_State_Override_Adjustment(dict):
 	#----------------------------------------------------------------------
 	def get_visibility(self):
 		""""""
-		if self.has_key("visibility"):
+		if "visibility" in self:
 			return self["visibility"].value
 	#----------------------------------------------------------------------
 	def set_visibility(self,value):
 		""""""
-		if self.has_key("visibility"):
+		if "visibility" in self:
 			cmds.setAttr(self["visibility"].name,value)
 	#----------------------------------------------------------------------
 	def apply_Beauty_Values(self):
 		""""""
-		for key,value in self.Override_Beauty_Values.iteritems():
+		for key,value in self.Override_Beauty_Values.items():
 			cmds.setAttr(self[key].name,value)
 	#----------------------------------------------------------------------
 	def apply_Invisible_Values(self):
 		""""""
-		for key,value in self.Override_Invisible_Values.iteritems():
+		for key,value in self.Override_Invisible_Values.items():
 			cmds.setAttr(self[key].name,value)
 	#----------------------------------------------------------------------
 	def apply_Matte_Values(self):
 		""""""
-		for key,value in self.Override_Matte_Values.iteritems():
+		for key,value in self.Override_Matte_Values.items():
 			cmds.setAttr(self[key].name,value)
 	#----------------------------------------------------------------------
 	def apply_Unasigned_Values(self):
 		""""""
-		for key,value in self.Override_Matte_Values.iteritems():
+		for key,value in self.Override_Matte_Values.items():
 			cmds.setAttr(self[key].name,value)
 
 ########################################################################
 class VRayRenderState(VRayObjectProperties):
 	script_Job_pattern = re.compile("(?P<jobid>([1-9]+)): (?P<event>([a-zA-Z]+))=\['(?P<node>([a-zA-Z]['a-zA-Z1-9_]+)\.([a-zA-Z][a-zA-Z1-9_]+))'")
 	Override_Attr_Names       = "matteSurface affectAlpha alphaContribution primaryVisibility reflectionAmount refractionAmount".split()
-	UnAssined,Beauty,Matte,Invisable = range(4)
+	UnAssined,Beauty,Matte,Invisable = list(range(4))
 	def __init__(self,name):
 		super(VRayRenderState,self).__init__(name)
 		#self.vrayRenderPassState        = self.Add_Enum_Attribute('vrayRenderPassState', ["UnAssined","Beauty","Matte","Invisable"])
@@ -2215,7 +2215,7 @@ class AnimCurve(MNODE):
 		"""Returns list of available drivers for the attribute."""
 		plgs = self.connected_output_attribute_plugs
 		if plgs:
-			print plgs
+			print(plgs)
 			res = cmds.setDrivenKeyframe( plgs, q=True, dr=True )
 			if res[0] == "No drivers.":
 				return []

@@ -1,5 +1,5 @@
 try:
-	import AttributeCreation
+	from . import AttributeCreation
 	import AttributeLister
 except ImportError:
 	pass

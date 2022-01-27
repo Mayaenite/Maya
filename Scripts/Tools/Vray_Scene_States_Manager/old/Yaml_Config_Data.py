@@ -61,7 +61,7 @@ class YAML_Config_Script_Node(Script_Node):
 #_______________________________________________________________________ Taged Yaml Data Type
 ########################################################################
 class Assets(yaml.YAMLObject):
-	yaml_tag = u'!Assets'
+	yaml_tag = '!Assets'
 	#----------------------------------------------------------------------
 	def __init__(self, items=None, parent=None):
 		self.parent = parent
@@ -83,7 +83,7 @@ class Assets(yaml.YAMLObject):
 
 ########################################################################
 class Asset(yaml.YAMLObject):
-	yaml_tag = u'!Asset'
+	yaml_tag = '!Asset'
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, render_states=None, part_sets=None, child_assets=None, parent=None):
 		self.name          = name
@@ -139,7 +139,7 @@ class Asset(yaml.YAMLObject):
 		return "%s(%r)" % (self.__class__.__name__, self.name)
 ########################################################################
 class Part_Sets(yaml.YAMLObject):
-	yaml_tag = u'!Part_Sets'
+	yaml_tag = '!Part_Sets'
 	#----------------------------------------------------------------------
 	def __init__(self, parts=None, parent=None):
 		self.parent = parent
@@ -160,7 +160,7 @@ class Part_Sets(yaml.YAMLObject):
 		return "%s(parts=%r)" % (self.__class__.__name__, self.parts)
 ########################################################################
 class Render_States(yaml.YAMLObject):
-	yaml_tag = u'!Render_States'
+	yaml_tag = '!Render_States'
 	#----------------------------------------------------------------------
 	def __init__(self, states=None, parent=None):
 		self.parent = parent
@@ -173,7 +173,7 @@ class Render_States(yaml.YAMLObject):
 		return "%s(states=%r,parent=%r)" % (self.__class__.__name__, self.states, self.parent)
 ########################################################################
 class Overides_Container(yaml.YAMLObject):
-	yaml_tag = u'!Overides_Container'
+	yaml_tag = '!Overides_Container'
 	#----------------------------------------------------------------------
 	def __init__(self, links=None, parent=None):
 		self.parent = parent
@@ -187,20 +187,20 @@ class Overides_Container(yaml.YAMLObject):
 
 ########################################################################
 class Beauty_Overides(Overides_Container):
-	yaml_tag = u'!Beauty_Overides'
+	yaml_tag = '!Beauty_Overides'
 ########################################################################
 class Matte_Overides(Overides_Container):
-	yaml_tag = u'!Matte_Overides'
+	yaml_tag = '!Matte_Overides'
 ########################################################################
 class Invisible_Overides(Overides_Container):
-	yaml_tag = u'!Invisible_Overides'
+	yaml_tag = '!Invisible_Overides'
 ########################################################################
 class Unassined_Overides(Overides_Container):
-	yaml_tag = u'!Unassined_Overides'
+	yaml_tag = '!Unassined_Overides'
 
 ########################################################################
 class Render_State(yaml.YAMLObject):
-	yaml_tag = u'!Render_State'
+	yaml_tag = '!Render_State'
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, Unassined=None, Matte=None, Invisible=None, Beauty=None, parent=None):
 		self.name      = name
@@ -229,7 +229,7 @@ class Render_State(yaml.YAMLObject):
 	
 ########################################################################
 class Part_Set(yaml.YAMLObject):
-	yaml_tag = u'!Part_Set'
+	yaml_tag = '!Part_Set'
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, parent=None):
 		self.name = name
@@ -255,7 +255,7 @@ class Part_Set(yaml.YAMLObject):
 	
 ########################################################################
 class Part_Set_Refence(yaml.YAMLObject):
-	yaml_tag = u'!Part_Set_Refence'
+	yaml_tag = '!Part_Set_Refence'
 	#----------------------------------------------------------------------
 	def __init__(self, link, parent):
 		self.link   = link
@@ -266,7 +266,7 @@ class Part_Set_Refence(yaml.YAMLObject):
 		return "%s(%r,%r)" % (self.__class__.__name__, self.link, self.parent)
 ########################################################################
 class Config_Data(yaml.YAMLObject):
-	yaml_tag = u'!Config_Data'
+	yaml_tag = '!Config_Data'
 	#----------------------------------------------------------------------
 	def __init__(self, assets=None):
 		self.Assets = assets
@@ -351,7 +351,7 @@ def data_cleaner(data):
 							del state.Matte.links[state.Matte.links.index(part)]
 						elif part in state.Unassined.links:
 							del state.Unassined.links[state.Unassined.links.index(part)]
-					print "remove Part At Index %i for asset %r because it has no valid name" % (item.Part_Sets.parts.index(part), item.name)
+					print(("remove Part At Index %i for asset %r because it has no valid name" % (item.Part_Sets.parts.index(part), item.name)))
 					del item.Part_Sets.parts[item.Part_Sets.parts.index(part)]
 		stop -= 1
 	return data
@@ -403,4 +403,4 @@ Assets: &id004 !Assets
 	return yaml.load(value)
 
 if __name__ == "__main__":
-	print yaml.dump(Config_Data())
+	print((yaml.dump(Config_Data())))

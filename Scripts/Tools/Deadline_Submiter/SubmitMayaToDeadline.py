@@ -6,12 +6,13 @@ import math
 import pymel.core as pm
 import maya.cmds  as cmds
 import maya.mel   as mel
-import DeadLine_Access
-import Job_Data_Model
-import Helpers
-reload(DeadLine_Access)
-reload(Job_Data_Model)
-reload(Helpers)
+from . import DeadLine_Access
+from . import Job_Data_Model
+from . import Helpers
+import importlib
+importlib.reload(DeadLine_Access)
+importlib.reload(Job_Data_Model)
+importlib.reload(Helpers)
 mydata = None
 from functools import partial
 try:
@@ -163,7 +164,7 @@ def GetMayaOutputPrefix(currCamera):
 	# Source a CustomOutputPrefix.mel file, if it exists.
 	outputPrefixPath=str(CheckSlashes(UI_Globals.DeadlineRepositoryRoot + "/submission/Maya/CustomOutputPrefix.mel"))
 	if cmds.file(outputPrefixPath,q=1,exists=1):
-		print "sourcing custom outputprefix file: " + outputPrefixPath + "\n"
+		print(("sourcing custom outputprefix file: " + outputPrefixPath + "\n"))
 		pm.mel.eval("source \"" + outputPrefixPath + "\";")
 		prefix=str(pm.mel.GetCustomMayaOutputPrefix(currCamera))
 
@@ -259,7 +260,7 @@ class Layer_Settings_Dialog(object):
 		form=str(pm.setParent(q=1))
 		pm.formLayout(form, width=(self.windowWidth + 8),e=1,height=self.windowHeight)
 		window=str(pm.formLayout(form,q=1,p=1))
-		print form + "\n"
+		print((form + "\n"))
 		mainScrollLayout = pm.scrollLayout(width=self.windowWidth,horizontalScrollBarThickness=0)
 		pm.columnLayout(adjustableColumn=True,columnAttach=("both", 0))
 		# Store the currently selected render layer
@@ -320,7 +321,7 @@ def LayerSettingsDialog(*args):
 	form=str(pm.setParent(q=1))
 	pm.formLayout(form,width=(windowWidth + 8),e=1,height=windowHeight)
 	window=str(pm.formLayout(form,q=1,p=1))
-	print form + "\n"
+	print((form + "\n"))
 	mainScrollLayout = pm.scrollLayout(width=windowWidth,horizontalScrollBarThickness=0)
 	pm.columnLayout(adjustableColumn=True,columnAttach=("both", 0))
 	# Store the currently selected render layer
@@ -2471,7 +2472,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 			submiter.Submit_the_job_to_Deadline()
 			submitCounter+=1
 			# Show results
-			print "\n\nSubmission Results For Job " + submiter.job.Name + ":\n---------------------------------------------------------------------------\n" + submiter.submitResults + "\n"
+			print(("\n\nSubmission Results For Job " + submiter.job.Name + ":\n---------------------------------------------------------------------------\n" + submiter.submitResults + "\n"))
 			
 			if self.Submit_Vrimg_2_Exr_Job.getValue():
 				conver_job_info = Job_Data_Model.Job_Info_File()
@@ -2504,7 +2505,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 				conver_plugin_info.Channel = self.Vrimg2Exr_Conversion_Specify_Channel_TextField.getText()
 				conver_submitter = Job_Data_Model.Job_Submitter(conver_job_info, conver_plugin_info)
 				conver_submitter.Submit_the_job_to_Deadline()
-				print "\n\nSubmission Results For Job " + conver_submitter.job.Name + ":\n---------------------------------------------------------------------------\n" + conver_submitter.submitResults + "\n"
+				print(("\n\nSubmission Results For Job " + conver_submitter.job.Name + ":\n---------------------------------------------------------------------------\n" + conver_submitter.submitResults + "\n"))
 				submitCounter+=1
 
 
@@ -2569,7 +2570,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		if showDialog:
 			pm.confirmDialog(message=submit_Info.submitResults,button="Ok",parent=self._main_window,title="Submission Results")
 		else:
-			print "\n\nSubmission Results For Job " + job_Info.Name + ":\n---------------------------------------------------------------------------\n" + submit_Info.submitResults + "\n"
+			print(("\n\nSubmission Results For Job " + job_Info.Name + ":\n---------------------------------------------------------------------------\n" + submit_Info.submitResults + "\n"))
 		return submit_Info
 	#----------------------------------------------------------------------
 	def _WriteJobFilesAndSubmit(self, renderer,showDialog,regionRendering,jobType,cameraOverride):
@@ -3263,7 +3264,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		if showDialog:
 			pm.confirmDialog(message=submitResults,button="Ok",parent=self._main_window,title="Submission Results")
 		else:
-			print "\n\nSubmission Results For Job " + jobName + ":\n---------------------------------------------------------------------------\n" + submitResults + "\n"
+			print(("\n\nSubmission Results For Job " + jobName + ":\n---------------------------------------------------------------------------\n" + submitResults + "\n"))
 		return jobId
 	#----------------------------------------------------------------------
 	def _Run_Vray_Export_Checks(self):
@@ -3311,10 +3312,10 @@ class SubmitToDeadLine_UI(UI_Globals):
 		""""""
 		# Save scene, if necessary
 		if pm.cmds.file(q=1,modified=1):
-			print "Maya scene has been modified, saving file\n"
+			print("Maya scene has been modified, saving file\n")
 			pm.cmds.file()
 		else:
-			print "Maya scene has not been modified, skipping save\n"
+			print("Maya scene has not been modified, skipping save\n")
 	#----------------------------------------------------------------------
 	def Run_Pre_Submit_Checks(self):
 		""""""
@@ -3419,7 +3420,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 		# Submit Region Rendering
 		if regionRendering:
 			extension=str(pm.mel.fileExtension(Helpers.GetOutputPrefix(0, 0, "", "")))
-			print "extension = " + extension
+			print(("extension = " + extension))
 			extension=extension.lower()
 			if extension != "bmp" and extension != "dds" and extension != "exr" and extension != "jpg" and extension != "png" and extension != "sgi" and extension != "tga" and extension != "tif":
 				message=message + "The image format used is not compatible with the Tile Assembler, so you will have to assemble the final image manually.\nThe following formats are currently supported: bmp, dds, exr, jpg, png, sgi, tga, tif.\n\n"
@@ -3435,7 +3436,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 	#----------------------------------------------------------------------
 	def SetupSubmission(self):
 		self._PD.SavePersistentDeadlineOptions()
-		print "Submitting job to Deadline...\n"
+		print("Submitting job to Deadline...\n")
 		# Get the current renderer
 		renderer = Helpers.Data_Access.currentRenderer
 		# Check if we are doing a mental ray export
@@ -3560,7 +3561,7 @@ class SubmitToDeadLine_UI(UI_Globals):
 
 		else:
 			jobId=str(self._WriteJobFilesAndSubmit(renderer, 1, 0, jobType, ""))
-			print "JOB ID = " + jobId + "\n"
+			print(("JOB ID = " + jobId + "\n"))
 	# Sets some region rendering settings before submitting the job to Deadline.
 	#----------------------------------------------------------------------
 	def _SetupRegionRenderingJob(self, renderer, cameraOverride):

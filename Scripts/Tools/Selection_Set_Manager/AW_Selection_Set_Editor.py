@@ -11,7 +11,7 @@ import itertools
 import maya.cmds as cmds
 import maya.OpenMayaUI as omui
 import shiboken
-import Master_Icon_Resource_File_rc
+from . import Master_Icon_Resource_File_rc
 from functools import wraps
 
 QtGui                    = QT.QtGui
@@ -38,18 +38,18 @@ def make_ui_code(path=None):
 		path = r"n:\User\dloveridge\Maya_App_Prefs\2015-x64\scripts\Selection_Set_Manager\AW_Selection_Set_Editor.ui"
 	from lxml import etree
 	tree = etree.parse(path)
-	print "\t\t\t# Widgets"
+	print("\t\t\t# Widgets")
 	print_Widget(tree)
-	print "\t\t\t# Actions"
+	print("\t\t\t# Actions")
 	print_actions(tree)
 #----------------------------------------------------------------------
 def print_actions(tree):
 	for action in sorted([elem.get("name") for elem in tree.findall(".//action")]):
-		print "\t\t\tself.%s = QtGui.QAction()" % action
+		print(("\t\t\tself.%s = QtGui.QAction()" % action))
 #----------------------------------------------------------------------
 def print_Widget(tree):
 	for elem in tree.findall(".//widget"):
-		print "\t\t\tself.%s = QtGui.%s()" % (elem.get("name"), elem.get("class"))
+		print(("\t\t\tself.%s = QtGui.%s()" % (elem.get("name"), elem.get("class"))))
 #----------------------------------------------------------------------
 def _Make_Maya_Node_Type_Icons():
 	Icons = dict(
@@ -339,7 +339,7 @@ class Counter(object):
 		self.num = count(int(start))
 	#----------------------------------------------------------------------
 	def __call__(self):
-		return self.num.next()
+		return next(self.num)
 _userRole_counter    = Counter(QtCore.Qt.ItemDataRole.UserRole)
 _userType_counter    = Counter(QtGui.QStandardItem.UserType)
 ########################################################################
@@ -717,7 +717,7 @@ class _Standered_Item_Data_Storage(object):
 	def get_Current_State(self):
 		""""""
 		state = dict()
-		for key in self.__dict__.keys():
+		for key in list(self.__dict__.keys()):
 			if key.startswith("_item_"):
 				val = getattr(self, key)
 				if not val is None:
@@ -729,7 +729,7 @@ class _Standered_Item_Data_Storage(object):
 		""""""
 		if not isinstance(state,dict):
 			raise ValueError("input state must be a dict and a %r was given" % type(state))
-		for key, val in state.iteritems():
+		for key, val in state.items():
 			if hasattr(self, "_item_"+key):
 				if val is not None:
 					try:
@@ -817,7 +817,7 @@ class _Standered_Item_Data_Storage(object):
 	#----------------------------------------------------------------------
 	@status_tip.setter
 	def status_tip(self, value):
-		if not isinstance(value,(str,unicode)):
+		if not isinstance(value,str):
 			raise ValueError("input value must be an instance of (str,unicode) and a %r was given" % type(value))
 		self._item_status_tip = value
 	#----------------------------------------------------------------------
@@ -830,7 +830,7 @@ class _Standered_Item_Data_Storage(object):
 	#----------------------------------------------------------------------
 	@tool_tip.setter
 	def tool_tip(self, value):
-		if not isinstance(value,(str,unicode)):
+		if not isinstance(value,str):
 			raise ValueError("input value must be an instance of (str,unicode) and a %r was given" % type(value))
 		self._item_tool_tip = value
 	#----------------------------------------------------------------------
@@ -844,8 +844,8 @@ class _Standered_Item_Data_Storage(object):
 	def vertical_alignment(self, value):
 		if value is None:
 			self._item_vertical_alignment = value
-		elif value in Alignment.Vertical.Values.keys():
-			if not isinstance(value,(str,unicode)):
+		elif value in list(Alignment.Vertical.Values.keys()):
+			if not isinstance(value,str):
 				value = Alignment.Vertical.Values[value]
 			self._item_vertical_alignment = value
 		else:
@@ -862,8 +862,8 @@ class _Standered_Item_Data_Storage(object):
 	def horizontal_alignment(self, value):
 		if value is None:
 			self._item_horizontal_alignment = value
-		elif value in Alignment.Horizontal.Values.keys():
-			if not isinstance(value,(str,unicode)):
+		elif value in list(Alignment.Horizontal.Values.keys()):
+			if not isinstance(value,str):
 				value = Alignment.Horizontal.Values[value]
 			self._item_horizontal_alignment = value
 		else:
@@ -885,7 +885,7 @@ class _Standered_Item_Data_Storage(object):
 	#----------------------------------------------------------------------
 	@font_family.setter
 	def font_family(self, value):
-		if not isinstance(value,(str, unicode)):
+		if not isinstance(value,str):
 			raise ValueError("input value must be an instance of str, unicode and a %r was given" % type(value))
 		self._item_font_family = value
 		self._update_font()
@@ -1047,7 +1047,7 @@ class _Standered_Item_Data_Storage(object):
 	#----------------------------------------------------------------------
 	@display_name.setter
 	def display_name(self, value):
-		if not isinstance(value,(str, unicode)):
+		if not isinstance(value,str):
 			raise ValueError("input value must be an instance of (str,unicode) and a %r was given" % type(value))
 		self._item_display_name = value
 	#----------------------------------------------------------------------
@@ -1392,7 +1392,7 @@ class Maya_Item_Data(Item_Data):
 		isinstance(self.internal_data, Util_API.Maya_Node)
 		self._py_node = pymel.core.PyNode(self.internal_data.name)
 		isinstance(self._py_node, pymel.core.nodetypes.DependNode)
-		if str(self.internal_data.objectType) in _Maya_Node_Type_Icons.keys():
+		if str(self.internal_data.objectType) in list(_Maya_Node_Type_Icons.keys()):
 			self.icon = QtGui.QPixmap(_Maya_Node_Type_Icons[str(self.internal_data.objectType)])
 			self.icon_visable = True
 		if self.internal_data.transfromType == "group" and self.internal_data.objectType == "transform":
@@ -1544,7 +1544,7 @@ class Item_Data_List(object):
 ########################################################################
 class Tree_Item(object):
 	_Item_Type_ID = _userType_counter()
-	CHILDREN_CONTEXT, ITEMS_CONTEXT =  range(2)
+	CHILDREN_CONTEXT, ITEMS_CONTEXT =  list(range(2))
 	_Context_Attribute_Return = {CHILDREN_CONTEXT: "childItems", ITEMS_CONTEXT: "_column_items",}
 	#----------------------------------------------------------------------
 	def __init__(self, model=None, parent_item=None, items=[], column_count=1):
@@ -1619,7 +1619,7 @@ class Tree_Item(object):
 	#----------------------------------------------------------------------
 	def context_data(self):
 		""""""
-		if self.current_context_state in self._Context_Attribute_Return.keys():
+		if self.current_context_state in list(self._Context_Attribute_Return.keys()):
 			return getattr(self, self._Context_Attribute_Return[self.current_context_state])
 		else:
 			return self.childItems
@@ -2422,10 +2422,10 @@ class Tree_View(QtGui.QTreeView):
 			for index in selected_node_indices:
 				tree_item = index.data(ITEM_DATA_ROLE.Tree_Item_Role)
 				current_parent = tree_item.parent
-				if not current_parent in same_parents.keys():
+				if not current_parent in list(same_parents.keys()):
 					same_parents[current_parent] = []
 				same_parents[current_parent].append(tree_item)
-			for parent in same_parents.keys():
+			for parent in list(same_parents.keys()):
 				items = same_parents[parent]
 				first_row = min([i.row for i in items])
 				if not first_row == 0:
@@ -2442,10 +2442,10 @@ class Tree_View(QtGui.QTreeView):
 			for index in selected_node_indices:
 				tree_item = index.data(ITEM_DATA_ROLE.Tree_Item_Role)
 				current_parent = tree_item.parent
-				if not current_parent in same_parents.keys():
+				if not current_parent in list(same_parents.keys()):
 					same_parents[current_parent] = []
 				same_parents[current_parent].append(tree_item)
-			for parent in same_parents.keys():
+			for parent in list(same_parents.keys()):
 				items = same_parents[parent]
 				last_row = max([i.row for i in items])
 				if not parent.child_Count == last_row + 1:
@@ -2872,7 +2872,7 @@ class TreeModel(QtCore.QAbstractItemModel):
 		try:
 			return self.createIndex(row, column, childItem)
 		except:
-			print "Can Not Create Index"
+			print("Can Not Create Index")
 		
 		if childItem:
 			return self.createIndex(row, column, childItem)
@@ -2970,13 +2970,13 @@ class TreeModel(QtCore.QAbstractItemModel):
 	def _display_output(self, item, tabs=0):
 		""""""
 		isinstance(item, Tree_Item)
-		print "\t" * tabs, item.row, item.column_Count
+		print(("\t" * tabs, item.row, item.column_Count))
 		for i, col_item in enumerate(item.get_internal_Data().items):
 			isinstance(col_item, Item_Data)
 			state = col_item.get_Current_State()
-			print "\t" * (tabs + 1), "column #%i" % i
+			print(("\t" * (tabs + 1), "column #%i" % i))
 			for key in sorted(state.keys()):
-				print "\t" * (tabs + 2), key, state[key]
+				print(("\t" * (tabs + 2), key, state[key]))
 		for child in item.childItems:
 			self._display_output(child, tabs+1)
 	#----------------------------------------------------------------------

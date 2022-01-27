@@ -14,11 +14,11 @@
     NOTHING IN THIS MODULE SHOULD REQUIRE RED9
 
 '''
-from __future__ import with_statement  # required only for Maya2009/8
+  # required only for Maya2009/8
 from functools import wraps
 import maya.cmds as cmds
 import maya.mel as mel
-import Singleton
+from . import Singleton
 import os
 import time
 import inspect
@@ -146,7 +146,7 @@ def inspectFunctionSource(value):
 		elif path=="Command":
 			cmds.warning('%s : is a Command not a script' % value)
 			return False
-	except StandardError, error:
+	except Exception as error:
 		log.info(error)
 	#Inspect for Python
 	if not path or not os.path.exists(path):
@@ -164,7 +164,7 @@ def inspectFunctionSource(value):
 			if path:
 				#sourceType='python'
 				log.info('path : %s' % path)
-		except StandardError, error:
+		except Exception as error:
 			log.exception(error)
 
 	#Open the file with the default editor
@@ -471,7 +471,7 @@ class SceneRestoreContext(object):
 		log.info('Restored PlayBack / Timeline setup')
 
 		#panel management
-		for panel, data in self.dataStore['panelStore'].items():
+		for panel, data in list(self.dataStore['panelStore'].items()):
 			cmdString = data['settings'].replace('$editorName', panel)
 			mel.eval(cmdString)
 			log.info("Restored Panel Settings Data >> %s" % panel)
@@ -479,7 +479,7 @@ class SceneRestoreContext(object):
 			log.info("Restored Panel Active Camera Data >> %s >> cam : %s" % (panel, data['activeCam']))
 
 		# camera management
-		for cam, settings in self.dataStore['cameraTransforms'].items():
+		for cam, settings in list(self.dataStore['cameraTransforms'].items()):
 			cmds.setAttr('%s.translate' % cam, settings[0][0][0], settings[0][0][1], settings[0][0][2])
 			cmds.setAttr('%s.rotate' % cam, settings[1][0][0], settings[1][0][1], settings[1][0][2])
 			cmds.setAttr('%s.scale' % cam, settings[2][0][0], settings[2][0][1], settings[2][0][2])
@@ -539,9 +539,7 @@ class Mel_Variable(object):
 
 	value = property(get_value)
 ########################################################################
-class Mel_Global_Variables(object):
-	__metaclass__ = Singleton.Singleton
-	#----------------------------------------------------------------------
+class Mel_Global_Variables(object, metaclass=Singleton.Singleton):
 	def __init__(self):
 		""""""
 		self.rebuild()
@@ -633,9 +631,7 @@ class OptionVar(object):
 	def __repr__(self):
 		return repr(self.get_value())
 ########################################################################
-class OptionVariables(object):
-	__metaclass__ = Singleton.Singleton
-	#----------------------------------------------------------------------
+class OptionVariables(object, metaclass=Singleton.Singleton):
 	def __init__(self):
 		""""""
 		for name in cmds.optionVar( list=True ):

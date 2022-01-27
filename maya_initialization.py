@@ -1,9 +1,19 @@
 import os
+from importlib import reload
+try:
+	import wingdbstub
+except:
+	os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 7.2")
+	try:
+		import wingdbstub
+	except:
+		print("Could Not Import Wing Debuger")
+
 import maya.cmds  as cmds
 import maya.utils as utils
 import maya.mel   as mel
 import Scripts
-if os.environ.has_key("AW_GLOBAL_SYSTEMS"):
+if "AW_GLOBAL_SYSTEMS" in os.environ:
 	if not os.environ["AW_GLOBAL_SYSTEMS"] in os.sys.path:
 		os.sys.path.append(os.environ["AW_GLOBAL_SYSTEMS"])
 else:
@@ -22,16 +32,6 @@ if "MAYA_SCRIPT_PATH" in os.environ:
 	os.environ["MAYA_SCRIPT_PATH"] = os.environ["MAYA_SCRIPT_PATH"] + ";" + System_Paths._CODE_MAYA_SCRIPT_PATH
 else:
 	os.environ["MAYA_SCRIPT_PATH"] = System_Paths._CODE_MAYA_SCRIPT_PATH
-	
-if System_Settings.USE_WING_DEBUG:
-	try:
-		import wingdbstub
-	except:
-		os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 7.2")
-		try:
-			import wingdbstub
-		except:
-			print "Could Not Import Wing Debuger"
 	
 MAYA_VERSION           = int(cmds.about(version=True))
 MAYA_BATCH             = cmds.about(b=True)

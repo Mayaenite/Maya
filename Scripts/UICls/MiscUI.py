@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-import UI_Object
+from . import UI_Object
 
 
 ########################################################################
@@ -8,7 +8,7 @@ class Annotate(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -27,7 +27,7 @@ class AutoPlace(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -46,7 +46,7 @@ class ButtonManip(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -65,7 +65,7 @@ class Callbacks(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -84,7 +84,7 @@ class GrabColor(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -103,7 +103,7 @@ class HeadsUpDisplay(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 		if cmds.headsUpDisplay(name, exists=True):
 			self._id = name
@@ -423,7 +423,7 @@ class HeadsUpMessage(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -442,7 +442,7 @@ class Hotkey(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -481,7 +481,7 @@ class HotkeyCheck(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -500,7 +500,7 @@ class InViewMessage(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -519,7 +519,7 @@ class LinearPrecision(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -538,7 +538,7 @@ class LoadPrefObjects(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -557,7 +557,7 @@ class LoadUI(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -576,7 +576,7 @@ class NameCommand(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -595,7 +595,7 @@ class OverrideModifier(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -614,7 +614,7 @@ class SaveAllShelves(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -633,7 +633,7 @@ class SavePrefObjects(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -652,7 +652,7 @@ class SavePrefs(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -671,7 +671,7 @@ class SaveShelf(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -690,7 +690,7 @@ class Scmh(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -709,7 +709,7 @@ class SetMenuMode(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -728,7 +728,7 @@ class SetNodeTypeFlag(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -752,7 +752,7 @@ class SetStartupMessage(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:
@@ -776,7 +776,7 @@ class TextManip(UI_Object.UI):
 	#----------------------------------------------------------------------
 	def __init__(self, name=None, **kwargs):
 		parent = None
-		if kwargs.has_key("qtParent"):
+		if "qtParent" in kwargs:
 			parent = kwargs.pop("qtParent")
 			
 		if name == None:

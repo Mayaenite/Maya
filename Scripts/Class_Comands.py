@@ -8,7 +8,7 @@ class Dynamic_Attribute_Object(object):
 	string_digits = list(string.digits)
 	#----------------------------------------------------------------------
 	def __init__(self, data={}):
-		for key, value in data.iteritems():
+		for key, value in data.items():
 			self.add(key, value)
 	#----------------------------------------------------------------------
 	def add(self,key,value):
@@ -117,9 +117,8 @@ class Command_Content_MetaClass(type):
 			Mod_flags.append(mod_flag)
 		cls.modifier_flags=Mod_flags
 ########################################################################
-class Select_Command_Content(object):
+class Select_Command_Content(object, metaclass=Command_Content_MetaClass):
 	""""""
-	__metaclass__ = Command_Content_MetaClass
 	secondary_flags   = ["noExpand", "visible", "hierarchy"]
 	primary_flags     = ["add","clear","deselect","toggle"]
 	primary_comands   = []
@@ -151,9 +150,8 @@ class Select_Command_Content(object):
 			for prim_cmd in self.primary_comands:
 				prim_cmd.kwargs=kwargs
 ########################################################################
-class List_Attr_Command_Content(Select_Command_Content):
+class List_Attr_Command_Content(Select_Command_Content, metaclass=Command_Content_MetaClass):
 	""""""
-	__metaclass__ = Command_Content_MetaClass
 	secondary_flags   = ["array", "caching" , "changedSinceFileOpen", "category", "extension", "fromPlugin", "hasData", "hasNullData", "inUse", "leaf", "multi", "output", "read", "ramp", "readOnly", "scalar", "scalarAndArray", "settable", "shortNames", "string", "unlocked", "userDefined", "usedAsFilename", "visible", "write"]
 	primary_flags     = ["connectable","channelBox","keyable","locked"]
 	primary_comands   = []
@@ -161,9 +159,8 @@ class List_Attr_Command_Content(Select_Command_Content):
 	cmd               = "listAttr"
 
 ########################################################################
-class List_Select_Command_Content(Select_Command_Content):
+class List_Select_Command_Content(Select_Command_Content, metaclass=Command_Content_MetaClass):
 	""""""
-	__metaclass__ = Command_Content_MetaClass
 	secondary_flags   = ["long","leaf","noIntermediate","nodeTypes","objectsOnly","orderedSelection","recursive","renderGlobals","referencedNodes","readOnly","shapes","sets","selection","shortNames","showNamespace","showType","textures","tail","templated","transforms","type","undeletable","untemplated","visible", "invisible"]
 	primary_flags     = ["lockedNodes","materials","modified","live","lights","planes","partitions", "references", "visible", "persistentNodes", "sets", "selection", "textures", "transforms", "invisible"]
 	primary_comands   = []

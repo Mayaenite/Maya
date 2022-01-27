@@ -132,7 +132,7 @@ class Uuid_Named_Node(object):
 		return get_Node_Path(self._uuid)
 	#----------------------------------------------------------------------
 	def __get_name(self):
-		return unicode(get_Node_Name(self._uuid))
+		return str(get_Node_Name(self._uuid))
 	#----------------------------------------------------------------------
 	name          = property(fget=__get_name)
 
@@ -165,9 +165,9 @@ def Remove_Unknown_Plugins():
 		for plugin in oldplugins:
 			try:
 				cmds.unknownPlugin(plugin, remove=True)
-				print "Removed Unknown Plugin {}".format(plugin)
+				print(("Removed Unknown Plugin {}".format(plugin)))
 			except:
-				print "Did Not Remove Unknown Plugin {}".format(plugin)
+				print(("Did Not Remove Unknown Plugin {}".format(plugin)))
 
 #----------------------------------------------------------------------
 def find_Most_Likely_Master_Item():
@@ -375,7 +375,7 @@ class Widget_Action_Add_Extractor_Id_Tags(Scan_Progress_Action_Widget):
 				try:
 					add_AW_Extractor_ID(item)
 				except:
-					print "Did Not Add Id To %s" % item	
+					print(("Did Not Add Id To %s" % item))	
 					continue
 			set_AW_Extractor_ID(item,id_extractor_counter)
 			id_extractor_counter += 1
@@ -499,7 +499,7 @@ class Widget_Action_Does_Scene_Contain_Instances(Scan_Progress_Action_Widget):
 		count = 0
 		while not iterDag.isDone():
 			count += 1
-			iterDag.next()
+			next(iterDag)
 		iterDag.reset()
 		
 		self.progressBar.set_Progress_Message("Scaning Dag Nodes",count,True)
@@ -512,7 +512,7 @@ class Widget_Action_Does_Scene_Contain_Instances(Scan_Progress_Action_Widget):
 				self._result = True
 				return True
 			self.progressBar.add_Tick()
-			iterDag.next()
+			next(iterDag)
 			
 		self.progressBar.setStyleSheet("QProgressBar {color:black;\n    border: 2px solid blue;\n    border-radius: 5px;\n}\n\nQProgressBar::chunk {\n    \n	background-color: rgb(0, 255, 0);\n    width: 10px;\n}")
 		self.progressBar.setFormat("No Instances Found")
@@ -551,7 +551,7 @@ class Base_Widget_Action_Convert_Instances(Scan_Progress_Action_Widget):
 		count = 0
 		while not iterDag.isDone():
 			count += 1
-			iterDag.next()
+			next(iterDag)
 			self.progressBar.setValue(0)
 		iterDag.reset()
 		
@@ -560,7 +560,7 @@ class Base_Widget_Action_Convert_Instances(Scan_Progress_Action_Widget):
 		while not iterDag.isDone():
 			if iterDag.isInstanced():
 				instances.append(iterDag.fullPathName())
-			iterDag.next()
+			next(iterDag)
 			self.progressBar.add_Tick()
 		
 		uuids            = cmds.ls(instances, uuid=True)
@@ -805,7 +805,7 @@ class Widget_Action_Delete_Animation_Curves(Fixed_Items_Progress_Action_Widget):
 		while not iterDepend.isDone():
 			fn.setObject(iterDepend.thisNode())
 			curves.append(fn.name())
-			iterDepend.next()
+			next(iterDepend)
 		return curves
 	#----------------------------------------------------------------------
 	def run_Action(self):
@@ -896,7 +896,7 @@ class Widget_Action_Fix_Shape_Nodes_With_No_Geo(Fixed_Items_Progress_Action_Widg
 					if not any(data.values()):
 						cmds.delete(item)
 						self.spinbox.setValue(self.spinbox.value()+1)
-			except StandardError:
+			except Exception:
 				cmds.delete(item)
 				self.spinbox.setValue(self.spinbox.value()+1)
 			self.progressBar.add_Tick()
@@ -973,10 +973,10 @@ class Widget_Action_Fix_Non_Unique_Transform_Names(Fixed_Items_Progress_Action_W
 			if not dagFn.hasUniqueName():
 				name     = dagFn.name()
 				uid      = str(dagFn.uuid())
-				if not name in names_dict.keys():
+				if not name in list(names_dict.keys()):
 					names_dict[name]=[]
 				names_dict[name].append(uid)
-			iterDag.next()
+			next(iterDag)
 		
 		return names_dict
 	#----------------------------------------------------------------------
@@ -985,14 +985,14 @@ class Widget_Action_Fix_Non_Unique_Transform_Names(Fixed_Items_Progress_Action_W
 		base_sufix = "_AWID_"
 		
 		items_to_scan = self.get_Items_Of_Interset()
-		if len(items_to_scan.keys()):
+		if len(list(items_to_scan.keys())):
 			total_count = 0
-			for name,uids in items_to_scan.iteritems():
+			for name,uids in items_to_scan.items():
 				total_count += len(uids)
 			
 			self.progressBar.set_Progress_Message("Making Names Unique",total_count,True)
 			
-			for name,uids in items_to_scan.iteritems():
+			for name,uids in items_to_scan.items():
 				new_base_name = name + base_sufix
 				for idnum,uid in enumerate(uids):
 					new_name       = new_base_name + str(idnum).zfill(4)
@@ -1272,9 +1272,9 @@ class Widget_Action_Replace_Master_Layer_Shader_Assignments(Multi_Scan_Progress_
 	#----------------------------------------------------------------------
 	def apply_Shading_Engine_dict(self,data):
 		
-		self.progressBarB.set_Progress_Message("Applying Shading Assignments",len(data.keys()),True)
+		self.progressBarB.set_Progress_Message("Applying Shading Assignments",len(list(data.keys())),True)
 		
-		for sg,items in data.iteritems():
+		for sg,items in data.items():
 			if len(items):
 				material = get_Shader_Engine_Material(sg)
 				self.progressBarB.set_Progress_Message("Assigning {} Objects to {}".format(len(items),material))

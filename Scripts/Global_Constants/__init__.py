@@ -1,4 +1,4 @@
 try:
-	import Nodes
+	from . import Nodes
 except ImportError:
 	pass

@@ -5,7 +5,8 @@ import maya.app.general.mayaMixin
 import maya.cmds as cmds
 import maya.OpenMayaUI as omui
 from shiboken import wrapInstance
-import AW_Selection_Set_Editor
+from . import AW_Selection_Set_Editor
+import importlib
 
 def Load_Editor(force_Reload=True):
 	expaded_items =  []
@@ -26,7 +27,7 @@ def Load_Editor(force_Reload=True):
 					native_Parent.hide()
 					native_Parent.setParent(None)
 					del native_Parent
-					reload(AW_Selection_Set_Editor)
+					importlib.reload(AW_Selection_Set_Editor)
 	editor = AW_Selection_Set_Editor.UI_LOADER()
 	if len(expaded_items):
 		editor.Selection_Set_Outliner_Tree_View.set_expand_item_by_name(expaded_items)

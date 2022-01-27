@@ -39,9 +39,9 @@ class Display_Layer_Assinment_Transfer(object):
 		self._assinment_logs = []
 		self._skiped_assinment_logs = []
 		self.load_data()
-		for layer in self.dl_name_dict.keys():
+		for layer in list(self.dl_name_dict.keys()):
 			if not cmds.objExists(layer):
-				print layer
+				print(layer)
 			else:
 				dl = DisplayLayer(layer)
 				for obj in self.dl_name_dict[layer]:

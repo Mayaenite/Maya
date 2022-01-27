@@ -1,6 +1,6 @@
-import Helpers
+from . import Helpers
 import os
-import DeadLine_Access
+from . import DeadLine_Access
 import pymel.core as pm
 
 class Base_Info_File(object):

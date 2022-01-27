@@ -4,8 +4,8 @@ import pymel.core as pm
 import maya.cmds as cmds
 import maya.mel as mm
 import xml.etree.ElementTree as etree
-import Coba_Data_Parser
-import Coba_Json_Data_Parser
+from . import Coba_Data_Parser
+from . import Coba_Json_Data_Parser
 class EIM_Config_Data(object):
 	def __init__(self, code, layers):
 		self.code = code

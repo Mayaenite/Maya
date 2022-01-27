@@ -2,7 +2,8 @@ import Scripts.NodeCls.M_Nodes
 import Scripts.Global_Constants
 import Scripts.General_Maya_Util
 import Scripts.OpenMaya_Util_API
-reload(Scripts.OpenMaya_Util_API)
+import importlib
+importlib.reload(Scripts.OpenMaya_Util_API)
 import xml.etree.ElementTree as etree
 # DisplayLayer   = Scripts.NodeCls.M_Nodes.DisplayLayer
 DisplayLayer   = Scripts.OpenMaya_Util_API.DisplayLayer
@@ -250,12 +251,12 @@ class Extrator_Display_Layer(Extrator_XML_Data):
 			
 	def add_assined_members(self):
 		data =  {}
-		for key, value in self.attrib.iteritems():
+		for key, value in self.attrib.items():
 			data[key] = value
 			
 		self.clear()
 		
-		for key, value in data.iteritems():
+		for key, value in data.items():
 			self.set(key, value)
 		subelement_list = []
 		for member in self._node.members:
@@ -356,7 +357,7 @@ class Function_Timer(object):
 		start_time =  cmds.timerX()
 		self.result = self.fn()
 		end_time   =  cmds.timerX(startTime=start_time)
-		print self.fn.__name__ + " Took %f To Run" % end_time
+		print((self.fn.__name__ + " Took %f To Run" % end_time))
 		
 		
 class Section_Timer(object):
@@ -367,7 +368,7 @@ class Section_Timer(object):
 		self._start_time = cmds.timerX()
 	def end_timer(self):
 		self._end_time = cmds.timerX(startTime=self._start_time)
-		print self.message, "Elapsed Time = %f" % self._end_time
+		print((self.message, "Elapsed Time = %f" % self._end_time))
 	
 ########################################################################
 class Alembic_Asset_Writer(etree.ElementTree):
@@ -379,12 +380,12 @@ class Alembic_Asset_Writer(etree.ElementTree):
 		self._no_error_found = True
 		self._get_top_level_node()
 		if self._no_error_found:
-			print "a"
+			print("a")
 			Function_Timer(rename_polySurface_Shapes)
 			Function_Timer(rename_bad_unicode)
-			print "b"
+			print("b")
 			Function_Timer(self.add_Extractor_Ids)
-			print "c"
+			print("c")
 			Function_Timer(self.unlock_and_break_Attr_connections)
 			# section_timer_1 = Section_Timer("Creation Of Extractor_Item_Storage_Collector")
 			self.item_Collector = Extractor_Item_Storage_Collector()
@@ -472,7 +473,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 		id_extractor_counter = 1
 		shader_engines = get_Shading_Engines()
 		nodes = [self.top_level_node]+self.top_level_node.allDescendents + shader_engines
-		print "Nodes"
+		print("Nodes")
 		for node in nodes:
 			node.unlockNode()
 			if not node.attributeExists("AW_Extractor_ID"):
@@ -481,7 +482,7 @@ class Alembic_Asset_Writer(etree.ElementTree):
 					cmds.setAttr(node.name+".AW_Extractor_ID", id_extractor_counter)
 					id_extractor_counter += 1
 				except:
-					print "Did Not Add Id To %s" % node.name
+					print(("Did Not Add Id To %s" % node.name))
 			else:
 				cmds.setAttr(node.name+".AW_Extractor_ID", id_extractor_counter)
 				id_extractor_counter += 1
@@ -615,11 +616,11 @@ class Asset_Extractor(object):
 			dl = DisplayLayer(name)
 			dl.color.value = color
 			self.ProgressBar.increment()
-			if name in self.dl_dict.keys():
+			if name in list(self.dl_dict.keys()):
 				dl.addMembers(self.dl_dict[name], noRecurse=True)
 
 	def reasine_shaders(self):
-		for shader in self.shader_dict.keys():
+		for shader in list(self.shader_dict.keys()):
 			self.ProgressBar.increment()
 			shader_name = "extracted_shaders:"+shader
 			if cmds.objExists(shader_name):

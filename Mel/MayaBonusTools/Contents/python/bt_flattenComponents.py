@@ -42,13 +42,13 @@ def bt_getAvgVertPosition():
         count = count + 1
         totalPos = totalPos + vert.getPosition(space='world')
     
-    print totalPos
-    print count
+    print(totalPos)
+    print(count)
     
     select (vertList,r=1)
     
     if (count == 0):
-        print 'No verts selected'
+        print('No verts selected')
         return [0,0,0]
     else:
         avgPosition = totalPos[0]/count, totalPos[1]/count, totalPos[2]/count
@@ -69,13 +69,13 @@ def bt_getAvgVertNormal():
         count = count + 1
         totalNormal = totalNormal + vert.getNormal()
     
-    print totalNormal
-    print count
+    print(totalNormal)
+    print(count)
 
     select (vertList,r=1)
     
     if (count == 0):
-        print 'No verts selected'
+        print('No verts selected')
         return [0,0,0]
     else:
         avgNormal = totalNormal[0]/count, totalNormal[1]/count, totalNormal[2]/count

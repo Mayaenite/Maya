@@ -79,8 +79,7 @@ class Singleton(type):
 		return newcls
 
 
-class Item_IDs_Singleton(dict):
-	__metaclass__ = Singleton
+class Item_IDs_Singleton(dict, metaclass=Singleton):
 	id_generator  = itertools.count(0)
 	def add_item(self,name):
 		idNumber = self.id_generator.new()

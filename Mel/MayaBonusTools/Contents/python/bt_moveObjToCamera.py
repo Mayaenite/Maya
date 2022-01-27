@@ -33,10 +33,10 @@ def bt_checkCtrFHotkey():
     hotkeyExists = cmds.hotkey('f',query=1,ctl=1)
     
     if hotkeyExists == 1:
-        print 'CTRL f hotkey already exists.  If you\'d like CTRL f to be associated with this tool simply delete the existing hotkey and rerun the tool to auto create.'
+        print('CTRL f hotkey already exists.  If you\'d like CTRL f to be associated with this tool simply delete the existing hotkey and rerun the tool to auto create.')
         
     else:
-        print 'Automatically setting CTRL f as hotkey for this tool'
+        print('Automatically setting CTRL f as hotkey for this tool')
         cmds.nameCommand('bt_moveObjToCameraNameCommand',annotation='bt_moveObjToCameraNameCommand', command='bt_moveObjToCamera')
         runtimeCommandExists = cmds.runTimeCommand('bt_moveObjToCamera', exists=1)
         if runtimeCommandExists == 0:

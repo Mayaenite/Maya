@@ -477,9 +477,9 @@ def Coba_Element_Factory(parent,tag, attrib={}, **extra):
 		else:
 			return Asset(parent, tag, attrib)
 	elif tag == "Layer":
-		if "is3dRendering" in attrib.keys():
+		if "is3dRendering" in list(attrib.keys()):
 			return Asset_Layer(parent, tag, attrib)
-		elif "compound" in attrib.keys():
+		elif "compound" in list(attrib.keys()):
 			return Layer(parent, tag, attrib)
 	else:
 		return Coba_Element_Base(parent,tag, attrib)

@@ -1,4 +1,4 @@
-from exceptions import Exception
+#from exceptions import Exception
 
 #--------------------------
 # PyNode Exceptions
@@ -7,7 +7,7 @@ from exceptions import Exception
 class MayaObjectError(TypeError):
     _objectDescription = 'Object'
     def __init__(self, node=None):
-        self.node = unicode(node)
+        self.node = str(node)
     def __str__(self):
         msg = "Maya %s does not exist (or is not unique):" % (self._objectDescription)
         if self.node:
