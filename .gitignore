@@ -2,3 +2,4 @@
 *.pyc
 /Scripts/Tools/Display_Layer_Editor/Icons
 /plug-ins/USD/
+/__pycache__/
