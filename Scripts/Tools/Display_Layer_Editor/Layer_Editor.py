@@ -7,9 +7,9 @@ import maya.OpenMayaUI as omui
 from maya.app.general import mayaMixin
 
 import PYQT
-from PYQT import BASE_CLASS_DEFINITIONS
-from PYQT.MAYA_CLASS_DEFINITIONS import Maya_API_Callback_Builders,DATA_MODELS,DATA_TYPES,DATA_VIEWS
-from PYQT.MAYA_CLASS_DEFINITIONS.Item_Data_Roles import Maya_Item_Data_Roles
+from   PYQT import BASE_CLASS_DEFINITIONS
+from   PYQT.MAYA_CLASS_DEFINITIONS import Maya_API_Callback_Builders,DATA_MODELS,DATA_TYPES,DATA_VIEWS
+from   PYQT.MAYA_CLASS_DEFINITIONS.Item_Data_Roles import Maya_Item_Data_Roles
 
 import os
 import sys

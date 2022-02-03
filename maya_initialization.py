@@ -1,18 +1,10 @@
 import os
 from importlib import reload
-try:
-	import wingdbstub
-except:
-	os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 7.2")
-	try:
-		import wingdbstub
-	except:
-		print("Could Not Import Wing Debuger")
-
 import maya.cmds  as cmds
 import maya.utils as utils
 import maya.mel   as mel
 import Scripts
+
 if "AW_GLOBAL_SYSTEMS" in os.environ:
 	if not os.environ["AW_GLOBAL_SYSTEMS"] in os.sys.path:
 		os.sys.path.append(os.environ["AW_GLOBAL_SYSTEMS"])
