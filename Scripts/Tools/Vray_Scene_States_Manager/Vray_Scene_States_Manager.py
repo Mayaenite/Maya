@@ -368,7 +368,7 @@ class Vray_Scene_States_Manager_MainWindow(MayaQWidgetBaseMixin,QT.QMainWindow):
 	def save_Yaml_Data_To_File(self,filePath=None):
 		""""""
 		if _maya_check:
-			if filePath is None:
+			if filePath is None or filePath == False:
 				filePath = os.path.join(os.environ["Temp"],"Temp_State_Manager_Data.yaml")
 			data = self.model.to_Yaml_Object()
 			Custom_Widgets.Yaml_Config_Data.save_config_data_to_file(data, filePath)

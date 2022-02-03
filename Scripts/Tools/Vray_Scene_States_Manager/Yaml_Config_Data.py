@@ -1,4 +1,5 @@
 import yaml
+import os
 try:
 	_maya_check = True
 	import Scripts.NodeCls.M_Nodes
@@ -52,7 +53,8 @@ class YAML_Config_Script_Node(Script_Node):
 	#----------------------------------------------------------------------
 	def load_Config_Data(self):
 		""""""
-		data = yaml.load(self.before.getValue())
+		
+		data = yaml.load(self.before.getValue(),yaml.Loader)
 		isinstance(data, Config_Data)
 		if not data is None:
 			data = data_cleaner(data)
@@ -273,7 +275,7 @@ class Part_Set_Refence(yaml.YAMLObject):
 		return "%s(%r,%r)" % (self.__class__.__name__, self.link, self.parent)
 ########################################################################
 class Config_Data(yaml.YAMLObject):
-	yaml_tag = '!Config_Data'
+	yaml_tag = u'!Config_Data'
 	#----------------------------------------------------------------------
 	def __init__(self, assets=None):
 		self.Assets = assets
@@ -486,15 +488,18 @@ class Yaml_Differences_Data(object):
 def save_config_data_to_file(data, file_path):
 	""""""
 	data = data_cleaner(data)
-	with file(file_path, mode="w") as f:
+	with open(file_path, mode="w") as f:
 		yaml.dump(data, stream=f)
 	return yaml.dump(data)
 
 #----------------------------------------------------------------------
 def load_config_data_from_file(file_path):
 	""""""
-	with file(file_path, mode="r") as f:
-		data = yaml.load(f)
+	if file_path == False:
+		file_path = os.path.join(os.environ["Temp"],"Temp_State_Manager_Data.yaml")
+	with open(file_path, mode="r") as f:
+		str_data = f.read()
+		data = yaml.load(str_data,yaml.Loader)
 		data = data_cleaner(data)
 	isinstance(data, Config_Data)
 	return data
@@ -546,7 +551,7 @@ def load_config_Script(namespace="AW_Yaml_Config_Data"):
 		data = get_default_Yaml_Data()
 	else:
 		script = Scripts.NodeCls.M_Nodes.Script_Node(script_name, afterScript="", beforeScript="", executeAfter=False,executeBefore=False,scriptType=0, sourceType="python")
-		data = yaml.load(script.after.getValue())
+		data = yaml.load(script.after.getValue(),yaml.Loader)
 		data = data_cleaner(data)
 		ns = ":".join(script.name.split(":")[:-1])
 		data.active_namespace = ns
@@ -584,7 +589,7 @@ Assets: &id004 !Assets
     name: Config_Asset
     parent: *id004
   parent: *id005"""
-	return yaml.load(value)
+	return yaml.load(value,yaml.Loader)
 
 if __name__ == "__main__":
 	print((yaml.dump(Config_Data())))

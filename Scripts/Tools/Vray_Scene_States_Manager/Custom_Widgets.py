@@ -3917,6 +3917,7 @@ class Maya_Selection_Set_Item(MNode_Item):
 		if _maya_check:
 			isinstance(self._data, M_Nodes.SelectionSet)
 	#----------------------------------------------------------------------
+	@QtSlot()
 	def node_select_set(self):
 		self._data.select_set()
 	#----------------------------------------------------------------------
@@ -4181,6 +4182,10 @@ class Render_State_Item(_Named_Data_Item):
 			self.asset_assembly_ref_type = None
 		else:
 			self.from_Yaml(render_state, part_sets)
+	#----------------------------------------------------------------------
+	def __hash__(self):
+		""""""
+		return self._data.__hash__()
 	#----------------------------------------------------------------------
 	def contextMenuActions(self, menu):
 		action_Set_Fav = QT.QAction(menu)
@@ -4486,6 +4491,10 @@ class Part_Set_Item(Vray_Object_Properties_Item):
 			return link.value
 		else:
 			return None
+	#----------------------------------------------------------------------
+	def __hash__(self):
+		""""""
+		return self._data.__hash__()
 		
 ########################################################################
 class Asset_Item(Maya_Asset_Item):
