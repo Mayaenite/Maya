@@ -55,6 +55,11 @@ class Global_Access(object):
 					if not items == None:
 						if len(items):
 							cmds.select(items,add=True)
+			for item in cmds.ls( assemblies=True):
+				try:
+					cmds.delete(item)
+				except:
+					continue
 			cmds.file(cls.Shader_File_Path,force=True,op="v=1;",typ="mayaBinary",es=True)
 	#----------------------------------------------------------------------
 	@classmethod
@@ -247,7 +252,10 @@ def perform_CleanUp():
 	""""""
 	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
 	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
-		maya.mel.eval(cmd)
+		try:
+			maya.mel.eval(cmd)
+		except:
+			continue
 	cmds.delete(all=True,constructionHistory=True)
 
 #----------------------------------------------------------------------
@@ -684,24 +692,38 @@ class Widget_Action_Remove_NameSpaces(Fixed_Items_Progress_Action_Widget):
 	#----------------------------------------------------------------------
 	def is_Scan_Needed(self):
 		""""""
-		return len([ns for ns in cmds.namespaceInfo( listOnlyNamespaces=True, recurse=True) if not ns in ['UI','shared']]) >= 1
+		return len([ns for ns in cmds.namespaceInfo(  absoluteName=True,listOnlyNamespaces=True, recurse=True,) if not ns in [":UI",":shared"]]) >= 1
 	#----------------------------------------------------------------------
 	def run_Action(self):
 		""""""
+		def isLonger(a,b):
+			if len(a)==len(b):
+				return 0
+			if len(a)<len(b):
+				return 1
+			else:
+				return -1
 		self.progressBar.set_Calculating()
 		
-		items_to_scan = [item for item in cmds.namespaceInfo( listOnlyNamespaces=True, recurse=True) if not item in ['UI','shared']]
-		items_to_scan.reverse()
-		if len(items_to_scan):
-			self.progressBar.set_Progress_Message("Removing Name Spaces",len(items_to_scan),True)
-			for item in items_to_scan:
-				if cmds.namespace( exists=item):
-					cmds.namespace(removeNamespace=item,mergeNamespaceWithRoot=True)
-					self.spinbox.setValue(self.spinbox.value()+1)
-				self.progressBar.add_Tick()
-		else:
-			self.progressBar.set_Progress_Message("No Name Spaces To Remove",100,True)
-			self.progressBar.setValue(100)
+		#items_to_scan = [item for item in cmds.namespaceInfo( listOnlyNamespaces=True, recurse=True) if not item in ['UI','shared']]
+		#items_to_scan.reverse()
+		#if len(items_to_scan):
+			#self.progressBar.set_Progress_Message("Removing Name Spaces",len(items_to_scan),True)
+			#for item in items_to_scan:
+				#if cmds.namespace( exists=item):
+					#cmds.namespace(removeNamespace=item,mergeNamespaceWithRoot=True)
+					#self.spinbox.setValue(self.spinbox.value()+1)
+				#self.progressBar.add_Tick()
+		#else:
+			#self.progressBar.set_Progress_Message("No Name Spaces To Remove",100,True)
+			#self.progressBar.setValue(100)
+		items_to_scan = sorted([ns for ns in cmds.namespaceInfo(  absoluteName=True,listOnlyNamespaces=True, recurse=True,) if not ns in [":UI",":shared"]],cmp=isLonger)
+		self.progressBar.set_Progress_Message("Removing Name Spaces",len(items_to_scan),True)
+		
+		for item in items_to_scan:
+			cmds.namespace( removeNamespace = item, mergeNamespaceWithRoot = True)
+			self.spinbox.setValue(self.spinbox.value()+1)
+			self.progressBar.add_Tick()
 ########################################################################
 class Widget_Action_Remove_Unknown_Plugins(Fixed_Items_Progress_Action_Widget):
 	""""""
@@ -1081,10 +1103,16 @@ class Widget_Action_Fix_Default_Uv_Set_Name(Fixed_Items_Progress_Action_Widget):
 			default_uv_set = cmds.getAttr(item)
 			if default_uv_set != "map1" and not default_uv_set == None:
 				node = item.split(".")[0]
-				cmds.polyUVSet(node, rename=True, newUVSet='map1', uvSet=default_uv_set)
-				if not cmds.polyUVSet( node, query=True, currentUVSet=True) == 'map1':
-					cmds.polyUVSet(node,currentUVSet=True, uvSet='map1')
-					self.spinbox.setValue(self.spinbox.value()+1)
+				allUvSets = cmds.polyUVSet(node, query=True, allUVSets=True)
+				if not allUvSets == None:
+					if "map1" in allUvSets:
+						cmds.polyUVSet( node, currentUVSet=True,uvSet='map1')
+						self.spinbox.setValue(self.spinbox.value()+1)
+					else:
+						cmds.polyUVSet(node, rename=True, newUVSet='map1', uvSet=default_uv_set)
+						#if not cmds.polyUVSet( node, query=True, currentUVSet=True) == 'map1':
+						cmds.polyUVSet(node,currentUVSet=True, uvSet='map1')
+						self.spinbox.setValue(self.spinbox.value()+1)
 			self.progressBar.add_Tick()
 ########################################################################
 class Widget_Action_Fix_Dirty_Meshs(Fixed_Items_Progress_Action_Widget):
@@ -1183,6 +1211,7 @@ class Widget_Action_Unlock_Dag_Objects(Fixed_Items_Progress_Action_Widget):
 				unlock_Node(item)
 				self.spinbox.setValue(self.spinbox.value()+1)
 			self.progressBar.add_Tick()
+			
 ########################################################################
 class Widget_Action_Unlock_Transform_Attributes(Fixed_Items_Progress_Action_Widget):
 	""""""
