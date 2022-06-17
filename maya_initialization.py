@@ -52,6 +52,7 @@ cmds.setStartupMessage(os.path.join(os.environ["MAYA_LOCATION"],'icons',"MayaSta
 
 if MAYA_GUI:
 	utilities.add_To_System_Path(System_Paths._CODE_AW_SITE_PACKAGES)
+	utilities.add_To_System_Path(System_Paths._CODE_AMSTERDAM_MAYA)
 	if MAYA_VERSION == 2015:
 		# cmds.setStartupMessage(os.path.join(System_Paths._CODE_MAYA_XBM_PATH , "MayaStartupImage.png"))
 		#----------------------------------------------------------------------
@@ -60,10 +61,8 @@ if MAYA_GUI:
 		utilities.add_To_Multi_Path_Environment_Key("XBMLANGPATH", [System_Paths._CODE_MAYA_BONUS_TOOLS_ICONS, System_Paths._CODE_MAYA_XBM_PATH])
 		#----------------------------------------------------------------------
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON)
-		utilities.add_To_System_Path(System_Paths._CODE_AMSTERDAM_MAYA)
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON_2014)
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON_2015)
-		utilities.add_To_System_Path(System_Paths._CODE_AMSTERDAM_MAYA)
 		if not System_Settings.NO_USER_TOOLS:
 			utilities.add_To_System_Path(System_Paths.MAYA_USER_TOOLS_DIR)
 			utils.executeDeferred ('mel.eval("bonusToolsMenu")')
