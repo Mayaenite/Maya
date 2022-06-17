@@ -12,6 +12,7 @@ else:
 	global_systems_directory = os.path.realpath(this_dir+"/../../Global_Systems")
 	if os.path.exists(global_systems_directory) and not global_systems_directory in os.sys.path:
 		os.sys.path.append(global_systems_directory)
+		
 from Environment_Access import System_Paths, System_Settings, utilities
 
 if "XBMLANGPATH" in os.environ:
@@ -28,7 +29,7 @@ if System_Settings.USE_WING_DEBUG:
 	try:
 		import wingdbstub
 	except:
-		os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 7.2")
+		os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 8")
 		try:
 			import wingdbstub
 		except:
@@ -59,8 +60,10 @@ if MAYA_GUI:
 		utilities.add_To_Multi_Path_Environment_Key("XBMLANGPATH", [System_Paths._CODE_MAYA_BONUS_TOOLS_ICONS, System_Paths._CODE_MAYA_XBM_PATH])
 		#----------------------------------------------------------------------
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON)
+		utilities.add_To_System_Path(System_Paths._CODE_AMSTERDAM_MAYA)
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON_2014)
 		utilities.add_To_System_Path(System_Paths._CODE_MAYA_BONUS_TOOLS_PYTHON_2015)
+		utilities.add_To_System_Path(System_Paths._CODE_AMSTERDAM_MAYA)
 		if not System_Settings.NO_USER_TOOLS:
 			utilities.add_To_System_Path(System_Paths.MAYA_USER_TOOLS_DIR)
 			utils.executeDeferred ('mel.eval("bonusToolsMenu")')

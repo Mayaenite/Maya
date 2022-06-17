@@ -437,15 +437,25 @@ def Build_Artist_Tools(shelfName):
 	      ,imageOverlayLabel="csnp" 
 	      ,command="print(\"Camera Snap Tool\");\nsource \"CameraSnap.mel\";\nCameraSnap(1);\n" 
 	      ,sourceType="mel")
-	# AW Camera Snap
+	# Selection_Set_Manager
+	#cmds.shelfButton(parent=active_shelf
+	                 #,annotation="Selection Set Helper Tool"
+	                 #,label     = "SSM"
+	                  #,image      = "Selection_Set_Manager.png"
+	                  #,image1     = "Selection_Set_Manager.png"
+	      #, version   = 2015
+	      #,imageOverlayLabel="ssm"
+	       #,command="import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader\nG_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()" 
+	      #,sourceType="python")
+	# Amsterdam Tool
 	cmds.shelfButton(parent=active_shelf
-	                 ,annotation="Selection Set Helper Tool"
-	                 ,label     = "SSM"
-	                  ,image      = "Selection_Set_Manager.png"
-	                  ,image1     = "Selection_Set_Manager.png"
+	                 ,annotation="Amsterdam Tool"
+	                 ,label     = "ADT"
+	                  ,image      = "logo_small.png"
+	                  ,image1     = "logo_small.png"
 	      , version   = 2015
-	      ,imageOverlayLabel="ssm"
-	       ,command="import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader\nG_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()" 
+	      ,imageOverlayLabel="adt"
+	       ,command="import tools.sgs_main\ntools.sgs_main.sgsUI()" 
 	      ,sourceType="python")
 
 
