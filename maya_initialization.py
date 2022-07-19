@@ -25,7 +25,7 @@ if "MAYA_SCRIPT_PATH" in os.environ:
 else:
 	os.environ["MAYA_SCRIPT_PATH"] = System_Paths._CODE_MAYA_SCRIPT_PATH
 	
-if System_Settings.USE_WING_DEBUG:
+if System_Settings.USE_WING_DEBUG or "WINGHOME" in os.environ:
 	try:
 		import wingdbstub
 	except:

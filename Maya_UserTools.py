@@ -28,7 +28,7 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 	# this looks in the folder where this script is run from and generates the
 	# cascading menues and Python script buttons
 	mainDir = Path(mainDir)
-	ignors  = ["__init__.py", "userSetup.py", "pythonScripts.py"]
+	ignors  = ["__init__.py", "userSetup.py", "pythonScripts.py",".idea",".gitignore",".git"]
 	files   = [f for f in mainDir.glob("*.py") if not f.parts[-1] in ignors]
 	try:
 		folders = [folder for folder in mainDir.iterdir(True) if not folder.baseName.startswith(".")]
@@ -36,7 +36,6 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 		folders = [folder for folder in mainDir.iterfolders() if not folder.baseName.startswith(".")]
 	folders = sorted(folders)
 	
-	#folders = mainDir.dirs(pattern=None, realpath=False)
 	gMainProgressBar = get_main_progress_bar()
 
 
@@ -47,7 +46,6 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 		if(cmds.progressBar(gMainProgressBar, q=True, pr=True)  == 100):
 			cmds.progressBar (gMainProgressBar, e=True, pr=1)
 		
-		#if not ( fnmatch.fnmatch(current_file,"*__init__.py") ) and not ( fnmatch.fnmatch (current_file, "*userSetup.py") ) and not ( fnmatch.fnmatch (current_file, "*pythonScripts.py") ):
 		data = current_file.read_text()
 		mch = re.search("def " + current_file.baseName + ".*\(.*\)", data)
 		if mch != None:
@@ -56,8 +54,6 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 				baseName = str(current_file.baseName)
 				cmds.progressBar (gMainProgressBar, edit=True, step=1)
 				cmds.progressBar (gMainProgressBar, e=True, status=("Adding: "+baseName) )
-				# print parts
-				# print mainDir + j
 				pyMenuItem = cmds.menuItem ( parent=pMenu, label=label, command='Maya_UserTools.importAndRun ("%(baseName)s")' % vars() )
 	
 	for current_folder in folders:
@@ -70,7 +66,6 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 			check = True
 		else:
 			for current_file in files:
-				#if not ( fnmatch.fnmatch(current_file,"*__init__.py") ) and not ( fnmatch.fnmatch (current_file, "*userSetup.py") ) and not ( fnmatch.fnmatch (current_file, "*pythonScripts.py") ):
 				data = current_file.read_text()
 				mch = re.search("def " + current_file.baseName + ".*\(.*\)", data)
 				if mch != None:
@@ -83,8 +78,6 @@ def gen_pythonScripts(mainDir, pMenu, depth=0):
 			label    =  " ".join(current_folder.baseName.split("_"))
 			menu     = cmds.menuItem(menuName, subMenu=True, aob=1, tearOff=True, parent=pMenu, label=label)
 			#This adds the folder into the PythonPath
-			#if (current_folder[-1] != "/"):
-				#current_folder = Path(current_folder+"/")
 			if not str(current_folder) in sys.path:
 				sys.path.append(str(current_folder))
 
