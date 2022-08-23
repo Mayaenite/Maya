@@ -30,7 +30,7 @@ if System_Settings.USE_WING_DEBUG or "WINGHOME" in os.environ:
 	try:
 		import wingdbstub
 	except:
-		os.sys.path.append(r"C:\Program Files (x86)\Wing Pro 8")
+		os.sys.path.append(os.environ["WINGHOME"])
 		try:
 			import wingdbstub
 		except:
