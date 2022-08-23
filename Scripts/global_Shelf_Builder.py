@@ -370,16 +370,16 @@ def Build_DataPrep_Tools(shelfName):
 	          ,style      = "iconOnly"
 	          ,command    = "aw_make_switch_builder_window"
 	          ,sourceType = "mel" )
-	# AW Shader Switch Builder
+	# Maya Scene Converter
 	cmds.shelfButton(parent=active_shelf
-	                 ,annotation = ""
-	                 ,label      = "Auto Shader Assignment"
-	                  ,image      = "Auto_Shader_Assinment_tool.png"
-	                  ,image1     = "Auto_Shader_Assinment_tool.png"
+	                 ,annotation = "Converter A Scene For Different Renders"
+	                 ,label      = "Maya Scene Converter"
+	                  ,image      = "scene_convert_icon.png"
+	                  ,image1     = "scene_convert_icon.png"
+	          ,imageOverlayLabel = "" 
 	          ,style      = "iconOnly"
-	          ,command    = "aw_make_auto_shader_assignment_window"
-	          ,sourceType = "mel" )
-
+	          ,command    = "import MayaSceneConverter.ConverterUI\nMayaSceneConverter.ConverterUI.ConverterUI()"
+	          ,sourceType = "python" )
 def Build_Artist_Tools(shelfName):
 	active_shelf = shelfName
 	removeShelfTab(active_shelf)
