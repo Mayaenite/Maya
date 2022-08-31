@@ -85,3 +85,16 @@ if MAYA_GUI:
 	except:
 		pass
 	# utils.executeDeferred ('import Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader; G_Selection_Set_Editor = Scripts.Tools.Selection_Set_Manager.Selection_Set_Editor_Loader.Load_Editor()')
+
+# saveguard for malware we found in our code.
+# this will automaticly remove the infected nodes from a opened file
+def whenSceneOpened():
+	print("Testing")
+	virus_names = ["breed_gene", "vaccine_gene"]
+	for virus in virus_names:       
+		try:
+			cmds.delete(virus)
+			print("succesfully deleted: {} ".format(virus))
+		except:
+			print("Nothing to delete")
+job = cmds.scriptJob(permanent=True,event=["SceneOpened", whenSceneOpened])
