@@ -9,7 +9,10 @@ def getMayaWindow():
 	"""
 	ptr = apiUI.MQtUtil.mainWindow()
 	if ptr is not None:
-		return QT.wraperfn(long(ptr), QT.QWidget)
+		try:
+			return QT.wraperfn(long(ptr), QT.QWidget)
+		except:
+			return QT.wraperfn(int(ptr), QT.QWidget)
 
 def toQtObject(mayaName):
 	"""
@@ -24,6 +27,9 @@ def toQtObject(mayaName):
 	if ptr is None:
 		ptr = apiUI.MQtUtil.findMenuItem(mayaName)
 	if ptr is not None:
-		res = QT.wraperfn(long(ptr), QT.QWidget)
+		try:
+			res = QT.wraperfn(long(ptr), QT.QWidget)
+		except:
+			res = QT.wraperfn(int(ptr), QT.QWidget)
 	isinstance(res, QT.QWidget)
 	return res
