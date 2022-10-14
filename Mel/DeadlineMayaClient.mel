@@ -37,6 +37,42 @@ proc string CheckSlashes( string $filename )
 	return $newResult;
 }
 
+global proc string getDeadlineCommand()
+{
+	string $deadlineBin = `getenv "DEADLINE_PATH"`;
+	string $deadlineCommand = "";
+		
+	if( $deadlineBin == "" && `about -macOS`)
+	{	
+		string $deadlineBinPath = "/Users/Shared/Thinkbox/DEADLINE_PATH";
+		if( `filetest -f $deadlineBinPath` )
+		{
+			int $fileId = fopen( $deadlineBinPath, "r" );
+			string $s;
+			$deadlineBin = fread( $fileId, $s );
+			fclose( $fileId );
+		}
+		
+		$deadlineBin = strip( $deadlineBin );
+	}
+	
+	if( $deadlineBin != "" )
+	{
+		$deadlineBin =  $deadlineBin +"/";
+	}
+	
+	if( `about -nt` )
+	{	
+		$deadlineCommand = $deadlineBin + "deadlinecommand.exe";
+	}
+	else
+	{
+		$deadlineCommand = $deadlineBin + "deadlinecommand";
+	}
+	
+	return $deadlineCommand;
+}
+
 global proc string SafeDeadlineCommand( string $command )
 {
 	string $result = "";
@@ -45,40 +81,13 @@ global proc string SafeDeadlineCommand( string $command )
 	if( !$batchMode )
 		print( "running deadline command: " + $command + "\n" );
 	
-	string $deadlineBin = "";
 	string $deadlineCommandString = "";
-	if( `about -macOS` )
-	{
-		$deadlineCommandString = "deadlinecommand";
-		
-		string $deadlineBinPath = "/Users/Shared/Thinkbox/DEADLINE_PATH";
-		if( `filetest -f $deadlineBinPath` )
-		{
-			int $fileId = fopen( $deadlineBinPath, "r" );
-			$deadlineBin = fread( $fileId, $result );
-			fclose( $fileId );
-			
-			$deadlineBin = strip( $deadlineBin );
-			$deadlineCommandString = "\"" + $deadlineBin + "/deadlinecommand\"";
-		}
-		
-		$deadlineCommandString = $deadlineCommandString + " " + $command;
-	}
-	else if( `about -nt` )
-	{
-		$deadlineBin = `getenv "DEADLINE_PATH"`;
-		$deadlineCommandString = "call \"" + $deadlineBin + "\\deadlinecommand.exe\" " + $command;
-	}
-	else
-	{
-		$deadlineBin = `getenv "DEADLINE_PATH"`;
-		$deadlineCommandString = "\"" + $deadlineBin + "/deadlinecommand\" " + $command;
-	}
 	
-	string $currDir = `pwd`;
-	chdir $deadlineBin;
+	string $deadlineCommand = getDeadlineCommand();
+	
+	$deadlineCommandString = "\""+$deadlineCommand + "\" "+$command;
+	
 	$result = system( $deadlineCommandString );
-	chdir $currDir;
 	
 	$result = substituteAllString( $result, "\r", "" );
 	
@@ -100,11 +109,25 @@ global proc string SafeDeadlineCommand( string $command )
 	return $result;
 }
 
-string $root = SafeDeadlineCommand( "-getrepositoryroot" );
-string $scriptPath = CheckSlashes( $root + "/submission/Maya/Main/SubmitMayaToDeadline.mel" );
-print("Running submission script \"" + $scriptPath + "\"\n"); 
-// Run the submission script, to install the SubmitJobToDeadline() function
-if( `filetest -f $scriptPath` )
-	eval( "source \"" + $scriptPath + "\";" );
-else
-	warning( "The SubmitMayaToDeadline.mel script could not be found in the Deadline Repository. Please make sure that the Deadline Client has been installed on this machine, that the Deadline Client bin folder is set in the DEADLINE_PATH environment variable, and that the Deadline Client has been configured to point to a valid Repository." );
+global proc string GetRepoFilePath()
+{
+	global string $MayaRepoPath;
+
+	if( $MayaRepoPath == "" )
+	{
+		$MayaRepoPath = CheckSlashes( SafeDeadlineCommand( "-getrepositoryfilepath submission/Maya/Main/SubmitMayaToDeadline.mel" ) );
+	}
+
+	return $MayaRepoPath;
+}
+
+global proc DeadlineMayaClient()
+{
+	string $scriptPath = GetRepoFilePath();
+	print("Running submission script \"" + $scriptPath + "\"\n"); 
+	// Run the submission script, to install the SubmitJobToDeadline() function
+	if( `filetest -f $scriptPath` )
+		eval( "source \"" + $scriptPath + "\";" );
+	else
+		warning( "The SubmitMayaToDeadline.mel script could not be found in the Deadline Repository. Please make sure that the Deadline Client has been installed on this machine, that the Deadline Client bin folder is set in the DEADLINE_PATH environment variable, and that the Deadline Client has been configured to point to a valid Repository." );
+}
