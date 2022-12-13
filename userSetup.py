@@ -1,2 +1,5 @@
 from maya_initialization import *
-import DeadlineMayaClient
+try:
+	import DeadlineMayaClient
+except:
+	pass

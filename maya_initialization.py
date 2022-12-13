@@ -15,7 +15,7 @@ else:
 		os.sys.path.append(global_systems_directory)
 from Environment_Access import System_Paths, System_Settings, utilities
 
-if System_Settings.USE_WING_DEBUG or "WINGHOME" in os.environ:
+if System_Settings.USE_WING_DEBUG and "WINGHOME" in os.environ:
 	try:
 		import wingdbstub
 	except:
