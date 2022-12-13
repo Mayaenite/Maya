@@ -30,8 +30,8 @@ if System_Settings.USE_WING_DEBUG or "WINGHOME" in os.environ:
 	try:
 		import wingdbstub
 	except:
-		os.sys.path.append(os.environ["WINGHOME"])
 		try:
+			os.sys.path.append(os.environ["WINGHOME"])
 			import wingdbstub
 		except:
 			print "Could Not Import Wing Debuger"
@@ -89,7 +89,6 @@ if MAYA_GUI:
 # saveguard for malware we found in our code.
 # this will automaticly remove the infected nodes from a opened file
 def whenSceneOpened():
-	print("Testing")
 	virus_names = ["breed_gene", "vaccine_gene"]
 	for virus in virus_names:       
 		try:
