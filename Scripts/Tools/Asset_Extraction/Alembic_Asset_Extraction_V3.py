@@ -250,7 +250,7 @@ def remove_All_Render_Layers():
 #----------------------------------------------------------------------
 def perform_CleanUp():
 	""""""
-	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
+	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2020/scripts/startup/cleanUpScene.mel"')
 	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
 		try:
 			maya.mel.eval(cmd)
