@@ -387,7 +387,7 @@ def Build_Artist_Tools(shelfName):
 	# Maya Mat Replace
 	cmds.shelfButton(parent=active_shelf
 	                 ,annotation="Maya Mat Replace" 
-	                 ,label="maya_mat_replace_v05" 
+	                 ,label="maya_mat_replace_v05"
 	                  ,imageOverlayLabel="MMR" 
 	                  ,image="materialEditor.png" 
 	      ,image1="materialEditor.png" 
@@ -449,7 +449,24 @@ def Build_Artist_Tools(shelfName):
 	      ,sourceType="python")
 
 
+def Build_Amsterdam_Tools(shelfName):
+	active_shelf = shelfName
+	removeShelfTab(active_shelf)
+	addNewShelfTab(active_shelf)
+	# Amsterdam sgsUI
+	cmds.shelfButton(parent=active_shelf
+	                 ,annotation="Amsterdam sgsUI" 
+	                 ,label="sgsUI" 
+	                  ,imageOverlayLabel="sgsUI"
+	                  ,image="Amsterdam_Tools_Button.jpg" 
+	      ,image1="Amsterdam_Tools_Button.jpg" 
+	      ,style="iconOnly" 
+	      ,command="import tools.sgs_main\ntools.sgs_main.sgsUI()" 
+	      ,sourceType="python")
+
+removeShelfTab("Old_Amsterdam_Tools")
 removeShelfTab("Old_AW_DP_Tools")
 removeShelfTab("Old_AW_CG_Tools")
 Build_DataPrep_Tools("AW_DP_Tools")
 Build_Artist_Tools("AW_CG_Tools")
+Build_Amsterdam_Tools("Amsterdam_Tools")
