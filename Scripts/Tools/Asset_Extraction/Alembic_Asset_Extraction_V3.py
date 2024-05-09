@@ -27,14 +27,14 @@ class Global_Access(object):
 	@classmethod
 	def load_Json_Data(cls):
 		""""""
-		with file(cls.Json_File_Path,"r") as f:
+		with open(cls.Json_File_Path,"r") as f:
 			cls.Json_Data = json.load(f)
 		return cls.Json_Data
 	#----------------------------------------------------------------------
 	@classmethod
 	def save_Json_Data(cls):
 		""""""
-		with file(cls.Json_File_Path,'w') as f:
+		with open(cls.Json_File_Path,'w') as f:
 			json.dump(cls.Json_Data, f, indent=4, sort_keys=True)
 	#----------------------------------------------------------------------
 	@classmethod
