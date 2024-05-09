@@ -245,7 +245,8 @@ def remove_All_Render_Layers():
 #----------------------------------------------------------------------
 def perform_CleanUp():
 	""""""
-	maya.mel.eval('source "C:/Program Files/Autodesk/Maya2018/scripts/startup/cleanUpScene.mel"')
+	version = cmds.about(v=True)
+	maya.mel.eval(f'source "C:/Program Files/Autodesk/Maya{version}/scripts/startup/cleanUpScene.mel"')
 	for cmd in ['deleteUnusedNurbsSurfaces','deleteUnusedConstraints','deleteUnusedPairBlends','deleteUnusedLocators' ,'deleteUnusedSets' ,'deleteUnusedExpressions' ,'deleteUnknownNodes','deleteUnusedDeformers','deleteInvalidNurbs(0)','MLdeleteUnused' ,'RNdeleteUnused' ,'deleteUnusedBrushes' ,'deleteUnusedCommon( "groupId", 0, "")']:
 		maya.mel.eval(cmd)
 	cmds.delete(all=True,constructionHistory=True)
